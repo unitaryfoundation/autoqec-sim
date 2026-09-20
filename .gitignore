@@ -1,0 +1,25 @@
+# uv / virtual environments
+.venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# build artifacts
+build/
+dist/
+*.egg-info/
+
+# experiment outputs that are not release artifacts (results/regression*.json
+# are tracked; everything else under results/ is a working cache)
+results/*
+!results/regression.json
+!results/regression_ppo.json
+
+# editors and OS
+.DS_Store
+.idea/
+.vscode/

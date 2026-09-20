@@ -1,0 +1,28 @@
+name: Release
+
+# Builds the sdist and wheel on a version tag and attaches them to a
+# GitHub release. Publishing to PyPI is a separate owner decision (RELEASE.md).
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Check that the tag matches pyproject version
+        run: test "v$(uv version --short)" = "$GITHUB_REF_NAME"
+      - run: uv build
+      - run: uv run --isolated --no-project --with "noise-model @ git+https://github.com/ORG/noise-model@v0.2.0" --with dist/*.whl python -c "import autoqec_sim; print(autoqec_sim.__version__)"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: false
+          body: "See CHANGELOG.md for this version's entry."

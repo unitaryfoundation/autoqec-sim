@@ -1,0 +1,105 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autoqec-sim"
+version = "0.2.0"
+description = "Vectorized stabilizer-tableau reward engine and RL environment for AutoQEC code discovery (Task 1, milestone M1)."
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "Vincent Russo"}]
+keywords = ["quantum", "error-correction", "stabilizer", "reinforcement-learning", "clifford"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.26,<3",
+    "stim>=1.13",
+    # Published pin for users of the wheel. noise-model is not on PyPI;
+    # install it from its git tag first (README "Install"). Development
+    # checkouts resolve it from the sibling directory through
+    # [tool.uv.sources] below, which uv uses and the built wheel ignores.
+    "noise-model>=0.2.0,<0.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+rl = [
+    "torch>=2.14.0",
+]
+
+[project.scripts]
+autoqec-ppo = "autoqec_sim.agents.ppo_regress:main"
+autoqec-regress = "autoqec_sim.regress:main"
+
+# ORG is a placeholder for the GitHub organization; see RELEASE.md.
+[project.urls]
+Repository = "https://github.com/ORG/autoqec-sim"
+Changelog = "https://github.com/ORG/autoqec-sim/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = ["pytest>=7.0", "ruff>=0.14"]
+
+# Development source for noise-model: the sibling checkout genesis/noise-model,
+# editable so the two evolve together. uv applies this to `uv sync`, `uv run`,
+# and `uv lock`; `uv build` writes only the version pin above into the wheel.
+# Users without the sibling checkout: `uv sync --no-sources` resolves the pin
+# from the configured index or a `--find-links` directory instead.
+[tool.uv.sources]
+noise-model = { path = "../noise-model", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autoqec_sim"]
+# Work in progress that is not part of 0.2.0.
+exclude = ["src/autoqec_sim/experiments"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/autoqec_sim",
+    "tests",
+    "docs",
+    "examples",
+    "scripts",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "LICENSE",
+    "README.md",
+    "pyproject.toml",
+]
+exclude = ["src/autoqec_sim/experiments"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "C4", "SIM", "RUF"]
+ignore = [
+    "E402",   # imports after the thread-cap and sys.path edits at module top are intentional
+    "E501",   # long lines are docstring tables and result literals
+    "C408",   # dict(...) calls are used deliberately for keyword-style budgets and configs
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["autoqec_sim", "noise_model"]
+
+# CPU-only torch on Linux for the `rl` extra (the agent is CPU-only; the
+# default PyPI wheel on Linux bundles CUDA). macOS wheels on PyPI are CPU.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources.torch]
+index = "pytorch-cpu"
+marker = "sys_platform == 'linux'"

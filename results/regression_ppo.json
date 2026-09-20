@@ -1,0 +1,3206 @@
+{
+ "agent": "ppo",
+ "budget": "full",
+ "budget_config": {
+  "batch_size": 256,
+  "max_env_steps": 3000000,
+  "max_time_s": 1200.0,
+  "max_attempts": 3,
+  "require_match": true
+ },
+ "seed": 0,
+ "platform": "macOS-26.5.1-arm64-arm-64bit",
+ "python": "3.12.14",
+ "numpy": "2.5.3",
+ "torch": "2.14.0",
+ "threads": "6",
+ "targets": {
+  "five_qubit": {
+   "target": "five_qubit",
+   "agent": "ppo",
+   "parameters": [
+    5,
+    1,
+    3
+   ],
+   "graph": "all_to_all:5",
+   "gates": [
+    "H",
+    "S",
+    "CNOT"
+   ],
+   "reference": "five_qubit",
+   "forbid_stabilizer_weight": 1,
+   "max_steps": 14,
+   "budget": {
+    "batch_size": 256,
+    "max_env_steps_per_attempt": 3000000,
+    "max_time_s_per_attempt": 1200.0,
+    "max_attempts": 3,
+    "require_enumerator_match": true
+   },
+   "ppo_config": {
+    "hidden": [
+     256,
+     256
+    ],
+    "observation": "tableau",
+    "rollout_steps": 16,
+    "epochs": 4,
+    "minibatch_size": 512,
+    "learning_rate": 0.0003,
+    "gamma": 0.98,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "normalize_advantages": true,
+    "mask_undo": true,
+    "max_threads": 6
+   },
+   "num_parameters": 99615,
+   "seed": 0,
+   "rediscovered": true,
+   "attempts_used": 1,
+   "total_env_steps": 61440,
+   "total_episodes": 4352,
+   "wall_time_s": 3.38,
+   "result": {
+    "env_steps": 60928,
+    "episodes": 4352,
+    "update": 14,
+    "actions": [
+     10,
+     16,
+     2,
+     19,
+     24,
+     3,
+     0,
+     10,
+     16,
+     12,
+     19,
+     21,
+     19,
+     26
+    ],
+    "gates": [
+     [
+      "CNOT",
+      0,
+      1
+     ],
+     [
+      "CNOT",
+      0,
+      4
+     ],
+     [
+      "H",
+      2,
+      -1
+     ],
+     [
+      "CNOT",
+      2,
+      1
+     ],
+     [
+      "CNOT",
+      2,
+      3
+     ],
+     [
+      "H",
+      3,
+      -1
+     ],
+     [
+      "H",
+      0,
+      -1
+     ],
+     [
+      "CNOT",
+      0,
+      1
+     ],
+     [
+      "CNOT",
+      0,
+      4
+     ],
+     [
+      "CNOT",
+      0,
+      2
+     ],
+     [
+      "CNOT",
+      2,
+      1
+     ],
+     [
+      "CNOT",
+      3,
+      1
+     ],
+     [
+      "CNOT",
+      2,
+      1
+     ],
+     [
+      "CNOT",
+      2,
+      4
+     ]
+    ],
+    "state_reward": 0.0,
+    "circuit_length": 14,
+    "wall_time_s": 1.408,
+    "verification": {
+     "n": 5,
+     "k": 1,
+     "distance_exact": 3,
+     "parameters_match": true,
+     "min_stabilizer_weight": 4,
+     "nontrivial": true,
+     "is_css": false,
+     "stabilizers": [
+      "-XYYZI",
+      "+IXXZX",
+      "+ZXZXI",
+      "-YXYIZ"
+     ],
+     "weight_enumerator_S": [
+      1,
+      0,
+      0,
+      0,
+      15,
+      0
+     ],
+     "weight_enumerator_N": [
+      1,
+      0,
+      0,
+      30,
+      15,
+      18
+     ],
+     "enumerators_match_reference": true
+    }
+   },
+   "attempts": [
+    {
+     "seed": 0,
+     "env_steps": 61440,
+     "episodes": 4352,
+     "updates": 15,
+     "wall_time_s": 1.408,
+     "successful_episodes": 1,
+     "first_success_env_steps": 60928,
+     "first_success_episodes": 4352,
+     "distinct_codes_verified": 1,
+     "distinct_codes_skipped": 0,
+     "enumerator_families": [
+      {
+       "S": [
+        1,
+        0,
+        0,
+        0,
+        15,
+        0
+       ],
+       "N": [
+        1,
+        0,
+        0,
+        30,
+        15,
+        18
+       ],
+       "count": 1
+      }
+     ],
+     "matched": true,
+     "first_nontrivial": {
+      "env_steps": 60928,
+      "episodes": 4352,
+      "update": 14,
+      "actions": [
+       10,
+       16,
+       2,
+       19,
+       24,
+       3,
+       0,
+       10,
+       16,
+       12,
+       19,
+       21,
+       19,
+       26
+      ],
+      "gates": [
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        0,
+        4
+       ],
+       [
+        "H",
+        2,
+        -1
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        3
+       ],
+       [
+        "H",
+        3,
+        -1
+       ],
+       [
+        "H",
+        0,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        0,
+        4
+       ],
+       [
+        "CNOT",
+        0,
+        2
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        3,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        4
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 14,
+      "wall_time_s": 1.408,
+      "verification": {
+       "n": 5,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 4,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "-XYYZI",
+        "+IXXZX",
+        "+ZXZXI",
+        "-YXYIZ"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        0,
+        0,
+        15,
+        0
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        0,
+        30,
+        15,
+        18
+       ],
+       "enumerators_match_reference": true
+      }
+     },
+     "result": {
+      "env_steps": 60928,
+      "episodes": 4352,
+      "update": 14,
+      "actions": [
+       10,
+       16,
+       2,
+       19,
+       24,
+       3,
+       0,
+       10,
+       16,
+       12,
+       19,
+       21,
+       19,
+       26
+      ],
+      "gates": [
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        0,
+        4
+       ],
+       [
+        "H",
+        2,
+        -1
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        3
+       ],
+       [
+        "H",
+        3,
+        -1
+       ],
+       [
+        "H",
+        0,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        0,
+        4
+       ],
+       [
+        "CNOT",
+        0,
+        2
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        3,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        1
+       ],
+       [
+        "CNOT",
+        2,
+        4
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 14,
+      "wall_time_s": 1.408,
+      "verification": {
+       "n": 5,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 4,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "-XYYZI",
+        "+IXXZX",
+        "+ZXZXI",
+        "-YXYIZ"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        0,
+        0,
+        15,
+        0
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        0,
+        30,
+        15,
+        18
+       ],
+       "enumerators_match_reference": true
+      }
+     },
+     "final_success_rate": 0.00390625,
+     "history": [
+      {
+       "update": 1,
+       "env_steps": 4096,
+       "episodes": 256,
+       "mean_reward": -0.31176525354385376,
+       "success_rate": 0.0,
+       "wall_time_s": 0.11,
+       "policy_loss": -0.01546,
+       "value_loss": 0.40367,
+       "entropy": 3.36858,
+       "approx_kl": 0.00643,
+       "clip_frac": 0.10876
+      },
+      {
+       "update": 2,
+       "env_steps": 8192,
+       "episodes": 512,
+       "mean_reward": -0.29232701659202576,
+       "success_rate": 0.0,
+       "wall_time_s": 0.21,
+       "policy_loss": -0.02142,
+       "value_loss": 0.15518,
+       "entropy": 3.34384,
+       "approx_kl": 0.00603,
+       "clip_frac": 0.15619
+      },
+      {
+       "update": 3,
+       "env_steps": 12288,
+       "episodes": 768,
+       "mean_reward": -0.27813199162483215,
+       "success_rate": 0.0,
+       "wall_time_s": 0.3,
+       "policy_loss": -0.02194,
+       "value_loss": 0.13031,
+       "entropy": 3.31227,
+       "approx_kl": 0.00761,
+       "clip_frac": 0.12299
+      },
+      {
+       "update": 4,
+       "env_steps": 16384,
+       "episodes": 1024,
+       "mean_reward": -0.25879138708114624,
+       "success_rate": 0.0,
+       "wall_time_s": 0.39,
+       "policy_loss": -0.02244,
+       "value_loss": 0.12316,
+       "entropy": 3.28046,
+       "approx_kl": 0.00719,
+       "clip_frac": 0.10278
+      },
+      {
+       "update": 5,
+       "env_steps": 20480,
+       "episodes": 1280,
+       "mean_reward": -0.2337239682674408,
+       "success_rate": 0.0,
+       "wall_time_s": 0.48,
+       "policy_loss": -0.02402,
+       "value_loss": 0.13367,
+       "entropy": 3.2421,
+       "approx_kl": 0.00852,
+       "clip_frac": 0.1095
+      },
+      {
+       "update": 6,
+       "env_steps": 24576,
+       "episodes": 1536,
+       "mean_reward": -0.22190755605697632,
+       "success_rate": 0.0,
+       "wall_time_s": 0.58,
+       "policy_loss": -0.02394,
+       "value_loss": 0.14367,
+       "entropy": 3.21387,
+       "approx_kl": 0.00708,
+       "clip_frac": 0.09137
+      },
+      {
+       "update": 7,
+       "env_steps": 28672,
+       "episodes": 2048,
+       "mean_reward": -0.20645694434642792,
+       "success_rate": 0.0,
+       "wall_time_s": 0.67,
+       "policy_loss": -0.02222,
+       "value_loss": 0.12586,
+       "entropy": 3.16829,
+       "approx_kl": 0.00658,
+       "clip_frac": 0.06567
+      },
+      {
+       "update": 8,
+       "env_steps": 32768,
+       "episodes": 2304,
+       "mean_reward": -0.21505999565124512,
+       "success_rate": 0.0,
+       "wall_time_s": 0.76,
+       "policy_loss": -0.02986,
+       "value_loss": 0.08613,
+       "entropy": 3.0451,
+       "approx_kl": 0.01191,
+       "clip_frac": 0.16266
+      },
+      {
+       "update": 9,
+       "env_steps": 36864,
+       "episodes": 2560,
+       "mean_reward": -0.19591006636619568,
+       "success_rate": 0.0,
+       "wall_time_s": 0.85,
+       "policy_loss": -0.03069,
+       "value_loss": 0.07677,
+       "entropy": 2.99437,
+       "approx_kl": 0.01083,
+       "clip_frac": 0.12054
+      },
+      {
+       "update": 10,
+       "env_steps": 40960,
+       "episodes": 2816,
+       "mean_reward": -0.17509999871253967,
+       "success_rate": 0.0,
+       "wall_time_s": 0.94,
+       "policy_loss": -0.03171,
+       "value_loss": 0.06783,
+       "entropy": 2.93159,
+       "approx_kl": 0.01173,
+       "clip_frac": 0.13672
+      },
+      {
+       "update": 11,
+       "env_steps": 45056,
+       "episodes": 3072,
+       "mean_reward": -0.15046969056129456,
+       "success_rate": 0.0,
+       "wall_time_s": 1.03,
+       "policy_loss": -0.02826,
+       "value_loss": 0.05624,
+       "entropy": 2.84669,
+       "approx_kl": 0.00739,
+       "clip_frac": 0.1098
+      },
+      {
+       "update": 12,
+       "env_steps": 49152,
+       "episodes": 3328,
+       "mean_reward": -0.13458427786827087,
+       "success_rate": 0.0,
+       "wall_time_s": 1.13,
+       "policy_loss": -0.02692,
+       "value_loss": 0.05107,
+       "entropy": 2.77138,
+       "approx_kl": 0.01042,
+       "clip_frac": 0.10455
+      },
+      {
+       "update": 13,
+       "env_steps": 53248,
+       "episodes": 3584,
+       "mean_reward": -0.12865513563156128,
+       "success_rate": 0.0,
+       "wall_time_s": 1.22,
+       "policy_loss": -0.02401,
+       "value_loss": 0.04855,
+       "entropy": 2.70818,
+       "approx_kl": 0.01089,
+       "clip_frac": 0.09064
+      },
+      {
+       "update": 14,
+       "env_steps": 57344,
+       "episodes": 4096,
+       "mean_reward": -0.1188034936785698,
+       "success_rate": 0.0,
+       "wall_time_s": 1.31,
+       "policy_loss": -0.02489,
+       "value_loss": 0.03266,
+       "entropy": 2.66074,
+       "approx_kl": 0.01078,
+       "clip_frac": 0.11285
+      },
+      {
+       "update": 15,
+       "env_steps": 61440,
+       "episodes": 4352,
+       "mean_reward": -0.14277112483978271,
+       "success_rate": 0.00390625,
+       "wall_time_s": 1.41,
+       "policy_loss": -0.02337,
+       "value_loss": 0.03194,
+       "entropy": 2.41774,
+       "approx_kl": 0.01174,
+       "clip_frac": 0.1239
+      }
+     ]
+    }
+   ]
+  },
+  "steane": {
+   "target": "steane",
+   "agent": "ppo",
+   "parameters": [
+    7,
+    1,
+    3
+   ],
+   "graph": "all_to_all:7",
+   "gates": [
+    "H",
+    "S",
+    "CNOT"
+   ],
+   "reference": "steane",
+   "forbid_stabilizer_weight": 3,
+   "max_steps": 20,
+   "budget": {
+    "batch_size": 256,
+    "max_env_steps_per_attempt": 3000000,
+    "max_time_s_per_attempt": 1200.0,
+    "max_attempts": 3,
+    "require_enumerator_match": true
+   },
+   "ppo_config": {
+    "hidden": [
+     256,
+     256
+    ],
+    "observation": "tableau",
+    "rollout_steps": 16,
+    "epochs": 4,
+    "minibatch_size": 512,
+    "learning_rate": 0.0003,
+    "gamma": 0.98,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "normalize_advantages": true,
+    "mask_undo": true,
+    "max_threads": 6
+   },
+   "num_parameters": 130873,
+   "seed": 0,
+   "rediscovered": true,
+   "attempts_used": 1,
+   "total_env_steps": 225280,
+   "total_episodes": 11264,
+   "wall_time_s": 10.672,
+   "result": {
+    "env_steps": 224256,
+    "episodes": 11009,
+    "update": 54,
+    "actions": [
+     1,
+     26,
+     14,
+     32,
+     0,
+     18,
+     14,
+     4,
+     34,
+     50,
+     31,
+     7,
+     21,
+     0,
+     6,
+     49
+    ],
+    "gates": [
+     [
+      "H",
+      1,
+      -1
+     ],
+     [
+      "CNOT",
+      1,
+      2
+     ],
+     [
+      "CNOT",
+      0,
+      1
+     ],
+     [
+      "CNOT",
+      1,
+      5
+     ],
+     [
+      "H",
+      0,
+      -1
+     ],
+     [
+      "CNOT",
+      0,
+      3
+     ],
+     [
+      "CNOT",
+      0,
+      1
+     ],
+     [
+      "H",
+      4,
+      -1
+     ],
+     [
+      "CNOT",
+      1,
+      6
+     ],
+     [
+      "CNOT",
+      4,
+      5
+     ],
+     [
+      "CNOT",
+      4,
+      1
+     ],
+     [
+      "S",
+      0,
+      -1
+     ],
+     [
+      "CNOT",
+      4,
+      0
+     ],
+     [
+      "H",
+      0,
+      -1
+     ],
+     [
+      "H",
+      6,
+      -1
+     ],
+     [
+      "CNOT",
+      6,
+      3
+     ]
+    ],
+    "state_reward": 0.0,
+    "circuit_length": 16,
+    "wall_time_s": 10.661,
+    "verification": {
+     "n": 7,
+     "k": 1,
+     "distance_exact": 3,
+     "parameters_match": true,
+     "min_stabilizer_weight": 4,
+     "nontrivial": true,
+     "is_css": false,
+     "stabilizers": [
+      "+IXXIIXZ",
+      "+ZYZXZIZ",
+      "+XIIZZIZ",
+      "+ZXIIXXI",
+      "+XZIIZZI",
+      "+IZIXZIX"
+     ],
+     "weight_enumerator_S": [
+      1,
+      0,
+      0,
+      0,
+      21,
+      0,
+      42,
+      0
+     ],
+     "weight_enumerator_N": [
+      1,
+      0,
+      0,
+      21,
+      21,
+      126,
+      42,
+      45
+     ],
+     "enumerators_match_reference": true
+    }
+   },
+   "attempts": [
+    {
+     "seed": 0,
+     "env_steps": 225280,
+     "episodes": 11264,
+     "updates": 55,
+     "wall_time_s": 10.661,
+     "successful_episodes": 6,
+     "first_success_env_steps": 81664,
+     "first_success_episodes": 3841,
+     "distinct_codes_verified": 6,
+     "distinct_codes_skipped": 0,
+     "enumerator_families": [
+      {
+       "S": [
+        1,
+        0,
+        0,
+        0,
+        13,
+        24,
+        18,
+        8
+       ],
+       "N": [
+        1,
+        0,
+        0,
+        13,
+        53,
+        78,
+        74,
+        37
+       ],
+       "count": 5
+      },
+      {
+       "S": [
+        1,
+        0,
+        0,
+        0,
+        21,
+        0,
+        42,
+        0
+       ],
+       "N": [
+        1,
+        0,
+        0,
+        21,
+        21,
+        126,
+        42,
+        45
+       ],
+       "count": 1
+      }
+     ],
+     "matched": true,
+     "first_nontrivial": {
+      "env_steps": 81664,
+      "episodes": 3841,
+      "update": 19,
+      "actions": [
+       3,
+       24,
+       37,
+       1,
+       34,
+       22,
+       40,
+       6,
+       19,
+       24,
+       55,
+       41,
+       55,
+       51,
+       32,
+       26,
+       17,
+       12,
+       53
+      ],
+      "gates": [
+       [
+        "H",
+        3,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        6
+       ],
+       [
+        "CNOT",
+        3,
+        2
+       ],
+       [
+        "H",
+        1,
+        -1
+       ],
+       [
+        "CNOT",
+        1,
+        6
+       ],
+       [
+        "CNOT",
+        0,
+        5
+       ],
+       [
+        "CNOT",
+        2,
+        5
+       ],
+       [
+        "H",
+        6,
+        -1
+       ],
+       [
+        "CNOT",
+        3,
+        0
+       ],
+       [
+        "CNOT",
+        0,
+        6
+       ],
+       [
+        "CNOT",
+        6,
+        5
+       ],
+       [
+        "CNOT",
+        5,
+        2
+       ],
+       [
+        "CNOT",
+        6,
+        5
+       ],
+       [
+        "CNOT",
+        5,
+        4
+       ],
+       [
+        "CNOT",
+        1,
+        5
+       ],
+       [
+        "CNOT",
+        1,
+        2
+       ],
+       [
+        "CNOT",
+        2,
+        0
+       ],
+       [
+        "S",
+        5,
+        -1
+       ],
+       [
+        "CNOT",
+        6,
+        4
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 19,
+      "wall_time_s": 3.832,
+      "verification": {
+       "n": 7,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 4,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "-YXYIIYZ",
+        "+IIZZIZZ",
+        "+IIXXIYX",
+        "+IZIIZZZ",
+        "+ZZIZIIZ",
+        "-YZYZXIX"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        0,
+        0,
+        13,
+        24,
+        18,
+        8
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        0,
+        13,
+        53,
+        78,
+        74,
+        37
+       ],
+       "enumerators_match_reference": false
+      }
+     },
+     "result": {
+      "env_steps": 224256,
+      "episodes": 11009,
+      "update": 54,
+      "actions": [
+       1,
+       26,
+       14,
+       32,
+       0,
+       18,
+       14,
+       4,
+       34,
+       50,
+       31,
+       7,
+       21,
+       0,
+       6,
+       49
+      ],
+      "gates": [
+       [
+        "H",
+        1,
+        -1
+       ],
+       [
+        "CNOT",
+        1,
+        2
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        1,
+        5
+       ],
+       [
+        "H",
+        0,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        3
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "H",
+        4,
+        -1
+       ],
+       [
+        "CNOT",
+        1,
+        6
+       ],
+       [
+        "CNOT",
+        4,
+        5
+       ],
+       [
+        "CNOT",
+        4,
+        1
+       ],
+       [
+        "S",
+        0,
+        -1
+       ],
+       [
+        "CNOT",
+        4,
+        0
+       ],
+       [
+        "H",
+        0,
+        -1
+       ],
+       [
+        "H",
+        6,
+        -1
+       ],
+       [
+        "CNOT",
+        6,
+        3
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 16,
+      "wall_time_s": 10.661,
+      "verification": {
+       "n": 7,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 4,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "+IXXIIXZ",
+        "+ZYZXZIZ",
+        "+XIIZZIZ",
+        "+ZXIIXXI",
+        "+XZIIZZI",
+        "+IZIXZIX"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        0,
+        0,
+        21,
+        0,
+        42,
+        0
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        0,
+        21,
+        21,
+        126,
+        42,
+        45
+       ],
+       "enumerators_match_reference": true
+      }
+     },
+     "final_success_rate": 0.00390625,
+     "history": [
+      {
+       "update": 1,
+       "env_steps": 4096,
+       "episodes": 0,
+       "mean_reward": -0.10745061933994293,
+       "success_rate": 0.0,
+       "wall_time_s": 0.19,
+       "policy_loss": -0.02419,
+       "value_loss": 0.07765,
+       "entropy": 4.00073,
+       "approx_kl": 0.01201,
+       "clip_frac": 0.15063
+      },
+      {
+       "update": 2,
+       "env_steps": 8192,
+       "episodes": 256,
+       "mean_reward": -0.10338562726974487,
+       "success_rate": 0.0,
+       "wall_time_s": 0.37,
+       "policy_loss": -0.02094,
+       "value_loss": 0.04942,
+       "entropy": 3.98247,
+       "approx_kl": 0.00718,
+       "clip_frac": 0.13086
+      },
+      {
+       "update": 3,
+       "env_steps": 12288,
+       "episodes": 512,
+       "mean_reward": -0.0974983498454094,
+       "success_rate": 0.0,
+       "wall_time_s": 0.56,
+       "policy_loss": -0.02156,
+       "value_loss": 0.03181,
+       "entropy": 3.95746,
+       "approx_kl": 0.00523,
+       "clip_frac": 0.12512
+      },
+      {
+       "update": 4,
+       "env_steps": 16384,
+       "episodes": 768,
+       "mean_reward": -0.09028225392103195,
+       "success_rate": 0.0,
+       "wall_time_s": 0.75,
+       "policy_loss": -0.01979,
+       "value_loss": 0.02342,
+       "entropy": 3.93446,
+       "approx_kl": 0.00954,
+       "clip_frac": 0.10632
+      },
+      {
+       "update": 5,
+       "env_steps": 20480,
+       "episodes": 1024,
+       "mean_reward": -0.08531636744737625,
+       "success_rate": 0.0,
+       "wall_time_s": 0.95,
+       "policy_loss": -0.01902,
+       "value_loss": 0.02617,
+       "entropy": 3.93013,
+       "approx_kl": 0.00659,
+       "clip_frac": 0.0838
+      },
+      {
+       "update": 6,
+       "env_steps": 24576,
+       "episodes": 1024,
+       "mean_reward": -0.09600792825222015,
+       "success_rate": 0.0,
+       "wall_time_s": 1.13,
+       "policy_loss": -0.02113,
+       "value_loss": 0.02413,
+       "entropy": 3.86668,
+       "approx_kl": 0.01224,
+       "clip_frac": 0.13458
+      },
+      {
+       "update": 7,
+       "env_steps": 28672,
+       "episodes": 1280,
+       "mean_reward": -0.09039343893527985,
+       "success_rate": 0.0,
+       "wall_time_s": 1.32,
+       "policy_loss": -0.02113,
+       "value_loss": 0.02509,
+       "entropy": 3.82712,
+       "approx_kl": 0.00651,
+       "clip_frac": 0.10333
+      },
+      {
+       "update": 8,
+       "env_steps": 32768,
+       "episodes": 1536,
+       "mean_reward": -0.08666368573904037,
+       "success_rate": 0.0,
+       "wall_time_s": 1.51,
+       "policy_loss": -0.02059,
+       "value_loss": 0.01779,
+       "entropy": 3.81588,
+       "approx_kl": 0.00386,
+       "clip_frac": 0.06964
+      },
+      {
+       "update": 9,
+       "env_steps": 36864,
+       "episodes": 1792,
+       "mean_reward": -0.08229198306798935,
+       "success_rate": 0.0,
+       "wall_time_s": 1.7,
+       "policy_loss": -0.02476,
+       "value_loss": 0.01606,
+       "entropy": 3.83411,
+       "approx_kl": 0.00647,
+       "clip_frac": 0.07263
+      },
+      {
+       "update": 10,
+       "env_steps": 40960,
+       "episodes": 2048,
+       "mean_reward": -0.07152696698904037,
+       "success_rate": 0.0,
+       "wall_time_s": 1.9,
+       "policy_loss": -0.0258,
+       "value_loss": 0.01749,
+       "entropy": 3.88861,
+       "approx_kl": 0.00446,
+       "clip_frac": 0.10132
+      },
+      {
+       "update": 11,
+       "env_steps": 45056,
+       "episodes": 2048,
+       "mean_reward": -0.08645875751972198,
+       "success_rate": 0.0,
+       "wall_time_s": 2.09,
+       "policy_loss": -0.02392,
+       "value_loss": 0.02206,
+       "entropy": 3.77155,
+       "approx_kl": 0.00865,
+       "clip_frac": 0.0755
+      },
+      {
+       "update": 12,
+       "env_steps": 49152,
+       "episodes": 2304,
+       "mean_reward": -0.08125317096710205,
+       "success_rate": 0.0,
+       "wall_time_s": 2.28,
+       "policy_loss": -0.02682,
+       "value_loss": 0.01788,
+       "entropy": 3.76526,
+       "approx_kl": 0.00669,
+       "clip_frac": 0.09998
+      },
+      {
+       "update": 13,
+       "env_steps": 53248,
+       "episodes": 2560,
+       "mean_reward": -0.07569289207458496,
+       "success_rate": 0.0,
+       "wall_time_s": 2.46,
+       "policy_loss": -0.02794,
+       "value_loss": 0.01413,
+       "entropy": 3.74201,
+       "approx_kl": 0.00723,
+       "clip_frac": 0.08118
+      },
+      {
+       "update": 14,
+       "env_steps": 57344,
+       "episodes": 2816,
+       "mean_reward": -0.06846348196268082,
+       "success_rate": 0.0,
+       "wall_time_s": 2.66,
+       "policy_loss": -0.02992,
+       "value_loss": 0.01234,
+       "entropy": 3.73692,
+       "approx_kl": 0.00774,
+       "clip_frac": 0.09924
+      },
+      {
+       "update": 15,
+       "env_steps": 61440,
+       "episodes": 3072,
+       "mean_reward": -0.05782666802406311,
+       "success_rate": 0.0,
+       "wall_time_s": 2.86,
+       "policy_loss": -0.0283,
+       "value_loss": 0.01364,
+       "entropy": 3.80977,
+       "approx_kl": 0.0056,
+       "clip_frac": 0.07153
+      },
+      {
+       "update": 16,
+       "env_steps": 65536,
+       "episodes": 3072,
+       "mean_reward": -0.07392936944961548,
+       "success_rate": 0.0,
+       "wall_time_s": 3.05,
+       "policy_loss": -0.02587,
+       "value_loss": 0.01558,
+       "entropy": 3.62632,
+       "approx_kl": 0.01032,
+       "clip_frac": 0.12354
+      },
+      {
+       "update": 17,
+       "env_steps": 69632,
+       "episodes": 3328,
+       "mean_reward": -0.07044165581464767,
+       "success_rate": 0.0,
+       "wall_time_s": 3.24,
+       "policy_loss": -0.02957,
+       "value_loss": 0.01525,
+       "entropy": 3.59004,
+       "approx_kl": 0.00711,
+       "clip_frac": 0.11652
+      },
+      {
+       "update": 18,
+       "env_steps": 73728,
+       "episodes": 3584,
+       "mean_reward": -0.0657411515712738,
+       "success_rate": 0.0,
+       "wall_time_s": 3.44,
+       "policy_loss": -0.02925,
+       "value_loss": 0.01258,
+       "entropy": 3.54855,
+       "approx_kl": 0.00831,
+       "clip_frac": 0.12427
+      },
+      {
+       "update": 19,
+       "env_steps": 77824,
+       "episodes": 3840,
+       "mean_reward": -0.05918930470943451,
+       "success_rate": 0.0,
+       "wall_time_s": 3.64,
+       "policy_loss": -0.03067,
+       "value_loss": 0.01067,
+       "entropy": 3.53804,
+       "approx_kl": 0.00933,
+       "clip_frac": 0.12665
+      },
+      {
+       "update": 20,
+       "env_steps": 81920,
+       "episodes": 4096,
+       "mean_reward": -0.04913441091775894,
+       "success_rate": 0.00390625,
+       "wall_time_s": 3.83,
+       "policy_loss": -0.02889,
+       "value_loss": 0.01041,
+       "entropy": 3.66229,
+       "approx_kl": 0.00629,
+       "clip_frac": 0.08807
+      },
+      {
+       "update": 21,
+       "env_steps": 86016,
+       "episodes": 4096,
+       "mean_reward": -0.06396801769733429,
+       "success_rate": 0.0,
+       "wall_time_s": 4.02,
+       "policy_loss": -0.02754,
+       "value_loss": 0.01207,
+       "entropy": 3.38943,
+       "approx_kl": 0.01212,
+       "clip_frac": 0.1012
+      },
+      {
+       "update": 22,
+       "env_steps": 90112,
+       "episodes": 4352,
+       "mean_reward": -0.06115669757127762,
+       "success_rate": 0.0,
+       "wall_time_s": 4.21,
+       "policy_loss": -0.02943,
+       "value_loss": 0.01244,
+       "entropy": 3.35716,
+       "approx_kl": 0.009,
+       "clip_frac": 0.1322
+      },
+      {
+       "update": 23,
+       "env_steps": 94208,
+       "episodes": 4608,
+       "mean_reward": -0.057364702224731445,
+       "success_rate": 0.00390625,
+       "wall_time_s": 4.4,
+       "policy_loss": -0.02797,
+       "value_loss": 0.00991,
+       "entropy": 3.33664,
+       "approx_kl": 0.0093,
+       "clip_frac": 0.09271
+      },
+      {
+       "update": 24,
+       "env_steps": 98304,
+       "episodes": 4864,
+       "mean_reward": -0.05211292579770088,
+       "success_rate": 0.0,
+       "wall_time_s": 4.59,
+       "policy_loss": -0.03046,
+       "value_loss": 0.00771,
+       "entropy": 3.37468,
+       "approx_kl": 0.00712,
+       "clip_frac": 0.09906
+      },
+      {
+       "update": 25,
+       "env_steps": 102400,
+       "episodes": 5120,
+       "mean_reward": -0.04253362864255905,
+       "success_rate": 0.0,
+       "wall_time_s": 4.79,
+       "policy_loss": -0.02669,
+       "value_loss": 0.00909,
+       "entropy": 3.56483,
+       "approx_kl": 0.00907,
+       "clip_frac": 0.09442
+      },
+      {
+       "update": 26,
+       "env_steps": 106496,
+       "episodes": 5120,
+       "mean_reward": -0.0587523877620697,
+       "success_rate": 0.0,
+       "wall_time_s": 4.98,
+       "policy_loss": -0.02536,
+       "value_loss": 0.00938,
+       "entropy": 3.23113,
+       "approx_kl": 0.01007,
+       "clip_frac": 0.13965
+      },
+      {
+       "update": 27,
+       "env_steps": 110592,
+       "episodes": 5376,
+       "mean_reward": -0.05600226670503616,
+       "success_rate": 0.0,
+       "wall_time_s": 5.18,
+       "policy_loss": -0.02747,
+       "value_loss": 0.01023,
+       "entropy": 3.17998,
+       "approx_kl": 0.00634,
+       "clip_frac": 0.12225
+      },
+      {
+       "update": 28,
+       "env_steps": 114688,
+       "episodes": 5632,
+       "mean_reward": -0.05301709473133087,
+       "success_rate": 0.0,
+       "wall_time_s": 5.38,
+       "policy_loss": -0.02664,
+       "value_loss": 0.00772,
+       "entropy": 3.16215,
+       "approx_kl": 0.00664,
+       "clip_frac": 0.10278
+      },
+      {
+       "update": 29,
+       "env_steps": 118784,
+       "episodes": 5888,
+       "mean_reward": -0.04918937012553215,
+       "success_rate": 0.0,
+       "wall_time_s": 5.58,
+       "policy_loss": -0.0318,
+       "value_loss": 0.00701,
+       "entropy": 3.19187,
+       "approx_kl": 0.01182,
+       "clip_frac": 0.10999
+      },
+      {
+       "update": 30,
+       "env_steps": 122880,
+       "episodes": 6144,
+       "mean_reward": -0.037704721093177795,
+       "success_rate": 0.0,
+       "wall_time_s": 5.79,
+       "policy_loss": -0.03008,
+       "value_loss": 0.00751,
+       "entropy": 3.42452,
+       "approx_kl": 0.00919,
+       "clip_frac": 0.1214
+      },
+      {
+       "update": 31,
+       "env_steps": 126976,
+       "episodes": 6144,
+       "mean_reward": -0.05390836298465729,
+       "success_rate": 0.0,
+       "wall_time_s": 5.98,
+       "policy_loss": -0.02722,
+       "value_loss": 0.0081,
+       "entropy": 3.05225,
+       "approx_kl": 0.00976,
+       "clip_frac": 0.10291
+      },
+      {
+       "update": 32,
+       "env_steps": 131072,
+       "episodes": 6400,
+       "mean_reward": -0.051454804837703705,
+       "success_rate": 0.0,
+       "wall_time_s": 6.18,
+       "policy_loss": -0.02699,
+       "value_loss": 0.00767,
+       "entropy": 3.01015,
+       "approx_kl": 0.00733,
+       "clip_frac": 0.11658
+      },
+      {
+       "update": 33,
+       "env_steps": 135168,
+       "episodes": 6656,
+       "mean_reward": -0.0497465617954731,
+       "success_rate": 0.0,
+       "wall_time_s": 6.37,
+       "policy_loss": -0.02742,
+       "value_loss": 0.00608,
+       "entropy": 3.05819,
+       "approx_kl": 0.00962,
+       "clip_frac": 0.11359
+      },
+      {
+       "update": 34,
+       "env_steps": 139264,
+       "episodes": 6912,
+       "mean_reward": -0.045671314001083374,
+       "success_rate": 0.0,
+       "wall_time_s": 6.57,
+       "policy_loss": -0.02985,
+       "value_loss": 0.00614,
+       "entropy": 3.08999,
+       "approx_kl": 0.00808,
+       "clip_frac": 0.10968
+      },
+      {
+       "update": 35,
+       "env_steps": 143360,
+       "episodes": 7168,
+       "mean_reward": -0.035661548376083374,
+       "success_rate": 0.00390625,
+       "wall_time_s": 6.77,
+       "policy_loss": -0.03136,
+       "value_loss": 0.00637,
+       "entropy": 3.32166,
+       "approx_kl": 0.00798,
+       "clip_frac": 0.125
+      },
+      {
+       "update": 36,
+       "env_steps": 147456,
+       "episodes": 7168,
+       "mean_reward": -0.05100298672914505,
+       "success_rate": 0.0,
+       "wall_time_s": 6.96,
+       "policy_loss": -0.0224,
+       "value_loss": 0.00691,
+       "entropy": 2.87696,
+       "approx_kl": 0.01005,
+       "clip_frac": 0.13672
+      },
+      {
+       "update": 37,
+       "env_steps": 151552,
+       "episodes": 7424,
+       "mean_reward": -0.04981071501970291,
+       "success_rate": 0.0,
+       "wall_time_s": 7.15,
+       "policy_loss": -0.02583,
+       "value_loss": 0.00674,
+       "entropy": 2.88133,
+       "approx_kl": 0.00542,
+       "clip_frac": 0.10291
+      },
+      {
+       "update": 38,
+       "env_steps": 155648,
+       "episodes": 7680,
+       "mean_reward": -0.04726530611515045,
+       "success_rate": 0.0,
+       "wall_time_s": 7.35,
+       "policy_loss": -0.02725,
+       "value_loss": 0.00568,
+       "entropy": 2.91684,
+       "approx_kl": 0.00882,
+       "clip_frac": 0.13159
+      },
+      {
+       "update": 39,
+       "env_steps": 159744,
+       "episodes": 7936,
+       "mean_reward": -0.04358787462115288,
+       "success_rate": 0.00390625,
+       "wall_time_s": 7.54,
+       "policy_loss": -0.03367,
+       "value_loss": 0.00517,
+       "entropy": 2.98661,
+       "approx_kl": 0.01029,
+       "clip_frac": 0.13428
+      },
+      {
+       "update": 40,
+       "env_steps": 163840,
+       "episodes": 8192,
+       "mean_reward": -0.033377617597579956,
+       "success_rate": 0.0,
+       "wall_time_s": 7.74,
+       "policy_loss": -0.02778,
+       "value_loss": 0.00539,
+       "entropy": 3.18286,
+       "approx_kl": 0.01046,
+       "clip_frac": 0.11292
+      },
+      {
+       "update": 41,
+       "env_steps": 167936,
+       "episodes": 8192,
+       "mean_reward": -0.049514465034008026,
+       "success_rate": 0.0,
+       "wall_time_s": 7.92,
+       "policy_loss": -0.02636,
+       "value_loss": 0.00563,
+       "entropy": 2.7238,
+       "approx_kl": 0.01105,
+       "clip_frac": 0.13617
+      },
+      {
+       "update": 42,
+       "env_steps": 172032,
+       "episodes": 8448,
+       "mean_reward": -0.04829514026641846,
+       "success_rate": 0.0,
+       "wall_time_s": 8.12,
+       "policy_loss": -0.02121,
+       "value_loss": 0.0064,
+       "entropy": 2.75146,
+       "approx_kl": 0.01124,
+       "clip_frac": 0.15094
+      },
+      {
+       "update": 43,
+       "env_steps": 176128,
+       "episodes": 8704,
+       "mean_reward": -0.046395279467105865,
+       "success_rate": 0.00390625,
+       "wall_time_s": 8.32,
+       "policy_loss": -0.02753,
+       "value_loss": 0.00545,
+       "entropy": 2.75181,
+       "approx_kl": 0.01215,
+       "clip_frac": 0.12225
+      },
+      {
+       "update": 44,
+       "env_steps": 180224,
+       "episodes": 8960,
+       "mean_reward": -0.04216445982456207,
+       "success_rate": 0.0,
+       "wall_time_s": 8.51,
+       "policy_loss": -0.03257,
+       "value_loss": 0.00482,
+       "entropy": 2.85723,
+       "approx_kl": 0.00985,
+       "clip_frac": 0.14264
+      },
+      {
+       "update": 45,
+       "env_steps": 184320,
+       "episodes": 9216,
+       "mean_reward": -0.0322788767516613,
+       "success_rate": 0.0,
+       "wall_time_s": 8.71,
+       "policy_loss": -0.03013,
+       "value_loss": 0.00496,
+       "entropy": 3.08682,
+       "approx_kl": 0.00866,
+       "clip_frac": 0.09888
+      },
+      {
+       "update": 46,
+       "env_steps": 188416,
+       "episodes": 9216,
+       "mean_reward": -0.04724501445889473,
+       "success_rate": 0.0,
+       "wall_time_s": 8.9,
+       "policy_loss": -0.0257,
+       "value_loss": 0.00524,
+       "entropy": 2.61714,
+       "approx_kl": 0.01386,
+       "clip_frac": 0.12457
+      },
+      {
+       "update": 47,
+       "env_steps": 192512,
+       "episodes": 9472,
+       "mean_reward": -0.04655793309211731,
+       "success_rate": 0.0,
+       "wall_time_s": 9.09,
+       "policy_loss": -0.02656,
+       "value_loss": 0.00526,
+       "entropy": 2.6081,
+       "approx_kl": 0.00865,
+       "clip_frac": 0.13086
+      },
+      {
+       "update": 48,
+       "env_steps": 196608,
+       "episodes": 9728,
+       "mean_reward": -0.04439110681414604,
+       "success_rate": 0.0,
+       "wall_time_s": 9.29,
+       "policy_loss": -0.02707,
+       "value_loss": 0.00422,
+       "entropy": 2.61922,
+       "approx_kl": 0.01142,
+       "clip_frac": 0.12378
+      },
+      {
+       "update": 49,
+       "env_steps": 200704,
+       "episodes": 9984,
+       "mean_reward": -0.03994224965572357,
+       "success_rate": 0.0,
+       "wall_time_s": 9.49,
+       "policy_loss": -0.03253,
+       "value_loss": 0.0039,
+       "entropy": 2.746,
+       "approx_kl": 0.0097,
+       "clip_frac": 0.1524
+      },
+      {
+       "update": 50,
+       "env_steps": 204800,
+       "episodes": 10240,
+       "mean_reward": -0.03008425608277321,
+       "success_rate": 0.0,
+       "wall_time_s": 9.68,
+       "policy_loss": -0.03045,
+       "value_loss": 0.00422,
+       "entropy": 3.00025,
+       "approx_kl": 0.00669,
+       "clip_frac": 0.11517
+      },
+      {
+       "update": 51,
+       "env_steps": 208896,
+       "episodes": 10240,
+       "mean_reward": -0.046421706676483154,
+       "success_rate": 0.0,
+       "wall_time_s": 9.87,
+       "policy_loss": -0.02059,
+       "value_loss": 0.00464,
+       "entropy": 2.51175,
+       "approx_kl": 0.01053,
+       "clip_frac": 0.14233
+      },
+      {
+       "update": 52,
+       "env_steps": 212992,
+       "episodes": 10496,
+       "mean_reward": -0.04561571776866913,
+       "success_rate": 0.0,
+       "wall_time_s": 10.07,
+       "policy_loss": -0.02487,
+       "value_loss": 0.00444,
+       "entropy": 2.51879,
+       "approx_kl": 0.00823,
+       "clip_frac": 0.12341
+      },
+      {
+       "update": 53,
+       "env_steps": 217088,
+       "episodes": 10752,
+       "mean_reward": -0.04353407770395279,
+       "success_rate": 0.0,
+       "wall_time_s": 10.26,
+       "policy_loss": -0.02764,
+       "value_loss": 0.00367,
+       "entropy": 2.58461,
+       "approx_kl": 0.01175,
+       "clip_frac": 0.13916
+      },
+      {
+       "update": 54,
+       "env_steps": 221184,
+       "episodes": 11008,
+       "mean_reward": -0.03969726711511612,
+       "success_rate": 0.0,
+       "wall_time_s": 10.46,
+       "policy_loss": -0.03242,
+       "value_loss": 0.00321,
+       "entropy": 2.69477,
+       "approx_kl": 0.01115,
+       "clip_frac": 0.15106
+      },
+      {
+       "update": 55,
+       "env_steps": 225280,
+       "episodes": 11264,
+       "mean_reward": -0.029260093346238136,
+       "success_rate": 0.00390625,
+       "wall_time_s": 10.66,
+       "policy_loss": -0.02625,
+       "value_loss": 0.0037,
+       "entropy": 2.94091,
+       "approx_kl": 0.00709,
+       "clip_frac": 0.10236
+      }
+     ]
+    }
+   ]
+  },
+  "rotated_surface_9": {
+   "target": "rotated_surface_9",
+   "agent": "ppo",
+   "parameters": [
+    9,
+    1,
+    3
+   ],
+   "graph": "square:3x3",
+   "gates": [
+    "H",
+    "CNOT"
+   ],
+   "reference": "rotated_surface_9",
+   "forbid_stabilizer_weight": 1,
+   "max_steps": 30,
+   "budget": {
+    "batch_size": 256,
+    "max_env_steps_per_attempt": 3000000,
+    "max_time_s_per_attempt": 1200.0,
+    "max_attempts": 3,
+    "require_enumerator_match": true
+   },
+   "ppo_config": {
+    "hidden": [
+     256,
+     256
+    ],
+    "observation": "tableau",
+    "rollout_steps": 16,
+    "epochs": 4,
+    "minibatch_size": 512,
+    "learning_rate": 0.0003,
+    "gamma": 0.98,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "normalize_advantages": true,
+    "mask_undo": true,
+    "max_threads": 6
+   },
+   "num_parameters": 157730,
+   "seed": 0,
+   "rediscovered": true,
+   "attempts_used": 1,
+   "total_env_steps": 106496,
+   "total_episodes": 3333,
+   "wall_time_s": 3.407,
+   "result": {
+    "env_steps": 103680,
+    "episodes": 3329,
+    "update": 25,
+    "actions": [
+     7,
+     11,
+     0,
+     26,
+     31,
+     5,
+     30,
+     22,
+     24,
+     16,
+     11,
+     7,
+     19,
+     9,
+     13
+    ],
+    "gates": [
+     [
+      "H",
+      7,
+      -1
+     ],
+     [
+      "CNOT",
+      0,
+      3
+     ],
+     [
+      "H",
+      0,
+      -1
+     ],
+     [
+      "CNOT",
+      7,
+      4
+     ],
+     [
+      "CNOT",
+      7,
+      8
+     ],
+     [
+      "H",
+      5,
+      -1
+     ],
+     [
+      "CNOT",
+      7,
+      6
+     ],
+     [
+      "CNOT",
+      6,
+      3
+     ],
+     [
+      "CNOT",
+      5,
+      4
+     ],
+     [
+      "CNOT",
+      4,
+      1
+     ],
+     [
+      "CNOT",
+      0,
+      3
+     ],
+     [
+      "H",
+      7,
+      -1
+     ],
+     [
+      "CNOT",
+      3,
+      4
+     ],
+     [
+      "CNOT",
+      0,
+      1
+     ],
+     [
+      "CNOT",
+      1,
+      2
+     ]
+    ],
+    "state_reward": 0.0,
+    "circuit_length": 15,
+    "wall_time_s": 3.4,
+    "verification": {
+     "n": 9,
+     "k": 1,
+     "distance_exact": 3,
+     "parameters_match": true,
+     "min_stabilizer_weight": 2,
+     "nontrivial": true,
+     "is_css": false,
+     "stabilizers": [
+      "+ZZIZZIIII",
+      "+IZZIIIIII",
+      "-YXXYXIZII",
+      "+IIIZZZIXI",
+      "+IXXIXXIII",
+      "+IIIIIIZXI",
+      "+IXXXIIXZX",
+      "+IIIIIIIXZ"
+     ],
+     "weight_enumerator_S": [
+      1,
+      0,
+      4,
+      0,
+      22,
+      0,
+      100,
+      0,
+      129,
+      0
+     ],
+     "weight_enumerator_N": [
+      1,
+      0,
+      4,
+      24,
+      22,
+      192,
+      100,
+      408,
+      129,
+      144
+     ],
+     "enumerators_match_reference": true
+    }
+   },
+   "attempts": [
+    {
+     "seed": 0,
+     "env_steps": 106496,
+     "episodes": 3333,
+     "updates": 26,
+     "wall_time_s": 3.4,
+     "successful_episodes": 15,
+     "first_success_env_steps": 38144,
+     "first_success_episodes": 1025,
+     "distinct_codes_verified": 13,
+     "distinct_codes_skipped": 0,
+     "enumerator_families": [
+      {
+       "S": [
+        1,
+        0,
+        2,
+        5,
+        8,
+        21,
+        54,
+        87,
+        63,
+        15
+       ],
+       "N": [
+        1,
+        0,
+        2,
+        20,
+        44,
+        108,
+        222,
+        300,
+        243,
+        84
+       ],
+       "count": 2
+      },
+      {
+       "S": [
+        1,
+        0,
+        5,
+        0,
+        23,
+        0,
+        95,
+        0,
+        132,
+        0
+       ],
+       "N": [
+        1,
+        0,
+        5,
+        27,
+        23,
+        195,
+        95,
+        393,
+        132,
+        153
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        2,
+        2,
+        12,
+        26,
+        46,
+        86,
+        67,
+        14
+       ],
+       "N": [
+        1,
+        0,
+        2,
+        18,
+        36,
+        122,
+        238,
+        278,
+        235,
+        94
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        1,
+        2,
+        9,
+        28,
+        55,
+        82,
+        62,
+        16
+       ],
+       "N": [
+        1,
+        0,
+        1,
+        13,
+        39,
+        121,
+        235,
+        295,
+        236,
+        83
+       ],
+       "count": 2
+      },
+      {
+       "S": [
+        1,
+        0,
+        1,
+        3,
+        9,
+        25,
+        55,
+        85,
+        62,
+        15
+       ],
+       "N": [
+        1,
+        0,
+        1,
+        15,
+        39,
+        115,
+        235,
+        301,
+        236,
+        81
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        5,
+        4,
+        11,
+        24,
+        39,
+        84,
+        72,
+        16
+       ],
+       "N": [
+        1,
+        0,
+        5,
+        27,
+        47,
+        123,
+        207,
+        249,
+        252,
+        113
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        1,
+        4,
+        5,
+        26,
+        63,
+        80,
+        58,
+        18
+       ],
+       "N": [
+        1,
+        0,
+        1,
+        13,
+        47,
+        113,
+        219,
+        311,
+        244,
+        75
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        2,
+        2,
+        14,
+        16,
+        58,
+        90,
+        53,
+        20
+       ],
+       "N": [
+        1,
+        0,
+        2,
+        16,
+        48,
+        100,
+        246,
+        296,
+        215,
+        100
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        1,
+        0,
+        19,
+        0,
+        115,
+        0,
+        120,
+        0
+       ],
+       "N": [
+        1,
+        0,
+        1,
+        15,
+        19,
+        183,
+        115,
+        453,
+        120,
+        117
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        0,
+        2,
+        10,
+        26,
+        56,
+        86,
+        61,
+        14
+       ],
+       "N": [
+        1,
+        0,
+        0,
+        12,
+        34,
+        116,
+        248,
+        308,
+        229,
+        76
+       ],
+       "count": 1
+      },
+      {
+       "S": [
+        1,
+        0,
+        4,
+        0,
+        22,
+        0,
+        100,
+        0,
+        129,
+        0
+       ],
+       "N": [
+        1,
+        0,
+        4,
+        24,
+        22,
+        192,
+        100,
+        408,
+        129,
+        144
+       ],
+       "count": 1
+      }
+     ],
+     "matched": true,
+     "first_nontrivial": {
+      "env_steps": 38144,
+      "episodes": 1025,
+      "update": 9,
+      "actions": [
+       5,
+       9,
+       31,
+       18,
+       5,
+       26,
+       13,
+       29,
+       6,
+       18,
+       15,
+       6,
+       27,
+       3,
+       9,
+       24,
+       17,
+       27,
+       19,
+       9,
+       12,
+       22,
+       23,
+       9,
+       21,
+       6,
+       29,
+       16,
+       22
+      ],
+      "gates": [
+       [
+        "H",
+        5,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        7,
+        8
+       ],
+       [
+        "CNOT",
+        5,
+        2
+       ],
+       [
+        "H",
+        5,
+        -1
+       ],
+       [
+        "CNOT",
+        7,
+        4
+       ],
+       [
+        "CNOT",
+        1,
+        2
+       ],
+       [
+        "CNOT",
+        6,
+        7
+       ],
+       [
+        "H",
+        6,
+        -1
+       ],
+       [
+        "CNOT",
+        5,
+        2
+       ],
+       [
+        "CNOT",
+        1,
+        4
+       ],
+       [
+        "H",
+        6,
+        -1
+       ],
+       [
+        "CNOT",
+        5,
+        8
+       ],
+       [
+        "H",
+        3,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        5,
+        4
+       ],
+       [
+        "CNOT",
+        2,
+        5
+       ],
+       [
+        "CNOT",
+        5,
+        8
+       ],
+       [
+        "CNOT",
+        3,
+        4
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        3,
+        0
+       ],
+       [
+        "CNOT",
+        6,
+        3
+       ],
+       [
+        "CNOT",
+        4,
+        5
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        3,
+        6
+       ],
+       [
+        "H",
+        6,
+        -1
+       ],
+       [
+        "CNOT",
+        6,
+        7
+       ],
+       [
+        "CNOT",
+        4,
+        1
+       ],
+       [
+        "CNOT",
+        6,
+        3
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 29,
+      "wall_time_s": 1.311,
+      "verification": {
+       "n": 9,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 2,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "+IZIXZIXXI",
+        "-ZYXIXYIIX",
+        "+XIIXXXZII",
+        "+ZZZZZZIZI",
+        "-IIYIZYIIX",
+        "-IIIYIIYXI",
+        "-IIIYIIXYI",
+        "-IIZYIIXYZ"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        2,
+        5,
+        8,
+        21,
+        54,
+        87,
+        63,
+        15
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        2,
+        20,
+        44,
+        108,
+        222,
+        300,
+        243,
+        84
+       ],
+       "enumerators_match_reference": false
+      }
+     },
+     "result": {
+      "env_steps": 103680,
+      "episodes": 3329,
+      "update": 25,
+      "actions": [
+       7,
+       11,
+       0,
+       26,
+       31,
+       5,
+       30,
+       22,
+       24,
+       16,
+       11,
+       7,
+       19,
+       9,
+       13
+      ],
+      "gates": [
+       [
+        "H",
+        7,
+        -1
+       ],
+       [
+        "CNOT",
+        0,
+        3
+       ],
+       [
+        "H",
+        0,
+        -1
+       ],
+       [
+        "CNOT",
+        7,
+        4
+       ],
+       [
+        "CNOT",
+        7,
+        8
+       ],
+       [
+        "H",
+        5,
+        -1
+       ],
+       [
+        "CNOT",
+        7,
+        6
+       ],
+       [
+        "CNOT",
+        6,
+        3
+       ],
+       [
+        "CNOT",
+        5,
+        4
+       ],
+       [
+        "CNOT",
+        4,
+        1
+       ],
+       [
+        "CNOT",
+        0,
+        3
+       ],
+       [
+        "H",
+        7,
+        -1
+       ],
+       [
+        "CNOT",
+        3,
+        4
+       ],
+       [
+        "CNOT",
+        0,
+        1
+       ],
+       [
+        "CNOT",
+        1,
+        2
+       ]
+      ],
+      "state_reward": 0.0,
+      "circuit_length": 15,
+      "wall_time_s": 3.4,
+      "verification": {
+       "n": 9,
+       "k": 1,
+       "distance_exact": 3,
+       "parameters_match": true,
+       "min_stabilizer_weight": 2,
+       "nontrivial": true,
+       "is_css": false,
+       "stabilizers": [
+        "+ZZIZZIIII",
+        "+IZZIIIIII",
+        "-YXXYXIZII",
+        "+IIIZZZIXI",
+        "+IXXIXXIII",
+        "+IIIIIIZXI",
+        "+IXXXIIXZX",
+        "+IIIIIIIXZ"
+       ],
+       "weight_enumerator_S": [
+        1,
+        0,
+        4,
+        0,
+        22,
+        0,
+        100,
+        0,
+        129,
+        0
+       ],
+       "weight_enumerator_N": [
+        1,
+        0,
+        4,
+        24,
+        22,
+        192,
+        100,
+        408,
+        129,
+        144
+       ],
+       "enumerators_match_reference": true
+      }
+     },
+     "final_success_rate": 0.6,
+     "history": [
+      {
+       "update": 1,
+       "env_steps": 4096,
+       "episodes": 0,
+       "mean_reward": -0.3076436519622803,
+       "success_rate": 0.0,
+       "wall_time_s": 0.13,
+       "policy_loss": -0.01412,
+       "value_loss": 0.31114,
+       "entropy": 3.46041,
+       "approx_kl": 0.00666,
+       "clip_frac": 0.09662
+      },
+      {
+       "update": 2,
+       "env_steps": 8192,
+       "episodes": 256,
+       "mean_reward": -0.21404039859771729,
+       "success_rate": 0.0,
+       "wall_time_s": 0.27,
+       "policy_loss": -0.01042,
+       "value_loss": 0.19738,
+       "entropy": 3.45209,
+       "approx_kl": 0.00468,
+       "clip_frac": 0.03931
+      },
+      {
+       "update": 3,
+       "env_steps": 12288,
+       "episodes": 256,
+       "mean_reward": -0.29121944308280945,
+       "success_rate": 0.0,
+       "wall_time_s": 0.4,
+       "policy_loss": -0.00753,
+       "value_loss": 0.22706,
+       "entropy": 3.43504,
+       "approx_kl": 0.00512,
+       "clip_frac": 0.05164
+      },
+      {
+       "update": 4,
+       "env_steps": 16384,
+       "episodes": 512,
+       "mean_reward": -0.2296396642923355,
+       "success_rate": 0.0,
+       "wall_time_s": 0.53,
+       "policy_loss": -0.015,
+       "value_loss": 0.13642,
+       "entropy": 3.4352,
+       "approx_kl": 0.00618,
+       "clip_frac": 0.08508
+      },
+      {
+       "update": 5,
+       "env_steps": 20480,
+       "episodes": 512,
+       "mean_reward": -0.2622279226779938,
+       "success_rate": 0.0,
+       "wall_time_s": 0.66,
+       "policy_loss": -0.01063,
+       "value_loss": 0.1818,
+       "entropy": 3.41506,
+       "approx_kl": 0.0037,
+       "clip_frac": 0.0589
+      },
+      {
+       "update": 6,
+       "env_steps": 24576,
+       "episodes": 768,
+       "mean_reward": -0.23085618019104004,
+       "success_rate": 0.0,
+       "wall_time_s": 0.79,
+       "policy_loss": -0.01669,
+       "value_loss": 0.14024,
+       "entropy": 3.39552,
+       "approx_kl": 0.00502,
+       "clip_frac": 0.0976
+      },
+      {
+       "update": 7,
+       "env_steps": 28672,
+       "episodes": 768,
+       "mean_reward": -0.23888710141181946,
+       "success_rate": 0.0,
+       "wall_time_s": 0.92,
+       "policy_loss": -0.01315,
+       "value_loss": 0.19278,
+       "entropy": 3.40157,
+       "approx_kl": 0.00576,
+       "clip_frac": 0.06036
+      },
+      {
+       "update": 8,
+       "env_steps": 32768,
+       "episodes": 1024,
+       "mean_reward": -0.23966820538043976,
+       "success_rate": 0.0,
+       "wall_time_s": 1.05,
+       "policy_loss": -0.02051,
+       "value_loss": 0.12821,
+       "entropy": 3.36202,
+       "approx_kl": 0.0082,
+       "clip_frac": 0.11011
+      },
+      {
+       "update": 9,
+       "env_steps": 36864,
+       "episodes": 1024,
+       "mean_reward": -0.210406094789505,
+       "success_rate": 0.0,
+       "wall_time_s": 1.18,
+       "policy_loss": -0.01842,
+       "value_loss": 0.15264,
+       "entropy": 3.38342,
+       "approx_kl": 0.00629,
+       "clip_frac": 0.06354
+      },
+      {
+       "update": 10,
+       "env_steps": 40960,
+       "episodes": 1280,
+       "mean_reward": -0.2450573742389679,
+       "success_rate": 0.00390625,
+       "wall_time_s": 1.31,
+       "policy_loss": -0.01759,
+       "value_loss": 0.15466,
+       "entropy": 3.33941,
+       "approx_kl": 0.00477,
+       "clip_frac": 0.07434
+      },
+      {
+       "update": 11,
+       "env_steps": 45056,
+       "episodes": 1280,
+       "mean_reward": -0.190011665225029,
+       "success_rate": 0.0,
+       "wall_time_s": 1.44,
+       "policy_loss": -0.01689,
+       "value_loss": 0.16905,
+       "entropy": 3.38379,
+       "approx_kl": 0.00441,
+       "clip_frac": 0.04846
+      },
+      {
+       "update": 12,
+       "env_steps": 49152,
+       "episodes": 1536,
+       "mean_reward": -0.2476462423801422,
+       "success_rate": 0.0,
+       "wall_time_s": 1.57,
+       "policy_loss": -0.02015,
+       "value_loss": 0.16444,
+       "entropy": 3.30203,
+       "approx_kl": 0.00719,
+       "clip_frac": 0.112
+      },
+      {
+       "update": 13,
+       "env_steps": 53248,
+       "episodes": 1536,
+       "mean_reward": -0.15114182233810425,
+       "success_rate": 0.0,
+       "wall_time_s": 1.7,
+       "policy_loss": -0.0203,
+       "value_loss": 0.12945,
+       "entropy": 3.35851,
+       "approx_kl": 0.00522,
+       "clip_frac": 0.05768
+      },
+      {
+       "update": 14,
+       "env_steps": 57344,
+       "episodes": 1792,
+       "mean_reward": -0.24600473046302795,
+       "success_rate": 0.0,
+       "wall_time_s": 1.83,
+       "policy_loss": -0.02627,
+       "value_loss": 0.14912,
+       "entropy": 3.22901,
+       "approx_kl": 0.01029,
+       "clip_frac": 0.13354
+      },
+      {
+       "update": 15,
+       "env_steps": 61440,
+       "episodes": 2048,
+       "mean_reward": -0.12864680588245392,
+       "success_rate": 0.00390625,
+       "wall_time_s": 1.96,
+       "policy_loss": -0.02414,
+       "value_loss": 0.10003,
+       "entropy": 3.32518,
+       "approx_kl": 0.00789,
+       "clip_frac": 0.0672
+      },
+      {
+       "update": 16,
+       "env_steps": 65536,
+       "episodes": 2048,
+       "mean_reward": -0.23772132396697998,
+       "success_rate": 0.0,
+       "wall_time_s": 2.09,
+       "policy_loss": -0.02443,
+       "value_loss": 0.13874,
+       "entropy": 3.14962,
+       "approx_kl": 0.01068,
+       "clip_frac": 0.12366
+      },
+      {
+       "update": 17,
+       "env_steps": 69632,
+       "episodes": 2304,
+       "mean_reward": -0.13139286637306213,
+       "success_rate": 0.0078125,
+       "wall_time_s": 2.22,
+       "policy_loss": -0.02873,
+       "value_loss": 0.07018,
+       "entropy": 3.19844,
+       "approx_kl": 0.00873,
+       "clip_frac": 0.1214
+      },
+      {
+       "update": 18,
+       "env_steps": 73728,
+       "episodes": 2304,
+       "mean_reward": -0.18711188435554504,
+       "success_rate": 0.0,
+       "wall_time_s": 2.35,
+       "policy_loss": -0.02821,
+       "value_loss": 0.10523,
+       "entropy": 3.10938,
+       "approx_kl": 0.00783,
+       "clip_frac": 0.133
+      },
+      {
+       "update": 19,
+       "env_steps": 77824,
+       "episodes": 2560,
+       "mean_reward": -0.13968808948993683,
+       "success_rate": 0.00390625,
+       "wall_time_s": 2.49,
+       "policy_loss": -0.03367,
+       "value_loss": 0.05174,
+       "entropy": 3.06155,
+       "approx_kl": 0.01335,
+       "clip_frac": 0.15918
+      },
+      {
+       "update": 20,
+       "env_steps": 81920,
+       "episodes": 2560,
+       "mean_reward": -0.14308379590511322,
+       "success_rate": 0.0,
+       "wall_time_s": 2.61,
+       "policy_loss": -0.02735,
+       "value_loss": 0.07691,
+       "entropy": 3.0625,
+       "approx_kl": 0.01264,
+       "clip_frac": 0.13782
+      },
+      {
+       "update": 21,
+       "env_steps": 86016,
+       "episodes": 2816,
+       "mean_reward": -0.14640577137470245,
+       "success_rate": 0.0078125,
+       "wall_time_s": 2.75,
+       "policy_loss": -0.03268,
+       "value_loss": 0.04776,
+       "entropy": 2.92431,
+       "approx_kl": 0.01013,
+       "clip_frac": 0.17419
+      },
+      {
+       "update": 22,
+       "env_steps": 90112,
+       "episodes": 2816,
+       "mean_reward": -0.09987090528011322,
+       "success_rate": 0.0,
+       "wall_time_s": 2.88,
+       "policy_loss": -0.02703,
+       "value_loss": 0.06155,
+       "entropy": 3.0194,
+       "approx_kl": 0.01113,
+       "clip_frac": 0.12592
+      },
+      {
+       "update": 23,
+       "env_steps": 94208,
+       "episodes": 3072,
+       "mean_reward": -0.14488737285137177,
+       "success_rate": 0.00390625,
+       "wall_time_s": 3.01,
+       "policy_loss": -0.03016,
+       "value_loss": 0.04382,
+       "entropy": 2.79456,
+       "approx_kl": 0.01101,
+       "clip_frac": 0.18536
+      },
+      {
+       "update": 24,
+       "env_steps": 98304,
+       "episodes": 3072,
+       "mean_reward": -0.07564324885606766,
+       "success_rate": 0.0,
+       "wall_time_s": 3.14,
+       "policy_loss": -0.02737,
+       "value_loss": 0.04305,
+       "entropy": 3.0048,
+       "approx_kl": 0.00714,
+       "clip_frac": 0.09637
+      },
+      {
+       "update": 25,
+       "env_steps": 102400,
+       "episodes": 3328,
+       "mean_reward": -0.14591263234615326,
+       "success_rate": 0.015625,
+       "wall_time_s": 3.27,
+       "policy_loss": -0.0288,
+       "value_loss": 0.04322,
+       "entropy": 2.68483,
+       "approx_kl": 0.01529,
+       "clip_frac": 0.18976
+      },
+      {
+       "update": 26,
+       "env_steps": 106496,
+       "episodes": 3333,
+       "mean_reward": -0.057897500693798065,
+       "success_rate": 0.6,
+       "wall_time_s": 3.4,
+       "policy_loss": -0.02676,
+       "value_loss": 0.03741,
+       "entropy": 3.02891,
+       "approx_kl": 0.00968,
+       "clip_frac": 0.11719
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

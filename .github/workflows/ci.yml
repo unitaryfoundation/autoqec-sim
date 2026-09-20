@@ -1,0 +1,81 @@
+name: CI
+
+# noise_model is resolved from a sibling checkout of ORG/noise-model (the
+# path source in pyproject.toml), so both repositories are checked out side
+# by side and every step runs in autoqec-sim/.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+defaults:
+  run:
+    working-directory: autoqec-sim
+
+jobs:
+  test:
+    name: py${{ matrix.python }} / ${{ matrix.os }} (no rl)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: autoqec-sim
+      - uses: actions/checkout@v4
+        with:
+          repository: ORG/noise-model
+          ref: v0.2.0
+          path: noise-model
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run ruff check
+      - run: uv run pytest -rs
+
+  test-rl:
+    # CPU torch from the pytorch-cpu index ([[tool.uv.index]] in pyproject).
+    name: py3.12 / ubuntu (rl extra)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: autoqec-sim
+      - uses: actions/checkout@v4
+        with:
+          repository: ORG/noise-model
+          ref: v0.2.0
+          path: noise-model
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --group dev --extra rl
+      - run: uv run pytest
+
+  build:
+    name: build sdist and wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: autoqec-sim
+      - uses: actions/checkout@v4
+        with:
+          repository: ORG/noise-model
+          ref: v0.2.0
+          path: noise-model
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv build
+      - run: uv run --isolated --no-project --with ../noise-model --with dist/*.whl python -c "import autoqec_sim; print(autoqec_sim.__version__)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: autoqec-sim/dist/
