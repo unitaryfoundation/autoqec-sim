@@ -412,6 +412,13 @@ scripts/reproduce.sh     fresh venv, tests, both reduced regressions
 docs/reproduce.md        commands and expected outputs for both regressions
 ```
 
+## Funding
+
+This material is based upon work supported by the U.S. Department of
+Energy, Office of Science, Office of Advanced Scientific Computing
+Research, as part of the Genesis Mission National Science and Technology
+Challenges under Award Number DE-SC0025336.
+
 ## Citation and license
 
 Versions are in CHANGELOG.md. To cite the package use CITATION.cff (the
