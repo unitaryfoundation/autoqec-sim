@@ -284,3 +284,36 @@ this is the bit-packed popcount kernel with parity and both tests fused,
 which removes the GEMM and the intermediate entirely, and a fused
 per-element gate kernel that avoids the per-gate-type `nonzero`
 synchronizations.
+
+## Fused CUDA kernels
+
+`autoqec_sim.backends.cuda_kernels` holds the two kernels the list above
+names, written as plain CUDA and compiled at first use through CuPy's NVRTC
+path (no nvcc, no toolkit beyond the driver):
+
+- `apply_actions`: one launch applies a per-element gate (any of the nine
+  gates, per-element qubit indices) to every row of every selected tableau.
+- `parity_codes`: bit-packed popcount symplectic products of the error set
+  against the code rows, reduced in the kernel to detected, undetected, or
+  in-stabilizer per (element, error).
+
+They are opt-in: `AUTOQEC_CUDA_KERNELS=1` or `cuda_kernels.enable()`. The
+torch backend's agreement tests pass with them on, and
+`tests/test_cuda_kernels.py` compares them with the torch path directly.
+Measured on one NVIDIA A100-SXM4-80GB (torch 2.8.0+cu129, `scripts/bench_cuda_kernels.py`,
+`docs/data/bench_cuda_kernels_a100.json`):
+
+| n | batch | errors | gate step, torch path | gate step, kernel | undetected mask, torch path | undetected mask, kernel |
+|---|---|---|---|---|---|---|
+| 5 | 1024 | 105 | 2415 us | 491 us (4.9x) | 0.24 ms | 0.39 ms (0.6x) |
+| 9 | 1024 | 351 | 2454 us | 483 us (5.1x) | 0.25 ms | 0.38 ms (0.7x) |
+| 16 | 1024 | 1,128 | 2435 us | 486 us (5.0x) | 0.90 ms | 0.38 ms (2.4x) |
+| 16 | 4096 | 1,128 | 2437 us | 485 us (5.0x) | 3.49 ms | 0.41 ms (8.5x) |
+| 25 | 1024 | 2,775 | 2414 us | 503 us (4.8x) | 3.18 ms | 0.40 ms (8.0x) |
+| 25 | 1024 | 64,875 | 2566 us | 485 us (5.3x) | 72.33 ms | 5.59 ms (12.9x) |
+
+The gate kernel is about five times the torch path at every size, since it
+replaces a per-gate-type gather and scatter with one launch. The parity
+kernel loses at a few hundred errors, where both paths are launch-bound, and
+wins by 8 to 13 times once the error set has thousands of rows, which is the
+regime of the Knill-Laflamme reward on 16 to 25 qubits.

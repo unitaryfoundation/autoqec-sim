@@ -44,6 +44,7 @@ import torch
 from ..errors import ErrorSet, paulis_of_weight, paulis_up_to_weight
 from ..tableau import GATES
 from ..tableau import ActionTable as NumpyActionTable
+from . import cuda_kernels
 
 _TWO_QUBIT_NAMES = ("CNOT", "CZ", "SWAP")
 
@@ -212,6 +213,7 @@ class ActionTable:
         self.gate_id = torch.as_tensor(base.gate_id, device=self.device)
         self.q1 = torch.as_tensor(base.q1, dtype=torch.long, device=self.device)
         self.q2 = torch.as_tensor(base.q2, dtype=torch.long, device=self.device)
+        self.codes = torch.as_tensor([cuda_kernels.GATE_CODES[g] for g in self.gate_names], dtype=torch.int32, device=self.device)
 
     def __len__(self):
         return len(self.entries)
@@ -225,6 +227,12 @@ class ActionTable:
             return
         gid = torch.full(actions.shape, -1, dtype=torch.long, device=tab.device)
         gid[active] = self.gate_id[actions[active]]
+        if cuda_kernels.active(tab):
+            codes = torch.full(actions.shape, -1, dtype=torch.int32, device=tab.device)
+            codes[active] = self.codes[gid[active]]
+            acts = actions.clamp(min=0)
+            cuda_kernels.apply_actions(tab, torch.arange(actions.shape[0], device=tab.device), codes, self.q1[acts], self.q2[acts])
+            return
         for g_idx, gate in enumerate(self.gate_names):
             sel = torch.nonzero(gid == g_idx, as_tuple=True)[0]
             if sel.numel() == 0:
@@ -287,6 +295,9 @@ def undetected_mask(tab: torch.Tensor, k: int, errors, chunk: int = 1 << 16) -> 
     ``(batch, min(M, chunk), n + k)`` block.
     """
     n = num_qubits(tab)
+    if cuda_kernels.active(tab):
+        e = torch.as_tensor(errors, device=tab.device).to(torch.uint8)
+        return cuda_kernels.parity_codes(swap_halves(code_rows(tab, k)), e, n - k) == 1
     rows_t = _rows32_swapped(tab, k)  # (B, 2n, n+k)
     e32 = _errors32(errors, tab.device)  # (M, 2n)
     w = _score_weights(n, k, tab.device)
@@ -304,6 +315,9 @@ def undetected_mask(tab: torch.Tensor, k: int, errors, chunk: int = 1 << 16) -> 
 def in_stabilizer_mask(tab: torch.Tensor, k: int, paulis, chunk: int = 1 << 16) -> torch.Tensor:
     """``(batch, M)`` bool: which Paulis lie in the stabilizer group."""
     n = num_qubits(tab)
+    if cuda_kernels.active(tab):
+        e = torch.as_tensor(paulis, device=tab.device).to(torch.uint8)
+        return cuda_kernels.parity_codes(swap_halves(code_rows(tab, k)), e, n - k) == 2
     rows_t = _rows32_swapped(tab, k)
     e32 = _errors32(paulis, tab.device)
     w = torch.ones(n + k, dtype=torch.float32, device=tab.device)

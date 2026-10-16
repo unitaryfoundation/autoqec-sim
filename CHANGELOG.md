@@ -2,6 +2,10 @@
 
 ## 0.2.0 (TBD)
 
+- `backends.cuda_kernels`: two opt-in fused CUDA kernels (CuPy, NVRTC) behind
+  the torch backend, a per-element gate kernel and a bit-packed popcount
+  parity kernel; agreement tests against the torch path; benchmark script
+  and A100 numbers in `docs/gpu.md`.
 First tagged release. Three additions on top of 0.1.0: the noise module
 in the circuit-level reward, an LDPC sparsity constraint, and a PPO
 agent with its own rediscovery regression.

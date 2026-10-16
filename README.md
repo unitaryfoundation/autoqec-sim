@@ -93,9 +93,10 @@ regressions are in `docs/reproduce.md`.
 ## GPU
 
 The numpy engine is the reference. `backends.torch_backend` runs the same
-kernels and rewards on CUDA with agreement tests against numpy; `docs/gpu.md`
-has the measurements and the two kernels that remain to be written as
-fused CUDA code.
+kernels and rewards on CUDA with agreement tests against numpy, and
+`backends.cuda_kernels` adds two opt-in fused CUDA kernels for the gate
+updates and the parity masks, five times and up to thirteen times the torch
+path on an A100. `docs/gpu.md` has the measurements.
 
 ## Documentation
 
