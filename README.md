@@ -120,11 +120,25 @@ The reward and training setup follow Olle et al.,
 See [CONTRIBUTING.md](CONTRIBUTING.md). Participation is governed by the
 [code of conduct](CODE_OF_CONDUCT.md).
 
+## AI Acknowledgement
+
+Generative AI tools were used in parts of the software development and
+writing for this project: code generation and review, implementation
+analysis, and documentation editing. Design, validation, and release
+decisions were made by the human author.
+
 ## Funding
 
-This work was supported by the U.S. Department of Energy, Office of Science,
-Office of Advanced Scientific Computing Research, Genesis Mission, under
-award DE-SC0025336.
+This material is based upon work supported by the U.S. Department of
+Energy, Office of Science, Office of Advanced Scientific Computing
+Research, as part of the Genesis Mission National Science and Technology
+Challenges under Award Number DE-SC0025336. This material is also based
+upon work supported by the U.S. Department of Energy, Office of Science,
+National Quantum Information Science Research Centers, Quantum Science
+Center. This research used resources of the National Energy Research
+Scientific Computing Center, a DOE Office of Science User Facility
+supported by the Office of Science of the U.S. Department of Energy under
+Contract No. DE-AC02-05CH11231 using NERSC award ALCC-ERCAP0040673.
 
 ## License
 
