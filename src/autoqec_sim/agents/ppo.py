@@ -108,9 +108,23 @@ def set_threads(max_threads: int = 6) -> int:
 # environment adapter
 # ----------------------------------------------------------------------
 def graph_action_mask(table: ActionTable, graph: Graph) -> np.ndarray:
-    """Boolean ``(num_actions,)`` mask, true where the action is allowed on
-    ``graph``: every single-qubit gate on a qubit of the graph, every
-    two-qubit gate whose pair is an edge (either orientation)."""
+    """Boolean mask over the action table, true where the action is allowed on
+    ``graph``.
+
+    Parameters
+    ----------
+    table
+        :class:`autoqec_sim.tableau.ActionTable` of the environment.
+    graph
+        Connectivity graph; every single-qubit gate on a qubit of the graph and
+        every two-qubit gate whose pair is an edge (either orientation) is
+        allowed.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(num_actions,)``, bool.
+    """
     allowed = {(min(a, b), max(a, b)) for a, b in graph.edges}
     mask = np.zeros(len(table), dtype=bool)
     for i, (g, a, b) in enumerate(table.entries):
@@ -298,16 +312,23 @@ class PPOAgent:
     """PPO over a :class:`CodeDiscoveryEnv` with ``auto_reset`` semantics.
 
     The environment is switched to ``auto_reset = True`` and dense reward;
-    the episode ends when the state reward reaches
-    ``env.success_threshold`` (a code satisfying every term of the reward)
-    or after ``env.max_steps`` gates. Truncated episodes are treated as
-    terminal for the value bootstrap.
+    the episode ends when the state reward reaches ``env.success_threshold``
+    (a code satisfying every term of the reward) or after ``env.max_steps``
+    gates. Truncated episodes are treated as terminal for the value bootstrap.
 
-    ``device`` (default ``"cpu"``) is the torch device of the network and
-    of the update: observations, masks, and rollout buffers are copied to
-    it, actions and values copied back. The environment and its reward
-    stay numpy on the host either way. On ``"cpu"`` every copy is a no-op
-    and the trajectory is the one of the version without the argument.
+    Parameters
+    ----------
+    env
+        Environment to train on.
+    config
+        :class:`PPOConfig` (default values when ``None``).
+    seed
+        Seed of the torch and numpy generators.
+    device
+        Torch device of the network and the update (default ``"cpu"``).
+        Observations, masks, and rollout buffers are copied to it, actions and
+        values copied back; the environment and its reward stay numpy on the
+        host. On ``"cpu"`` every copy is a no-op.
     """
 
     def __init__(self, env: CodeDiscoveryEnv, config: PPOConfig | None = None, seed: int = 0, device=None):

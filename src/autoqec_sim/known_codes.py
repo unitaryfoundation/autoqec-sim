@@ -51,12 +51,24 @@ FOUR_TWO_TWO = ["XXXX", "ZZZZ"]
 
 
 def rotated_surface(d: int) -> list[str]:
-    """Rotated surface code ``[[d^2, 1, d]]`` on a ``d x d`` grid, row-major
-    indices. Plaquette ``(r, c)`` covers ``{(r, c), (r, c+1), (r+1, c),
-    (r+1, c+1)}`` and is X-type iff ``r + c`` is even; the weight-2
-    boundary checks have the type opposite to the adjacent plaquette.
-    ``d = 3`` reproduces ``ROTATED_SURFACE_9`` up to the order of the
-    generators."""
+    """Rotated surface code ``[[d^2, 1, d]]`` on a ``d x d`` grid.
+
+    Parameters
+    ----------
+    d
+        Distance; qubit indices are row-major.
+
+    Returns
+    -------
+    StabilizerCode
+
+    Notes
+    -----
+    Plaquette ``(r, c)`` covers ``{(r, c), (r, c+1), (r+1, c), (r+1, c+1)}``
+    and is X-type iff ``r + c`` is even; the weight-2 boundary checks have
+    the type opposite to the adjacent plaquette. ``d = 3`` reproduces
+    ``ROTATED_SURFACE_9`` up to the order of the generators.
+    """
     n = d * d
     idx = lambda r, c: r * d + c  # noqa: E731
 

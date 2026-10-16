@@ -526,15 +526,34 @@ def build_memory_circuit(
 ) -> MemoryCircuit:
     """The memory circuit of ``code`` (see the module docstring).
 
-    ``rounds >= 1`` noisy rounds; ``basis`` ``"Z"`` or ``"X"`` selects the
-    logical operators read out; ``connectivity`` is ``"all_to_all"``,
-    ``"square:RxC"``, or a :class:`Layout`; ``flags`` is ``"none"`` or
-    ``"one"``; ``order`` is ``"hook"`` (hook-aware order per generator,
-    :func:`hook_orders`, at ``hook_target``, default the code's exact
-    distance), ``"sorted"`` (support by qubit index), or ``"random"`` (per
-    generator, from ``seed``). ``orders`` overrides the per-generator
-    orders (``[(qubit, letter), ...]`` per generator, as :func:`hook_orders`
-    returns them).
+    Parameters
+    ----------
+    code
+        Stabilizer code.
+    rounds
+        Noisy rounds, at least 1.
+    basis
+        ``"Z"`` or ``"X"``: the logical operators read out.
+    connectivity
+        ``"all_to_all"``, ``"square:RxC"``, or a :class:`Layout`.
+    flags
+        ``"none"`` or ``"one"``.
+    order
+        ``"hook"`` (hook-aware order per generator, :func:`hook_orders`, at
+        ``hook_target``, default the code's exact distance), ``"sorted"``
+        (support by qubit index), or ``"random"`` (per generator, from
+        ``seed``).
+    seed
+        Seed of the random orders.
+    hook_target
+        Target distance of the hook-aware order.
+    orders
+        Overrides the per-generator orders (``[(qubit, letter), ...]`` per
+        generator, as :func:`hook_orders` returns them).
+
+    Returns
+    -------
+    MemoryCircuit
     """
     if basis not in BASES:
         raise ValueError("basis must be Z or X")
@@ -808,17 +827,31 @@ def _ml_failure_from_sets(sid: np.ndarray, obs: np.ndarray, weight: np.ndarray) 
 
 def pfail_low_weight(sig: Signature, max_weight: int = 2, max_triples: int = 2_000_000, exclusive: bool = False) -> float:
     """Leading-order failure probability of the maximum-likelihood decoder
-    restricted to fault sets of weight at most ``max_weight`` (2, or 3 when
-    the number of triples is at most ``max_triples``). Sets are grouped by
-    syndrome, the decoder picks the observable pattern of largest summed
-    weight per syndrome, and the rest fails. A set is weighted by
-    ``prod_{i in set} p_i`` (the low-``p`` asymptote, which does not damp a
-    noisier circuit by the probability that nothing else happened); with
-    ``exclusive`` the weight is the exact probability of that set alone,
-    ``prod p_i prod_{j not in set} (1 - p_j)``. The leading term of the
-    failure rate of a code whose circuit-level distance is at most
-    ``2 max_weight``; meaningful while the expected number of faults per
-    shot (``sig.probs.sum()``) is below about one."""
+    restricted to fault sets of weight at most ``max_weight``.
+
+    Sets are grouped by syndrome, the decoder picks the observable pattern of
+    largest summed weight per syndrome, and the rest fails. This is the
+    leading term of the failure rate of a code whose circuit-level distance
+    is at most ``2 max_weight``, meaningful while the expected number of
+    faults per shot (``sig.probs.sum()``) is below about one.
+
+    Parameters
+    ----------
+    sig
+        :class:`Signature` of the detector error model.
+    max_weight
+        2, or 3 when the number of triples is at most ``max_triples``.
+    max_triples
+        Cap on the weight-3 enumeration.
+    exclusive
+        Weight a set by the exact probability of that set alone,
+        ``prod p_i prod_{j not in set} (1 - p_j)``, instead of the low-``p``
+        asymptote ``prod_{i in set} p_i``.
+
+    Returns
+    -------
+    float
+    """
     m = len(sig)
     if m == 0:
         return 0.0
@@ -923,13 +956,25 @@ def _cross_hits(dA, bA, pA, idxA, dB, bB, pB, idxB, weight):
 
 
 def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
-    """Exact circuit-level distance of a DEM up to ``wmax`` (4 or 5): the
-    smallest number of mechanisms whose combined effect flips no detector
-    and some observable, with the number of such minimum-weight sets, their
-    summed probability product, and one witness (mechanism indices).
-    ``d_circ`` is ``None`` when no such set of weight ``<= wmax`` exists.
-    Ported from ``ion-search/lib.py``; detector signatures wider than 64
-    bits are mapped to integer ids first."""
+    """Exact circuit-level distance of a DEM up to ``wmax``.
+
+    Parameters
+    ----------
+    sig
+        :class:`Signature` of the detector error model; detector signatures
+        wider than 64 bits are mapped to integer ids first.
+    wmax
+        Largest fault-set weight searched, 4 or 5.
+
+    Returns
+    -------
+    dict
+        ``d_circ`` (the smallest number of mechanisms whose combined effect
+        flips no detector and some observable, ``None`` when no such set of
+        weight ``<= wmax`` exists), ``count`` of such minimum-weight sets,
+        ``mass`` (their summed probability product), and ``witness`` (one set
+        as mechanism indices).
+    """
     m = len(sig)
     det1 = sig.det
     obs = sig.obs
@@ -1104,12 +1149,35 @@ def sample_failures(
     min_failures: int = 0,
     max_shots: int | None = None,
 ) -> dict:
-    """Monte Carlo logical failures of ``dem`` under ``decoder``
-    (``"lookup"`` or ``"bposd"``). Distinct syndromes are decoded once (both
-    decoders are deterministic functions of the syndrome). Shots grow in
-    doublings until ``min_failures`` failures or ``max_shots``. Returns
-    ``failures``, ``shots``, ``p_fail``, ``distinct_syndromes``,
-    ``fallbacks`` (lookup only), ``seconds``."""
+    """Monte Carlo logical failures of ``dem`` under ``decoder``.
+
+    Distinct syndromes are decoded once (both decoders are deterministic
+    functions of the syndrome). Shots grow in doublings until
+    ``min_failures`` failures or ``max_shots``.
+
+    Parameters
+    ----------
+    dem
+        Detector error model sampled.
+    sig
+        Its :class:`Signature`.
+    decoder
+        ``"lookup"`` or ``"bposd"``.
+    shots
+        Initial number of shots.
+    seed
+        Sampler seed.
+    min_failures
+        Stop once this many failures are seen (``0``: a single pass).
+    max_shots
+        Cap on the doublings.
+
+    Returns
+    -------
+    dict
+        ``failures``, ``shots``, ``p_fail``, ``distinct_syndromes``,
+        ``fallbacks`` (lookup only), ``seconds``.
+    """
     t0 = time.perf_counter()
     sampler = dem.compile_sampler(seed=seed)
     if decoder == "lookup":
@@ -1368,9 +1436,26 @@ class MemoryObjective:
 # environment reward
 # --------------------------------------------------------------------------
 class MemoryReward:
-    """Environment reward with the memory term (module docstring). Use as
-    ``CodeDiscoveryEnv(reward_fn=r)``; the environment adopts ``r.success_fn``
-    unless a ``success_fn`` is given explicitly."""
+    """Environment reward with the memory term (module docstring).
+
+    Use as ``CodeDiscoveryEnv(reward_fn=r)``; the environment adopts
+    ``r.success_fn`` unless a ``success_fn`` is given explicitly.
+
+    Parameters
+    ----------
+    objective
+        :class:`MemoryObjective` that scores a terminal code.
+    target_distance
+        Distance a state must reach before the memory term is added.
+    weight
+        Multiplier of the memory term ``log10(p_ref / p_round)``.
+    p_ref
+        Reference per-round failure probability (term zero at ``p_ref``).
+    clip
+        Bound on the log ratio before weighting.
+    p_floor
+        Lower bound on ``p_round`` inside the logarithm.
+    """
 
     def __init__(
         self,

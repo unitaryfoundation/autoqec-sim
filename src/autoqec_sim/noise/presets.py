@@ -102,20 +102,47 @@ HERON_GRAPH = heavy_hex(4, 4)
 
 
 def forte(timing="parallel", graph: Graph | None = None) -> Profile:
+    """IonQ Forte profile (arXiv:2308.05071; ``SPEC.md``).
+
+    Parameters
+    ----------
+    timing
+        Timing model name (``"parallel"`` or ``"sequential"``).
+    graph
+        Connectivity graph; ``None`` for all-to-all.
+    """
     return Profile("forte-2308.05071", FORTE, Timing.from_name(timing), graph,
                    source="IonQ Forte, arXiv:2308.05071; SPEC.md")
 
 
 def chain(timing="sequential", graph: Graph | None = None) -> Profile:
-    """The chain set. Its device runs gates strictly sequentially
-    (arXiv:2606.06455 Appendix C), so the default timing is sequential."""
+    """The chain set (arXiv:2606.06455, Table V; ``SPEC.md``). Its device runs
+    gates strictly sequentially, so the default timing is sequential.
+
+    Parameters
+    ----------
+    timing
+        Timing model name.
+    graph
+        Connectivity graph; ``None`` for all-to-all.
+    """
     return Profile("chain-2606.06455", CHAIN, Timing.from_name(timing), graph,
                    source="arXiv:2606.06455 Table V; SPEC.md")
 
 
 def board(p: float = BOARD_P_REF) -> Profile:
-    """The qldpc-challenge canonical recipe at rate p (scale multiplies p).
-    `apply` needs n_data for this profile."""
+    """The qldpc-challenge canonical recipe.
+
+    Parameters
+    ----------
+    p
+        Error rate of the recipe (the profile's scale multiplies it).
+
+    Notes
+    -----
+    :func:`autoqec_sim.noise.apply.apply` needs ``n_data`` for this profile,
+    since its idle channel acts on data qubits only.
+    """
     params = BOARD if p == BOARD_P_REF else BOARD.replace(
         p2=p, p_reset=p, p_meas=p, idle=Idle(kind="slot", gate=p, meas=p, scope="data"))
     return Profile("board-rfc0001", params, PARALLEL, None,
@@ -123,15 +150,38 @@ def board(p: float = BOARD_P_REF) -> Profile:
 
 
 def heron(timing="parallel", graph: Graph | None = HERON_GRAPH) -> Profile:
+    """IBM Heron r2 profile (arXiv:2504.07258, arXiv:2510.18847, and the
+    ``ibm_fez`` calibration table).
+
+    Parameters
+    ----------
+    timing
+        Timing model name.
+    graph
+        Connectivity graph; default a 4 x 4 heavy-hex lattice large enough for
+        the one-round ``[[9,1,3]]`` circuits.
+    """
     return Profile("heron-r2", HERON, Timing.from_name(timing), graph,
                    source="arXiv:2504.07258, arXiv:2510.18847, IBM ibm_fez table")
 
 
 def depolarizing(p: float, timing="parallel", graph: Graph | None = None,
                  idle_scope: str = "all") -> Profile:
-    """Uniform depolarizing profile: p on every gate, reset, measurement
-    and idle qubit per layer, including single-qubit gates (unlike the
-    board recipe)."""
+    """Uniform depolarizing profile: ``p`` on every gate, reset, measurement, and
+    idle qubit per layer, including single-qubit gates (unlike the board
+    recipe).
+
+    Parameters
+    ----------
+    p
+        Error probability of every channel.
+    timing
+        Timing model name.
+    graph
+        Connectivity graph; ``None`` for all-to-all.
+    idle_scope
+        ``"all"`` or ``"data"``: which qubits take the idle channel.
+    """
     params = Params(p2=p, p1=p, p_reset=p, p_meas=p,
                     idle=Idle(kind="slot", gate=p, meas=p, scope=idle_scope),
                     notes="uniform depolarizing")
@@ -147,6 +197,16 @@ PRESETS = {
 
 
 def preset(name: str, **kw) -> Profile:
+    """Profile by preset name.
+
+    Parameters
+    ----------
+    name
+        One of ``PRESETS`` (``"forte-2308.05071"``, ``"chain-2606.06455"``,
+        ``"board-rfc0001"``, ``"heron-r2"``).
+    **kw
+        Passed to the preset constructor.
+    """
     if name not in PRESETS:
         raise ValueError(f"unknown preset {name!r}; choose from {sorted(PRESETS)}")
     return PRESETS[name](**kw)

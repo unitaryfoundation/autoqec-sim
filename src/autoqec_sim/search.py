@@ -45,7 +45,30 @@ class SearchResult:
 
 
 class EvolutionarySearch:
-    """Random search with evolutionary improvement over batched episodes."""
+    """Random search with evolutionary improvement over batched episodes.
+
+    Parameters
+    ----------
+    env
+        Environment whose action table and reward are searched.
+    seed
+        Generator seed.
+    length
+        Gate-sequence length (default and cap ``env.max_steps``).
+    elite_frac
+        Fraction of each generation kept unchanged.
+    random_frac
+        Fraction of each generation drawn fresh at random.
+    mutation_rate
+        Per-position probability of replacing an action.
+    crossover_prob
+        Probability of one-point crossover between tournament winners.
+    tournament
+        Tournament size of parent selection.
+    length_penalty
+        Fitness penalty per gate, which favors shorter sequences at equal
+        reward.
+    """
 
     def __init__(
         self,
@@ -186,7 +209,17 @@ class EvolutionarySearch:
 
 
 class RandomSearch(EvolutionarySearch):
-    """Pure random search: every generation is a fresh random population."""
+    """Pure random search: every generation is a fresh random population.
+
+    Parameters
+    ----------
+    env
+        Environment searched.
+    seed
+        Generator seed.
+    length
+        Gate-sequence length (default and cap ``env.max_steps``).
+    """
 
     def __init__(self, env: CodeDiscoveryEnv, seed: int = 0, length: int | None = None):
         super().__init__(env, seed=seed, length=length, elite_frac=0.0, random_frac=1.0)

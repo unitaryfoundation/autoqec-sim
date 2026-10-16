@@ -77,10 +77,27 @@ def kl_reward(
     normalize: bool = True,
     chunk: int = 1 << 16,
 ) -> np.ndarray:
-    """``r = -sum_mu lam_mu K_mu`` per batch element (shape ``(batch,)``).
+    """``r = -sum_mu lam_mu K_mu`` per batch element.
 
-    With ``normalize`` the sum is divided by ``sum_mu lam_mu`` so the reward
-    lies in ``[-1, 0]`` and ``0`` means every error in the set is detected.
+    Parameters
+    ----------
+    tab
+        Tableau batch ``(batch, 2n, 2n + 1)``.
+    k
+        Number of logical qubits.
+    errors
+        :class:`autoqec_sim.errors.ErrorSet` with Paulis ``(M, 2n)`` and
+        weights ``lam``.
+    normalize
+        Divide by ``sum_mu lam_mu`` so the reward lies in ``[-1, 0]``; ``0``
+        means every error in the set is detected.
+    chunk
+        Errors per inner batch.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(batch,)``.
     """
     und = undetected_mask(tab, k, errors.paulis, chunk)
     r = -(und.astype(np.float64) @ errors.lam)
@@ -103,10 +120,26 @@ def batched_distance(
     """Exact distance of every batch element, capped at ``max_weight + 1``.
 
     Enumerates Paulis by increasing weight and records the first weight at
-    which some undetected error exists. Elements with no undetected error up
-    to ``max_weight`` receive ``max_weight + 1`` (a lower bound on their
-    distance). Cost grows as ``3^w C(n, w)``; intended for ``n <= 20`` and
-    small ``max_weight``.
+    which some undetected error exists. Cost grows as ``3^w C(n, w)``;
+    intended for ``n <= 20`` and small ``max_weight``.
+
+    Parameters
+    ----------
+    tab
+        Tableau batch ``(batch, 2n, 2n + 1)``.
+    k
+        Number of logical qubits.
+    max_weight
+        Largest error weight enumerated.
+    chunk
+        Errors per inner batch.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(batch,)``, int. Elements with no undetected error up to
+        ``max_weight`` receive ``max_weight + 1``, a lower bound on their
+        distance.
     """
     from .errors import paulis_of_weight
 
@@ -153,11 +186,27 @@ def low_weight_stabilizer_penalty(
     tab: np.ndarray, k: int, max_weight: int, chunk: int = 1 << 16
 ) -> np.ndarray:
     """Minus the fraction of Paulis of weight ``1..max_weight`` that are
-    stabilizer elements, ``(batch,)``. Zero iff the stabilizer group has no
-    element of weight at most ``max_weight``. With ``max_weight = 1`` this
-    penalizes idle qubits (a code padded with unused qubits has a weight-1
-    ``Z`` stabilizer), which the Knill-Laflamme reward alone does not
-    exclude."""
+    stabilizer elements.
+
+    Zero iff the stabilizer group has no element of weight at most
+    ``max_weight``. With ``max_weight = 1`` this penalizes idle qubits (a code
+    padded with unused qubits has a weight-1 ``Z`` stabilizer), which the
+    Knill-Laflamme reward alone does not exclude.
+
+    Parameters
+    ----------
+    tab, k
+        Tableau batch ``(batch, 2n, 2n + 1)`` and number of logical qubits.
+    max_weight
+        Largest Pauli weight counted.
+    chunk
+        Paulis per inner batch.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(batch,)``, values in ``[-1, 0]``.
+    """
     from .errors import paulis_up_to_weight
 
     e, _ = paulis_up_to_weight((tab.shape[-1] - 1) // 2, max_weight)
@@ -187,7 +236,16 @@ class CompositeReward:
 
 
 def make_kl_reward(errors: ErrorSet, normalize: bool = True):
-    """Closure ``f(tab, k)`` for use as an environment reward."""
+    """Closure ``f(tab, k)`` over :func:`kl_reward` for use as an environment
+    reward.
+
+    Parameters
+    ----------
+    errors
+        :class:`autoqec_sim.errors.ErrorSet` scored by the closure.
+    normalize
+        Passed to :func:`kl_reward`.
+    """
 
     def f(tab, k):
         return kl_reward(tab, k, errors, normalize=normalize)

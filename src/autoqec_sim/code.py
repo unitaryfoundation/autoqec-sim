@@ -31,8 +31,16 @@ EXACT_MAX_N = 20
 class StabilizerCode:
     """An ``[[n, k]]`` stabilizer code with a fixed choice of logicals.
 
-    ``stabilizers`` is ``(n - k, 2n)``, ``logical_x`` and ``logical_z`` are
-    ``(k, 2n)``, ``signs`` is ``(n - k,)`` (1 for a negative generator).
+    Attributes
+    ----------
+    stabilizers
+        ``(n - k, 2n)`` binary symplectic rows.
+    logical_x, logical_z
+        ``(k, 2n)`` rows each.
+    signs
+        ``(n - k,)``, 1 for a negative generator (``None``: all positive).
+    destabilizers
+        ``(n - k, 2n)`` rows when known, else ``None``.
     """
 
     stabilizers: np.ndarray

@@ -180,14 +180,24 @@ def depolarizing_noise_model(p1: float | None = 1e-3, p2: float = 1e-2, idle: fl
 def resolve_noise_model(spec, scale: float = 1.0, graph=None, n: int | None = None, **apply_kw) -> NoiseModel:
     """Turn ``spec`` into a ``stim.Circuit -> stim.Circuit`` callable.
 
-    ``spec`` is a ``autoqec_sim.noise.Profile``, a preset name, or a callable
-    (returned unchanged; ``scale`` and ``graph`` then do not apply). For a
-    profile, ``graph`` (either graph class) becomes the profile's
-    connectivity graph when the profile has none, and must have the same
-    edge set as the profile's graph otherwise, so that the environment's
-    action space and the placement check agree. ``n`` is passed as
-    ``n_data`` for profiles whose idle channel is restricted to data qubits
-    (the board recipe); the whole register of an encoding circuit is data.
+    Parameters
+    ----------
+    spec
+        A ``autoqec_sim.noise.Profile``, a preset name, or a callable
+        (returned unchanged; ``scale`` and ``graph`` then do not apply).
+    scale
+        Multiplies every rate of a profile.
+    graph
+        Either graph class. Becomes the profile's connectivity graph when the
+        profile has none, and must have the same edge set as the profile's
+        graph otherwise, so that the environment's action space and the
+        placement check agree.
+    n
+        Passed as ``n_data`` for profiles whose idle channel is restricted to
+        data qubits (the board recipe); the whole register of an encoding
+        circuit is data.
+    **apply_kw
+        Passed to :func:`autoqec_sim.noise.apply.apply`.
     """
     if callable(spec) and not isinstance(spec, Profile):
         return spec
@@ -354,18 +364,29 @@ def _mechanism_matrix(inst, n: int, else_scale: float):
 def fault_set(noisy_circuit: stim.Circuit, n: int) -> FaultSet:
     """Propagate every single fault of ``noisy_circuit`` to the end.
 
-    Handles ``DEPOLARIZE1/2``, ``X/Y/Z_ERROR``, ``PAULI_CHANNEL_1/2``,
-    ``CORRELATED_ERROR`` and ``ELSE_CORRELATED_ERROR`` chains (absolute
-    probabilities), and ``HERALDED_ERASE`` (heralded). Annotations and
-    ``TICK`` are ignored.
+    Parameters
+    ----------
+    noisy_circuit
+        Circuit with ``DEPOLARIZE1/2``, ``X/Y/Z_ERROR``, ``PAULI_CHANNEL_1/2``,
+        ``CORRELATED_ERROR`` and ``ELSE_CORRELATED_ERROR`` chains (absolute
+        probabilities), or ``HERALDED_ERASE`` (heralded). Annotations and
+        ``TICK`` are ignored.
+    n
+        Number of qubits.
 
+    Returns
+    -------
+    FaultSet
+
+    Notes
+    -----
     The propagation is symplectic: walking the circuit backwards keeps the
     ``2n x 2n`` GF(2) map from a Pauli inserted at the current position to
     the output Pauli (signs dropped, they do not affect detection), each
-    Clifford gate being a few row operations on that map, and the
-    mechanisms of a noise instruction are one small GF(2) product against
-    it. :func:`fault_set_reference` is the instruction-by-instruction stim
-    version it replaces; the two agree mechanism for mechanism.
+    Clifford gate being a few row operations on that map, and the mechanisms
+    of a noise instruction are one small GF(2) product against it.
+    :func:`fault_set_reference` is the instruction-by-instruction stim version
+    it replaces; the two agree mechanism for mechanism.
     """
     insts = list(noisy_circuit.flattened())
     # forward pass: absolute probabilities of ELSE_CORRELATED_ERROR chains
@@ -487,15 +508,32 @@ def circuit_level_reward(
     on_violation: str = "raise",
     violation_reward: float = -1.0,
 ) -> np.ndarray:
-    """Per-element ``-sum_f p_f K_f`` (divided by ``sum_f p_f`` when
-    ``normalize``) for the encoding circuits ``gate_lists`` whose final
+    """Per-element ``-sum_f p_f K_f`` for the encoding circuits whose final
     tableaux are the rows of ``tab``.
 
-    ``autoqec_sim.noise`` is anything :func:`resolve_noise_model` accepts;
-    ``scale`` and ``graph`` apply to profiles. A two-qubit gate on a
-    non-edge of the profile's graph raises ``ConnectivityError``
-    (``on_violation="raise"``) or scores ``violation_reward``
-    (``on_violation="penalize"``).
+    Parameters
+    ----------
+    tab, k
+        Tableau batch ``(batch, 2n, 2n + 1)`` and number of logical qubits.
+    gate_lists
+        One ``(gate, q1, q2)`` list per batch element.
+    noise_model
+        Anything :func:`resolve_noise_model` accepts.
+    normalize
+        Divide by ``sum_f p_f``.
+    scale, graph
+        Applied to profiles by :func:`resolve_noise_model`.
+    on_violation
+        ``"raise"``: a two-qubit gate on a non-edge of the profile's graph
+        raises ``ConnectivityError``; ``"penalize"``: it scores
+        ``violation_reward``.
+    violation_reward
+        Reward of a violating circuit under ``"penalize"``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(batch,)``.
     """
     n = (tab.shape[-1] - 1) // 2
     model = resolve_noise_model(noise_model, scale=scale, graph=graph, n=n)
@@ -519,10 +557,22 @@ def circuit_level_reward(
 
 
 def make_circuit_level_reward(env, noise_model, normalize: bool = True, scale: float = 1.0, **kw):
-    """Closure ``f(tab, k)`` bound to an environment so it can read the
-    action histories that produced ``tab``; the profile's graph is the
-    environment's graph. Use as a terminal-only reward
-    (``reward_mode="sparse"``); it is not batched over circuits."""
+    """Closure ``f(tab, k)`` over :func:`circuit_level_reward` bound to an
+    environment so it can read the action histories that produced ``tab``.
+
+    Parameters
+    ----------
+    env
+        Environment whose gate histories and graph are used.
+    noise_model, normalize, scale, **kw
+        Passed to :func:`circuit_level_reward`; the profile's graph is the
+        environment's graph.
+
+    Notes
+    -----
+    Use as a terminal-only reward (``reward_mode="sparse"``); it is not
+    batched over circuits.
+    """
     n = env.n
     model = resolve_noise_model(noise_model, scale=scale, graph=env.graph, n=n)
 

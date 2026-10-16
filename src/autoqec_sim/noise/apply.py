@@ -105,11 +105,27 @@ def apply(circuit: stim.Circuit, profile: Profile, scale: float = 1.0, *,
           check_graph: bool = True) -> stim.Circuit:
     """The noisy circuit for a noiseless skeleton in the board convention.
 
-    `n_data` is required when the profile's idle scope is "data" (qubits
-    0..n_data-1 idle, the board rule); `idle_qubits` overrides the idle set
-    outright. With a connectivity graph on the profile the two-qubit gates
-    are checked first and a ConnectivityError listing every violation is
-    raised (`check_graph=False` skips it; crosstalk still needs the graph).
+    Parameters
+    ----------
+    circuit
+        Noiseless skeleton with ``TICK`` layers.
+    profile
+        Noise profile.
+    scale
+        Multiplies every rate of the profile.
+    n_data
+        Number of data qubits (``0..n_data-1``); required when the profile's
+        idle scope is ``"data"``, the board rule.
+    idle_qubits
+        Overrides the idle set outright.
+    check_graph
+        With a connectivity graph on the profile, check every two-qubit gate
+        first and raise :class:`ConnectivityError` listing the violations.
+        Crosstalk still needs the graph when this is false.
+
+    Returns
+    -------
+    stim.Circuit
     """
     p = profile.params
     if profile.graph is not None and check_graph:
@@ -240,19 +256,39 @@ def apply(circuit: stim.Circuit, profile: Profile, scale: float = 1.0, *,
 
 
 def noisifier(profile: Profile, scale: float = 1.0, **kw) -> Callable[[stim.Circuit], stim.Circuit]:
-    """A callable circuit -> noisy circuit with the profile and scale bound,
-    the form a reward engine plugs in."""
+    """A callable ``circuit -> noisy circuit`` with the profile and scale bound,
+    the form a reward engine plugs in.
+
+    Parameters
+    ----------
+    profile, scale, **kw
+        Passed to :func:`apply`.
+    """
     return functools.partial(apply, profile=profile, scale=scale, **kw)
 
 
 def dem(circuit: stim.Circuit, approximate: bool | None = None,
         decompose_errors: bool = False) -> stim.DetectorErrorModel:
-    """Detector error model with the board's pinned options (no
-    decomposition, loops flattened). Channels stim cannot convert exactly
-    (PAULI_CHANNEL_2, ELSE_CORRELATED_ERROR, HERALDED_ERASE, a Pauli
-    channel with a zero component) need approximate_disjoint_errors; with
-    `approximate` None the exact conversion is tried first and the
-    approximate one used only if stim refuses."""
+    """Detector error model with the board's pinned options (no decomposition,
+    loops flattened).
+
+    Parameters
+    ----------
+    circuit
+        Noisy circuit.
+    approximate
+        Use ``approximate_disjoint_errors``. Channels stim cannot convert
+        exactly (``PAULI_CHANNEL_2``, ``ELSE_CORRELATED_ERROR``,
+        ``HERALDED_ERASE``, a Pauli channel with a zero component) need it;
+        with ``None`` the exact conversion is tried first and the approximate
+        one used only if stim refuses.
+    decompose_errors
+        Passed to stim.
+
+    Returns
+    -------
+    stim.DetectorErrorModel
+    """
     kw = dict(decompose_errors=decompose_errors, flatten_loops=True)
     if approximate:
         return circuit.detector_error_model(approximate_disjoint_errors=True, **kw)

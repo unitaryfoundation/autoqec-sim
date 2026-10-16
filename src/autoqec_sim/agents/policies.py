@@ -107,7 +107,22 @@ def mlp_actor_critic_class():
 
 
 def mlp_actor_critic(obs_dim: int, num_actions: int, hidden=(256, 256)):
-    """Flat MLP actor-critic over a flat observation of ``obs_dim`` bits."""
+    """Flat MLP actor-critic over a flat observation.
+
+    Parameters
+    ----------
+    obs_dim
+        Observation length in bits.
+    num_actions
+        Size of the action table.
+    hidden
+        Widths of the hidden layers.
+
+    Returns
+    -------
+    torch.nn.Module
+        Module whose forward pass returns ``(logits, value)``.
+    """
     return mlp_actor_critic_class()(obs_dim, num_actions, tuple(hidden))
 
 
@@ -117,17 +132,33 @@ def mlp_actor_critic(obs_dim: int, num_actions: int, hidden=(256, 256)):
 def equivariant_actor_critic(n: int, entries: list[tuple], hidden: int = 128, rows: int | None = None):
     """Permutation-equivariant actor-critic over the tableau.
 
-    ``entries`` is the environment's action table (``(gate, q1, q2)`` with
-    ``q2 = -1`` for single-qubit gates); logits are assembled in its order.
-    The observation is the flat ``rows x 2n`` block of X and Z bits
-    (``rows = 2n`` for the ``tableau`` observation, ``n - k`` for
-    ``check_matrix``). Qubit ``q`` gets the ``2 rows`` features of its two
-    columns (X bit and Z bit of every row), a shared MLP embeds them, a
-    mean over qubits gives the context, and a second shared MLP maps
-    ``[own, context]`` to the qubit embedding. Single-qubit gate logits
-    come from a per-gate linear head on the qubit embedding; two-qubit gate
-    logits from a head on the concatenated embeddings of the ordered pair;
-    the value from the mean and max pooled embeddings.
+    Parameters
+    ----------
+    n
+        Number of qubits.
+    entries
+        The environment's action table (``(gate, q1, q2)`` with ``q2 = -1``
+        for single-qubit gates); logits are assembled in its order.
+    hidden
+        Width of the per-qubit embeddings.
+    rows
+        Rows of the observation block (``2n`` for the ``tableau``
+        observation, ``n - k`` for ``check_matrix``; default ``2n``).
+
+    Returns
+    -------
+    torch.nn.Module
+        Module whose forward pass returns ``(logits, value)``.
+
+    Notes
+    -----
+    The observation is the flat ``rows x 2n`` block of X and Z bits. Qubit
+    ``q`` gets the ``2 rows`` features of its two columns, a shared MLP embeds
+    them, a mean over qubits gives the context, and a second shared MLP maps
+    ``[own, context]`` to the qubit embedding. Single-qubit gate logits come
+    from a per-gate linear head on the qubit embedding, two-qubit gate logits
+    from a head on the concatenated embeddings of the ordered pair, and the
+    value from the mean and max pooled embeddings.
     """
     torch = _torch()
     nn = torch.nn

@@ -156,9 +156,20 @@ _TWO_QUBIT = {"CNOT": apply_cnot, "CZ": apply_cz, "SWAP": apply_swap}
 def apply_gate(tab: np.ndarray, gate: str, q1, q2=None, where=None) -> None:
     """Apply ``gate`` in place to the batch elements selected by ``where``.
 
-    ``q1`` and ``q2`` are ints (same qubit on every selected element) or
-    arrays with one entry per selected element. ``where`` is ``None`` (all
-    elements), a boolean mask over the batch, or an integer index array.
+    Parameters
+    ----------
+    tab
+        Tableau batch ``(batch, 2n, 2n + 1)``, modified in place.
+    gate
+        ``"H"``, ``"S"``, ``"S_DAG"``, ``"X"``, ``"Y"``, ``"Z"``, ``"CNOT"``,
+        ``"CZ"``, or ``"SWAP"``.
+    q1, q2
+        Qubit indices: ints (the same qubit on every selected element) or
+        arrays with one entry per selected element. ``q2`` is required for the
+        two-qubit gates and must differ from ``q1``.
+    where
+        ``None`` (all elements), a boolean mask over the batch, or an integer
+        index array.
     """
     b = _select(tab, where)
     if b.size == 0:
@@ -181,9 +192,15 @@ def apply_gate(tab: np.ndarray, gate: str, q1, q2=None, where=None) -> None:
 class ActionTable:
     """Enumeration of the discrete actions of an environment.
 
-    ``entries`` is a list of ``(gate, q1, q2)`` with ``q2 = -1`` for
-    single-qubit gates. The table stores three parallel arrays so that a
-    batch of action indices can be resolved with one gather each.
+    Parameters
+    ----------
+    entries
+        List of ``(gate, q1, q2)`` with ``q2 = -1`` for single-qubit gates.
+
+    Notes
+    -----
+    The table stores three parallel arrays so that a batch of action indices
+    can be resolved with one gather each.
     """
 
     def __init__(self, entries):
@@ -302,8 +319,18 @@ def gates_to_stim_circuit(gates, n: int):
 class BatchTableau:
     """Thin object wrapper around the tableau array.
 
-    Holds ``array`` of shape ``(batch, 2n, 2n + 1)``. Methods mutate in
-    place and return ``self``.
+    Parameters
+    ----------
+    n
+        Number of qubits.
+    batch_size
+        Batch size of a fresh identity tableau (ignored when ``array`` is given).
+    array
+        Existing array of shape ``(batch, 2n, 2n + 1)`` to wrap.
+
+    Notes
+    -----
+    Methods mutate in place and return ``self``.
     """
 
     def __init__(self, n: int, batch_size: int = 1, array: np.ndarray | None = None):

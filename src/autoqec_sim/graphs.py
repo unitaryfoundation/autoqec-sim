@@ -104,7 +104,13 @@ def linear(n: int) -> Graph:
 
 
 def square(rows: int, cols: int) -> Graph:
-    """Nearest-neighbour square lattice, qubits indexed row-major."""
+    """Nearest-neighbor square lattice, qubits indexed row-major.
+
+    Parameters
+    ----------
+    rows, cols
+        Lattice dimensions.
+    """
     return from_topology(topo.square(rows, cols))
 
 
@@ -114,8 +120,14 @@ def triangular(rows: int, cols: int) -> Graph:
 
 
 def heavy_hex(rows: int, cols: int) -> Graph:
-    """Heavy-hex lattice of ``rows x cols`` hexagons with a qubit on every
-    edge (degree at most 3), the ``autoqec_sim.noise`` construction."""
+    """Heavy-hex lattice of ``rows x cols`` hexagons with a qubit on every edge
+    (degree at most 3), the ``autoqec_sim.noise`` construction.
+
+    Parameters
+    ----------
+    rows, cols
+        Number of hexagons along each direction.
+    """
     return from_topology(topo.heavy_hex(rows, cols))
 
 
@@ -129,8 +141,14 @@ BUILDERS = {
 
 
 def from_spec(spec: str) -> Graph:
-    """``"all_to_all:7"``, ``"linear:5"``, ``"square:3x3"``,
-    ``"triangular:2x3"``, ``"heavy_hex:1x1"``."""
+    """Graph from a short specification string.
+
+    Parameters
+    ----------
+    spec
+        ``"all_to_all:7"``, ``"linear:5"``, ``"square:3x3"``,
+        ``"triangular:2x3"``, or ``"heavy_hex:1x1"``.
+    """
     kind, _, arg = spec.partition(":")
     if kind not in BUILDERS:
         raise ValueError(f"unknown graph kind {kind!r}")

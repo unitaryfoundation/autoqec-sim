@@ -62,8 +62,18 @@ def paulis_up_to_weight(n: int, max_weight: int, min_weight: int = 1):
 def pauli_probabilities(errors: np.ndarray, px, py, pz) -> np.ndarray:
     """Probability of each Pauli under independent single-qubit channels.
 
-    ``px, py, pz`` are scalars or length ``n`` arrays; the identity on a site
-    has probability ``1 - px - py - pz``.
+    Parameters
+    ----------
+    errors
+        ``(M, 2n)`` binary symplectic rows.
+    px, py, pz
+        Scalars or length ``n`` arrays; the identity on a site has
+        probability ``1 - px - py - pz``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(M,)``.
     """
     n = errors.shape[1] // 2
     px = np.broadcast_to(np.asarray(px, dtype=float), (n,))
@@ -82,8 +92,14 @@ def pauli_probabilities(errors: np.ndarray, px, py, pz) -> np.ndarray:
 class ErrorSet:
     """A set of Pauli errors with weights.
 
-    ``paulis`` has shape ``(M, 2n)``; ``lam`` has shape ``(M,)``. ``weights``
-    (Pauli weights, integers) is kept for the distance reward.
+    Attributes
+    ----------
+    paulis
+        ``(M, 2n)`` binary symplectic rows.
+    lam
+        ``(M,)`` weights of the Knill-Laflamme sum.
+    weights
+        ``(M,)`` Pauli weights (integers), kept for the distance reward.
     """
 
     paulis: np.ndarray

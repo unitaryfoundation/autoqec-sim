@@ -233,10 +233,25 @@ def sparsest_basis_rows(tab: np.ndarray, k: int, index: int = 0, **kw) -> np.nda
 # constraint and penalty
 # --------------------------------------------------------------------------
 def ldpc_feasible(tab: np.ndarray, k: int, w_max: int, exact_max_generators: int = EXACT_MAX_GENERATORS) -> np.ndarray:
-    """``(B,)`` bool: the stabilizer group has a generating set with every
-    generator of weight ``<= w_max``. Exact for ``n - k <= exact_max_generators``
-    (rank of the elements of weight ``<= w_max`` equals ``n - k``); the
-    greedy fallback for larger codes is sufficient but not necessary."""
+    """Whether each stabilizer group has a generating set with every generator
+    of weight at most ``w_max``.
+
+    Parameters
+    ----------
+    tab, k
+        Tableau batch ``(B, 2n, 2n + 1)`` and number of logical qubits.
+    w_max
+        Weight bound.
+    exact_max_generators
+        Largest ``n - k`` tested exactly (rank of the elements of weight
+        ``<= w_max`` equals ``n - k``); above it the greedy bound is used,
+        which is sufficient but not necessary.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(B,)``, bool.
+    """
     n = (tab.shape[-1] - 1) // 2
     gens = _generators_packed(tab, k)
     m = gens.shape[1]
@@ -259,9 +274,27 @@ def ldpc_penalty(
     scale: float = 1.0,
     exact_max_generators: int = EXACT_MAX_GENERATORS,
 ) -> np.ndarray:
-    """``-scale * (max(0, w* - w_max) + max(0, deg - deg_max))`` per
-    element, with ``w*`` and ``deg`` from :func:`sparsest_basis_stats`.
-    Zero iff the sparsest basis meets both bounds."""
+    """``-scale * (max(0, w* - w_max) + max(0, deg - deg_max))`` per element.
+
+    Parameters
+    ----------
+    tab, k
+        Tableau batch ``(B, 2n, 2n + 1)`` and number of logical qubits.
+    w_max
+        Bound on ``w*``, the bottleneck weight of the sparsest basis.
+    deg_max
+        Bound on the largest qubit degree of that basis (``None``: not
+        penalized).
+    scale
+        Penalty per unit of excess.
+    exact_max_generators
+        Passed to :func:`sparsest_basis_stats`.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape ``(B,)``; zero iff the sparsest basis meets both bounds.
+    """
     st = sparsest_basis_stats(tab, k, w_max, exact_max_generators)
     excess = np.maximum(0, st["w_star"] - w_max).astype(float)
     if deg_max is not None:

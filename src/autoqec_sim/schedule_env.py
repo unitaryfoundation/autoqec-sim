@@ -163,12 +163,30 @@ def score_layers(code: BoardCode, layers, rounds=None, bases=("Z", "X"), tier="e
                  exact_wmax=4, ris_trials=2000, ris_seed=0, ris_seconds=None):
     """Fault distance of a schedule under the board's own pipeline.
 
-    Returns ``{"valid": bool, "d_circ": {basis: int|None}, "min": int|None,
-    "layers": int, "seconds": float, "detail": {...}}``. In the ``exact``
-    tier a basis whose search finds nothing up to ``exact_wmax`` reports
-    ``exact_wmax + 1`` as a floor (the exact value is at least that); in the
-    ``ris`` tier ``None`` from the search is reported as ``code.d`` since the
-    tier credits nothing above the code distance anyway."""
+    Parameters
+    ----------
+    code
+        :class:`BoardCode`.
+    layers
+        CX layers, each a list of ``(kind, check, qubit)`` edges.
+    rounds
+        Extraction rounds scored (default ``code.d``).
+    bases
+        Memory bases scored.
+    tier
+        ``"exact"`` (:func:`autoqec_sim.memory_objective.exact_dcirc` up to
+        ``exact_wmax``) or ``"ris"`` (randomized information set search with
+        ``ris_trials`` trials, ``ris_seed``, and ``ris_seconds`` cap).
+
+    Returns
+    -------
+    dict
+        ``{"valid": bool, "d_circ": {basis: int | None}, "min": int | None,
+        "layers": int, "seconds": float, "detail": {...}}``. In the ``exact``
+        tier a basis whose search finds nothing up to ``exact_wmax`` reports
+        ``exact_wmax + 1`` as a floor; in the ``ris`` tier ``None`` from the
+        search is reported as ``code.d``.
+    """
     ct, ca = _board()
     rounds = code.d if rounds is None else int(rounds)
     t0 = time.time()
@@ -207,9 +225,26 @@ def _edges_of(H, kind):
 
 
 def coloring_baseline(code: BoardCode, samples=20, seed=0, **score_kw):
-    """The board builder's own schedule family: a greedy proper edge
-    coloring of each Tanner graph, X block then Z block, shuffled by seed.
-    Returns one score dict per sample with the layers attached."""
+    """The board builder's own schedule family: a greedy proper edge coloring of
+    each Tanner graph, X block then Z block, shuffled by seed.
+
+    Parameters
+    ----------
+    code
+        :class:`BoardCode`.
+    samples
+        Number of colorings scored.
+    seed
+        First seed; sample ``i`` uses ``seed + i``.
+    **score_kw
+        Passed to :func:`score_layers`.
+
+    Returns
+    -------
+    list[dict]
+        One :func:`score_layers` result per sample with ``layers_list`` and
+        ``seed`` attached.
+    """
     ct, _ = _board()
     out = []
     for i in range(samples):
