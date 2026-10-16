@@ -9280,8 +9280,11 @@ deterministic function of the syndrome). Shots grow in doublings until
 
     <div class="doc doc-contents ">
 
-        <p>Per-round failure probability from the failure probability of an
-<code>R</code>-round experiment: <code>1 - (1 - p)^(1/R)</code>.</p>
+        <p>Per-round logical error from the failure probability <code>p</code> of an
+<code>R</code>-round memory experiment, in the convention of the hardware memory
+experiments: <code>(1 - (1 - 2p)^(1/R)) / 2</code>, the per-round flip
+probability of a logical bit that can flip back, so that <code>p</code> saturates
+at one half. Agrees with <code>1 - (1 - p)^(1/R)</code> to first order in <code>p</code>.</p>
 
 
     </div>

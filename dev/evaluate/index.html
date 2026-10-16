@@ -1898,7 +1898,7 @@ in half a second.</p>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">top</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">pauli</span><span class="si">:</span><span class="s2">7s</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">gate</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">qubits</span><span class="si">}</span><span class="s2"> at tick </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">tick</span><span class="si">}</span><span class="s2">  -&gt;  </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">targets</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>error per round 9.05e-03  d_circ {'Z': 3, 'X': 3}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Z basis, probability 1.4e-06, 3 mechanisms:
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  X4      after DEPOLARIZE2 on (14, 4) at tick 16  -&gt;  D12 D13
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  X1      after DEPOLARIZE2 on (13, 1) at tick 14  -&gt;  D12 L0
@@ -1919,14 +1919,14 @@ in the <code>Z</code> basis with a summed mass of <code>8.7e-6</code> per shot
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">s</span> <span class="o">=</span> <span class="n">sampled</span><span class="o">.</span><span class="n">per_basis</span><span class="p">[</span><span class="n">basis</span><span class="p">][</span><span class="s2">"sampling"</span><span class="p">]</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'failures'</span><span class="p">]</span><span class="si">}</span><span class="s2"> failures in </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'shots'</span><span class="p">]</span><span class="si">}</span><span class="s2"> shots, </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'distinct_syndromes'</span><span class="p">]</span><span class="si">}</span><span class="s2"> distinct syndromes"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tesseract error per round 8.45e-03
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tesseract error per round 8.49e-03
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Z: 248 failures in 20000 shots, 2798 distinct syndromes
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  X: 257 failures in 20000 shots, 2797 distinct syndromes
 </code></pre></div>
 <p>Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">1</a></sup> decodes the detector error model as it is, without
 graphlike decomposition, so it applies to non-CSS codes and to the
-correlated channels of the device presets. The proxy above (<code>9.05e-3</code>) and
-the sampled tier (<code>8.79e-3</code> with the lookup decoder at the same shots and
+correlated channels of the device presets. The proxy above (<code>9.09e-3</code>) and
+the sampled tier (<code>8.83e-3</code> with the lookup decoder at the same shots and
 seed) agree with it within shot noise on this code. Distinct syndromes are
 decoded once, so the 20,000 shots per basis cost about 2,800 decoder calls
 each, a few seconds on a laptop.</p>
