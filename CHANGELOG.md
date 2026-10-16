@@ -7,7 +7,10 @@
   distance (`experiments/qdx_targets/REPORT.md`). `experiments.sat_codes`:
   the SAT-sampled biased-noise codes of DalFavero et al. under the
   circuit-level memory objective against the rotated surface and XZZX
-  codes (`experiments/sat_codes/REPORT.md`).
+  codes (`experiments/sat_codes/REPORT.md`). `experiments.sat_population`:
+  the same question over a sample of 2,150 of those codes, with the
+  structural features of each code's extraction circuit
+  (`experiments/sat_population/REPORT.md`).
 
 ## 0.2.0 (2026-10-16)
 

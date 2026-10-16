@@ -224,3 +224,27 @@ correlations.
 uv run python -m autoqec_sim.experiments.sat_codes run
 uv run python -m autoqec_sim.experiments.sat_codes report
 ```
+
+## A population of SAT-designed codes
+
+`autoqec_sim.experiments.sat_population` scales the previous experiment
+from fifteen codes to a population: a uniform random sample of 2,000 of the
+43,563 distinct stabilizer groups among the 100,000 codes of
+[@dalfavero2026], plus the 100 best and the 50 worst by the source's
+code-capacity rate at bias 10, scored under four cases (biased idle at
+source bias 4 and 10, every channel biased at bias 10, and the Forte
+preset) at the proxy and sampled tiers. The report gives the rank
+correlation between the two scores, the overlap of their best sets, the
+circuit-level rates of the source's best codes against random ones, the
+structural features of a code's extraction circuit that predict its
+circuit-level rate, and the best codes of the population against the
+rotated surface code and XZZX. `experiments/sat_population/REPORT.md`
+holds the tables and the figure. The `prepare` step reads the source
+repository's `experiments/surface/` directory and writes
+`experiments/sat_population/population.json`, which is committed.
+
+```
+uv run python -m autoqec_sim.experiments.sat_population prepare --source <satisfying-codes>/experiments/surface
+uv run python -m autoqec_sim.experiments.sat_population run --workers 4
+uv run python -m autoqec_sim.experiments.sat_population report
+```
