@@ -1963,7 +1963,11 @@ setting the noise-aware experiment could not solve), plus how the
 LDPC-constrained target behaves at <code>n = 12</code> to <code>16</code>. Findings, from
 <code>experiments/scaling/REPORT.md</code>: the 4x4 failure is exploration (d = 4 states
 within 50 gates exist but are too rare for the default policy to ever see
-one); a per-qubit permutation-equivariant policy
+one). This holds for this setting, nearest-neighbor 4x4 connectivity, the
+unrestricted H and CNOT action space, and 50-gate episodes; a flat policy
+with CSS-restricted actions on a next-to-nearest-neighbor periodic
+lattice reaches distance 5 at 17 qubits in <sup id="fnref2:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup>. Here a per-qubit
+permutation-equivariant policy
 (now <code>agents.policies.equivariant_actor_critic</code>, <code>PPOConfig(policy="equivariant")</code>) reaches a clean <code>[[16, 1, 4]]</code> at the
 50-gate cap in 0.2M to 0.26M env steps on every seed (about 20x fewer than the
 flat MLP with a 4x larger batch, which also works), and it is the recommended
@@ -2073,7 +2077,7 @@ heavy-hex graph.</p>
 <hr />
 <ol>
 <li id="fn:olle2024">
-<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:chen2024">
 <p>Jwo-Sy Chen, Erik Nielsen, Matthew Ebert, Volkan Inlek, Kenneth Wright, Vandiver Chaplin, Andrii Maksymov, Eduardo Páez, Amrit Poudel, Peter Maunz, and John Gamble. Benchmarking a trapped-ion quantum computer with 30 qubits. <em>Quantum</em>, 8:1516, 2024. <a href="https://arxiv.org/abs/2308.05071">arXiv:2308.05071</a>, <a href="https://doi.org/10.22331/q-2024-11-07-1516">doi:10.22331/q-2024-11-07-1516</a>.&#160;<a class="footnote-backref" href="#fnref:chen2024" title="Jump back to footnote 2 in the text">&#8617;</a></p>

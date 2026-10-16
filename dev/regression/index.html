@@ -1952,7 +1952,13 @@ surface enumerators but <code>w* = 6</code>, that is, a code whose sparsest
 generating set has a weight-6 element, so equal enumerators do not
 certify local-Clifford equivalence to the CSS reference (a local Clifford
 preserves weights, so an equivalent code would have <code>w* = 4</code>; the
-enumerators of <code>S</code> and <code>N(S)</code> coincide without equivalence here). The
+enumerators of <code>S</code> and <code>N(S)</code> coincide without equivalence here). That
+weight enumerators are not a complete invariant is well known: the
+classification of self-dual additive codes over GF(4) lists 675
+inequivalent codes at 9 qubits with 320 distinct enumerators
+<sup id="fnref:danielsen2006"><a class="footnote-ref" href="#fn:danielsen2006">7</a></sup>, and local-Clifford equivalence has a polynomial-time
+test <sup id="fnref:vandennest2004"><a class="footnote-ref" href="#fn:vandennest2004">8</a></sup>. The regression reports the enumerator match as
+a necessary check, and <code>w*</code> as a second invariant. The
 mask-constrained run matched the enumerators with <code>w* = 4</code> in 10
 attempts against 21 unconstrained. The penalty-constrained surface target
 accepts any verified distance-3 code within the bound: in a first full
@@ -1982,8 +1988,8 @@ far more varied: the rotated-surface enumerators appeared in 3 of 60 runs
 with H, CNOT and in 0 of 30 runs with H, S, CNOT, which is why the surface
 target uses H, CNOT and the full budget allows up to 60 attempts.</p>
 <h2 id="ppo-agent">PPO agent<a class="headerlink" href="#ppo-agent" title="Permanent link">&para;</a></h2>
-<p><code>agents/ppo.py</code> is a PPO implementation <sup id="fnref:schulman2017"><a class="footnote-ref" href="#fn:schulman2017">7</a></sup> over
-<code>CodeDiscoveryEnv</code>, in the spirit of <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">8</a></sup>: a
+<p><code>agents/ppo.py</code> is a PPO implementation <sup id="fnref:schulman2017"><a class="footnote-ref" href="#fn:schulman2017">9</a></sup> over
+<code>CodeDiscoveryEnv</code>, in the spirit of <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">10</a></sup>: a
 policy over gate choices conditioned on the current tableau, trained on the
 Knill-Laflamme reward. The batch dimension of the environment is the
 vectorized environment (256 parallel episodes by default), <code>auto_reset</code> is
@@ -2001,7 +2007,7 @@ satisfied) or after the target's gate cap.</p>
 <tbody>
 <tr>
 <td>Observation</td>
-<td>the <code>2n x 2n</code> X and Z bits of the whole tableau (destabilizers and stabilizers, sign column dropped), mapped to <code>{-1, +1}</code>; <code>check_matrix</code> (only the <code>(n - k) x 2n</code> stabilizer block, as in <sup id="fnref3:olle2024"><a class="footnote-ref" href="#fn:olle2024">8</a></sup>) is an option</td>
+<td>the <code>2n x 2n</code> X and Z bits of the whole tableau (destabilizers and stabilizers, sign column dropped), mapped to <code>{-1, +1}</code>; <code>check_matrix</code> (only the <code>(n - k) x 2n</code> stabilizer block, as in <sup id="fnref3:olle2024"><a class="footnote-ref" href="#fn:olle2024">10</a></sup>) is an option</td>
 </tr>
 <tr>
 <td>Network</td>
@@ -2017,7 +2023,7 @@ satisfied) or after the target's gate cap.</p>
 </tr>
 <tr>
 <td>PPO</td>
-<td>clip 0.2, gamma 0.98, GAE <sup id="fnref:schulman2015gae"><a class="footnote-ref" href="#fn:schulman2015gae">9</a></sup> lambda 0.95, value coefficient 0.5, entropy coefficient 0.01, advantages normalized per update</td>
+<td>clip 0.2, gamma 0.98, GAE <sup id="fnref:schulman2015gae"><a class="footnote-ref" href="#fn:schulman2015gae">11</a></sup> lambda 0.95, value coefficient 0.5, entropy coefficient 0.01, advantages normalized per update</td>
 </tr>
 <tr>
 <td>Masking</td>
@@ -2223,7 +2229,7 @@ after 11 families; at 4x4 the family count is far larger and a
 stop-at-match search at this budget does not land on the CSS code. What
 the target does certify is a verified <code>[[16, 1, 4]]</code> code on the lattice
 in under 300k env steps on both seeds.</p>
-<p>Missing for parity with <sup id="fnref2:olle2024"><a class="footnote-ref" href="#fn:olle2024">8</a></sup>:</p>
+<p>Missing for parity with <sup id="fnref2:olle2024"><a class="footnote-ref" href="#fn:olle2024">10</a></sup>:</p>
 <ul>
 <li>Noise-aware training at larger scale. The noise-aware experiment below
   trains on the circuit-level fault reward under three profiles at
@@ -2264,14 +2270,20 @@ in under 300k env steps on both seeds.</p>
 <li id="fn:knill1997">
 <p>Emanuel Knill and Raymond Laflamme. Theory of quantum error-correcting codes. <em>Physical Review A</em>, 55:900–911, 1997. <a href="https://arxiv.org/abs/quant-ph/9604034">arXiv:quant-ph/9604034</a>, <a href="https://doi.org/10.1103/PhysRevA.55.900">doi:10.1103/PhysRevA.55.900</a>.&#160;<a class="footnote-backref" href="#fnref:knill1997" title="Jump back to footnote 6 in the text">&#8617;</a></p>
 </li>
+<li id="fn:danielsen2006">
+<p>Lars Eirik Danielsen and Matthew G. Parker. On the classification of all self-dual additive codes over GF(4) of length up to 12. <em>Journal of Combinatorial Theory, Series A</em>, 113:1351–1367, 2006. <a href="https://arxiv.org/abs/math/0504522">arXiv:math/0504522</a>, <a href="https://doi.org/10.1016/j.jcta.2005.12.004">doi:10.1016/j.jcta.2005.12.004</a>.&#160;<a class="footnote-backref" href="#fnref:danielsen2006" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:vandennest2004">
+<p>Maarten Van den Nest, Jeroen Dehaene, and Bart De Moor. An efficient algorithm to recognize local Clifford equivalence of graph states. <em>Physical Review A</em>, 70:034302, 2004. <a href="https://arxiv.org/abs/quant-ph/0405023">arXiv:quant-ph/0405023</a>, <a href="https://doi.org/10.1103/PhysRevA.70.034302">doi:10.1103/PhysRevA.70.034302</a>.&#160;<a class="footnote-backref" href="#fnref:vandennest2004" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
 <li id="fn:schulman2017">
-<p>John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. 2017. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2017" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+<p>John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. 2017. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2017" title="Jump back to footnote 9 in the text">&#8617;</a></p>
 </li>
 <li id="fn:olle2024">
-<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 8 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:olle2024" title="Jump back to footnote 8 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:olle2024" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 10 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:olle2024" title="Jump back to footnote 10 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:olle2024" title="Jump back to footnote 10 in the text">&#8617;</a></p>
 </li>
 <li id="fn:schulman2015gae">
-<p>John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. 2015. <a href="https://arxiv.org/abs/1506.02438">arXiv:1506.02438</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2015gae" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+<p>John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. 2015. <a href="https://arxiv.org/abs/1506.02438">arXiv:1506.02438</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2015gae" title="Jump back to footnote 11 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

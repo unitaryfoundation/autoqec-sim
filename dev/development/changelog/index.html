@@ -1826,12 +1826,13 @@ agent with its own rediscovery regression.</p>
   and <code>max_qubit_degree</code> in every verification, five new targets
   (<code>rotated_surface_9_ldpc</code>, <code>rotated_surface_9_ldpc_penalty</code>,
   <code>steane_ldpc_w4</code>, <code>seven_qubit_w3_excluded</code>, <code>five_qubit_w3_excluded</code>).</li>
-<li>Finding from the <code>w*</code> column of the regression: the unconstrained
+<li>Observation from the <code>w*</code> column of the regression: the unconstrained
   surface-code result of 0.1.0 (seed 20) has the surface code's weight
   enumerators of <code>S</code> and <code>N(S)</code> but <code>w* = 6</code> (its 26 elements of weight
-  at most 4 span a rank-7 subgroup, the reference's span rank 8), so equal
-  enumerators do not imply local-Clifford equivalence; the mask-constrained
-  target's match has <code>w* = 4</code>.</li>
+  at most 4 span a rank-7 subgroup, the reference's span rank 8), an
+  instance of the known fact that equal enumerators do not imply
+  local-Clifford equivalence; the mask-constrained target's match has
+  <code>w* = 4</code>.</li>
 <li>PPO agent (<code>agents.ppo</code>): clipped objective, GAE, shared value head,
   entropy bonus, action masking (static graph mask, dynamic undo mask, and
   any mask the environment exposes), PyTorch on CPU with a six-thread cap.
