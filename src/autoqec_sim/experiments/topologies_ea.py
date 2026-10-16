@@ -101,7 +101,8 @@ def report(out_dir: Path, ppo_dir: Path) -> Path:
         emed = med(es, lambda r: r["first_success"]["env_steps_equivalent"]) if e else "no run"
         ewall = f"{statistics.median(r['wall_time_s'] for r in e):.0f} s" if e else "no run"
         lines.append(f"| {top} | {n} | {len(ps)}/{len(p)} | {pmed} | {len(es)}/{len(e)} | {emed} | {ewall} |")
-    tot_p = sum(1 for r in ppo if r.get("success")); tot_e = sum(1 for r in ea if r.get("success"))
+    tot_p = sum(1 for r in ppo if r.get("success"))
+    tot_e = sum(1 for r in ea if r.get("success"))
     lines += ["", f"Totals: PPO {tot_p} of {len(ppo)} runs succeed, evolutionary search {tot_e} of {len(ea)}. "
               "The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), "
               "not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else."]
