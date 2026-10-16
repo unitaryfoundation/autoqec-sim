@@ -114,24 +114,6 @@ https://unitaryfoundation.github.io/autoqec-sim/ (`dev/` tracks `main`,
 `stable/` is the latest release). It builds with MkDocs from `docs/`;
 `uv run --group docs mkdocs serve` renders it locally.
 
-## Citation
-
-If you use autoqec-sim in your work, please cite the software below
-([CITATION.cff](CITATION.cff) holds the same metadata).
-```
-@software{russo2026autoqecsim,
-      title={autoqec-sim: Vectorized stabilizer-code reward engine and RL environment},
-      author={Vincent Russo},
-      year={2026},
-      version={0.2.0},
-      url={https://github.com/unitaryfoundation/autoqec-sim},
-      license={Apache-2.0},
-}
-```
-
-The reward and training setup follow Olle et al.,
-[arXiv:2311.04750](https://arxiv.org/abs/2311.04750).
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Participation is governed by the
