@@ -69,8 +69,6 @@ pip install git+https://github.com/unitaryfoundation/autoqec-sim
 ```
 
 Python 3.12 to 3.14; the dependencies are `numpy` and `stim`. The PPO agent
-needs torch: install `"autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"`.
-Releases are tagged on GitHub and archived on Zenodo; there is no PyPI
 package.
 
 ## Quick Start
