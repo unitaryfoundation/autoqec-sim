@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
 type: software
-title: "autoqec-sim: vectorized stabilizer-code reward engine and RL environment for AutoQEC"
+title: "autoqec-sim: vectorized stabilizer-code reward engine and RL environment"
 version: 0.2.0
 date-released: "TBD"
 license: Apache-2.0
@@ -9,7 +9,6 @@ repository-code: "https://github.com/unitaryfoundation/autoqec-sim"
 authors:
   - family-names: Russo
     given-names: Vincent
-    orcid: "https://orcid.org/0000-0000-0000-0000"
 keywords:
   - quantum error correction
   - stabilizer codes

@@ -26,21 +26,12 @@ mechanical once the OWNER steps before them are settled.
    CITATION.cff: fill the ORCID and set `date-released` to the tag date;
    CHANGELOG.md: replace TBD.
 
-2. RUN: make the repository public, wait for CI on `main`.
-
-   ```
-   gh repo edit unitaryfoundation/autoqec-sim --visibility public --accept-visibility-change-consequences
-   gh run list --workflow ci.yml --limit 1 && gh run watch
-   ```
-
-3. RUN: tag and push the tag. The release workflow checks that the tag
-   equals `uv version --short`.
-
-   ```
-   git tag -a v0.2.0 -m "autoqec-sim 0.2.0"
-   git push origin v0.2.0
-   gh release view v0.2.0        # sdist and wheel attached
-   ```
+2. RUN: `scripts/release.sh v0.2.0` dates CITATION.cff and CHANGELOG.md,
+   commits, makes the repository public, tags, pushes, and enables GitHub
+   Pages on the `gh-pages` branch the docs workflow maintains (Pages is kept
+   off while the repository is private: on this plan a private repository's
+   Pages site would be public). The release workflow checks that the tag
+   equals `uv version --short` and attaches the sdist and wheel.
 
 4. RUN: Zenodo DOI through the GitHub integration (enable the repository
    on zenodo.org before the tag is pushed), then paste the concept DOI into
