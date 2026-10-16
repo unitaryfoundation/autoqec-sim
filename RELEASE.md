@@ -27,10 +27,10 @@ mechanical once the OWNER steps before them are settled.
    CHANGELOG.md: replace TBD.
 
 2. RUN: `scripts/release.sh v0.2.0` dates CITATION.cff and CHANGELOG.md,
-   commits, makes the repository public, tags, pushes, and enables GitHub
-   Pages on the `gh-pages` branch the docs workflow maintains (Pages is kept
-   off while the repository is private: on this plan a private repository's
-   Pages site would be public). The release workflow checks that the tag
+   commits, makes the repository public, tags, and pushes. GitHub Pages is
+   already enabled on the `gh-pages` branch the docs workflow maintains (on
+   this plan the Pages site is public while the repository is still
+   private). The release workflow checks that the tag
    equals `uv version --short` and attaches the sdist and wheel.
 
 4. RUN: Zenodo DOI through the GitHub integration (enable the repository
