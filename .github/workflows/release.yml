@@ -24,7 +24,9 @@ jobs:
       - run: uv run --isolated --no-project --with dist/*.whl python -c "import autoqec_sim; print(autoqec_sim.__version__)"
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
           generate_release_notes: false
           body: "See CHANGELOG.md for this version's entry."
 
