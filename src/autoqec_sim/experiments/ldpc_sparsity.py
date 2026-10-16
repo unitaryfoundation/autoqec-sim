@@ -840,7 +840,7 @@ def bench_mask(cell: str, batch: int, steps: int | None = None, seed: int = 0, m
     counters (tests per call, admitted, cache hit rate)."""
     from ..env import CodeDiscoveryEnv
 
-    n, k, d, graph_spec, gates, cell_steps = CELL_SPECS[cell]
+    n, k, _d, graph_spec, gates, cell_steps = CELL_SPECS[cell]
     steps = cell_steps if steps is None else int(steps)
     env = CodeDiscoveryEnv(n=n, k=k, batch_size=batch, max_steps=steps + 1, gates=gates, graph=graphs.from_spec(graph_spec), seed=seed, auto_reset=True)
     env.reset()
@@ -872,7 +872,7 @@ def bench_mask(cell: str, batch: int, steps: int | None = None, seed: int = 0, m
     for mth in methods:
         out[mth] = {"mean_s": float(np.mean(times[mth])), "max_s": float(np.max(times[mth])), "masked_frac_mean": float(np.mean(masked[mth])), "masked_frac_last": masked[mth][-1]}
     if "exact" in methods:
-        out["exact"].update({k2: v for k2, v in totals.items()})
+        out["exact"].update(dict(totals.items()))
         out["exact"]["tested_per_call"] = totals["exact_tested"] / steps
         out["exact"]["s_per_tested_pair"] = (sum(times["exact"]) - sum(times.get("basis", [0.0]))) / max(totals["exact_tested"], 1)
     return out

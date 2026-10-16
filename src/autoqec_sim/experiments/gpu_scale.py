@@ -1438,7 +1438,7 @@ def sparse_outcome(runs: list[dict]) -> str:
     stopped = f"; the runs were stopped after seed {seeds[0]}" if seeds == [0] else ""
     capped = all(r["hit_wall_cap"] for r in runs)
     return (
-        f"Outcome: negative. No run produced a state with exact d = 5 and w* <= 4: "
+        "Outcome: negative. No run produced a state with exact d = 5 and w* <= 4: "
         + "; ".join(parts)
         + (". Every run stopped at its wall cap" if capped else "")
         + stopped

@@ -1,0 +1,69 @@
+site_name: autoqec-sim
+site_url: https://unitaryfoundation.github.io/autoqec-sim/
+repo_url: https://github.com/unitaryfoundation/autoqec-sim
+repo_name: unitaryfoundation/autoqec-sim
+edit_uri: edit/main/docs/
+copyright: Apache-2.0
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: [".", "docs"]
+      check_paths: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            members_order: source
+            separate_signature: true
+
+nav:
+  - Overview: index.md
+  - Modules: modules.md
+  - Rediscovery regression: regression.md
+  - Experiments: experiments.md
+  - LDPC constraint: ldpc.md
+  - Memory objective: memory_objective.md
+  - Noise module:
+      - Interface: noise.md
+      - Device presets: noise_presets.md
+  - GPU backend: gpu.md
+  - CPU profile: profile.md
+  - Reproduce: reproduce.md
+  - API reference:
+      - autoqec_sim: api/autoqec_sim.md
+      - env and reward: api/env.md
+      - code and tableau: api/code.md
+      - noise: api/noise.md
+      - schedule synthesis: api/schedule.md
+      - backends and agents: api/backends.md

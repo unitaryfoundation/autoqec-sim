@@ -1071,7 +1071,7 @@ def css_standard_encoder(stabilizers: list[str], logical: int = 0, seed: int | N
         seed = 0
     rng = np.random.default_rng(seed)
     for _ in range(200):
-        order_x = list(rng.permutation(others)) + [logical]
+        order_x = [*list(rng.permutation(others)), logical]
         xr, px = _rref_with_order(hx, order_x)
         if len(px) != hx.shape[0] or logical in px:
             continue
@@ -1197,7 +1197,7 @@ def polish_encoder(gates, setting: Setting, model, target_key: bytes, env_table,
     for i in rng.permutation(max(len(cur) - 1, 0)):
         if not time_left():
             break
-        cand = cur[:i] + [cur[i + 1], cur[i]] + cur[i + 2 :]
+        cand = [*cur[:i], cur[i + 1], cur[i], *cur[i + 2:]]
         m = score(cand)
         evals += 1
         if m is not None and m < cur_m - 1e-15:
@@ -1212,7 +1212,7 @@ def polish_encoder(gates, setting: Setting, model, target_key: bytes, env_table,
             g = actions[a]
             if g == cur[i]:
                 continue
-            cand = cur[:i] + [g] + cur[i + 1 :]
+            cand = [*cur[:i], g, *cur[i + 1:]]
             m = score(cand)
             evals += 1
             if m is not None and m < cur_m - 1e-15:
@@ -1269,7 +1269,7 @@ def known_code_encoders(setting: Setting, spec: dict, models: dict, polish_time_
     target_key = code_key(StabilizerCode.from_stabilizers(spec["stabilizers"]).to_tableau()[0], 1)
     cands = []
     for logical in range(n):
-        for sd in [None] + list(range(12)):
+        for sd in [None, *list(range(12))]:
             try:
                 base = css_standard_encoder(parent, logical=logical, seed=sd, graph=graph)
             except RuntimeError:

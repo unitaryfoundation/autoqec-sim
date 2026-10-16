@@ -99,13 +99,8 @@ fused CUDA code.
 
 ## Documentation
 
-- `docs/modules.md`: every module and the repository layout
-- `docs/regression.md`: the rediscovery regression and the PPO agent, with results
-- `docs/experiments.md`: noise-aware discovery, memory objective, scaling probe, topology matrix
-- `docs/ldpc.md`: the LDPC constraint and its forms
-- `docs/noise.md`, `docs/noise_presets.md`: the noise module's interface and the sourced device parameters
-- `docs/gpu.md`, `docs/profile.md`: the torch backend and the CPU profile
-- `docs/reproduce.md`: commands and expected outputs
+https://unitaryfoundation.github.io/autoqec-sim/ (built with MkDocs from `docs/`;
+`uv run --group docs mkdocs serve` renders it locally).
 
 ## License
 

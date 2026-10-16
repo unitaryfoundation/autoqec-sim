@@ -177,7 +177,7 @@ def noise_models(graph: graphs.Graph) -> dict:
     for name in PROFILES:
         try:
             out[name] = resolve_noise_model(builders[name](), scale=1.0, graph=graph, n=graph.n)
-        except Exception as exc:  # noqa: BLE001 - the refusal is reported, not handled
+        except Exception as exc:
             out[name] = None
             out["_refused"][name] = f"{type(exc).__name__}: {exc}"
     return out
@@ -194,7 +194,7 @@ def masses(gates, n: int, tab: np.ndarray, models: dict) -> dict:
             continue
         try:
             faults = fault_set(model(gates_to_layered_circuit(gates, n)), n)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             out[name] = {"refused": f"{type(exc).__name__}: {exc}"}
             continue
         out[name] = {"undetected": undetected_fault_mass(tab[None], 1, faults), "total": faults.total}
@@ -250,7 +250,7 @@ def surface_baseline(graph: graphs.Graph, models: dict) -> dict | None:
     cands = []
     seen = set()
     for logical in range(n):
-        for sd in [None] + list(range(12)):
+        for sd in [None, *list(range(12))]:
             try:
                 base = css_standard_encoder(stabs, logical=logical, seed=sd, graph=graph)
             except RuntimeError:
@@ -657,7 +657,7 @@ def write_report(out_dir: Path) -> Path:
         "Paulis in the stabilizer group), H and CNOT on the lattice edges only, 50-gate",
         "episode cap, level distance reward `min(d, 3) / 3 - 1` plus the padding penalty",
         "(`experiments.scaling.LevelDistanceReward`; reward 0 iff the target is met).",
-        f"`PPOConfig` defaults with `policy = \"auto\"` (flat MLP below 12 qubits, per-qubit",
+        "`PPOConfig` defaults with `policy = \"auto\"` (flat MLP below 12 qubits, per-qubit",
         f"equivariant network from 12 on), {BATCH} parallel episodes, seeds {', '.join(map(str, SEEDS))}.",
         f"Budgets: {BUDGETS['small']:,} env steps for the small tier, {BUDGETS['large']:,} for the",
         f"large tier, {MINUTES:.0f} min wall cap per run; a run stops at its first success.",
