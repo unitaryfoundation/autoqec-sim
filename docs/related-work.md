@@ -113,7 +113,9 @@ Exact distance here is enumeration to 20 qubits. Public tools go further:
 randomized information-set distance [@pryadko2023], parallel
 Brouwer-Zimmermann [@hernando2024], and SAT, MILP, and heuristic code and
 circuit distance in one package [@webster2026]; the problem is NP-hard
-[@kapshikar2022]. Weight enumerators are not a complete invariant, and
+[@kapshikar2022], has been cast as quantum annealing [@ismail2024], and
+for large LDPC codes is bounded from above by heuristic witness search
+[@kasai2026]. Weight enumerators are not a complete invariant, and
 local-Clifford equivalence has its own test [@danielsen2006; @vandennest2004];
 the generator weight this package calls `w*` is the optimal generator
 weight of [@wei2026]. Fault-counting sensitivities [@fu2026], Pauli
