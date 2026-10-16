@@ -6,6 +6,7 @@ need.
 
 | I want to... | Start with |
 |---|---|
+| Evaluate one code under a device profile: error per round, circuit distance, dominant faults | `evaluate_code(code, profile)`; [Evaluate a code](../evaluate.md) |
 | Rediscover a known code and check the installation | `autoqec-regress --budget reduced`; [Rediscovery regression](../regression.md) |
 | Train PPO on the same targets | `autoqec-ppo --budget reduced` (`rl` extra); [PPO agent](../regression.md#ppo-agent) |
 | Search for a code under my own `n`, `k`, graph, and gate set | `CodeDiscoveryEnv` with `EvolutionarySearch` or `agents.ppo`; [User Guide](../guide.md) |
@@ -36,4 +37,4 @@ full-budget regression. For lattices, the permutation-equivariant policy in
 | Exact distance | `reward` and `code.StabilizerCode` | the minimum weight in the normalizer minus the stabilizer | enumeration, `n <= 20` |
 | LDPC penalty or constraint | `ldpc` | minimum bottleneck generator weight `w*` and qubit degree | bit-packed elimination, `n - k <= 14` exact |
 | Circuit-level noise | `circuit_noise` | undetected single-fault mass of the noisy encoder under a profile | one fault set per circuit, propagated with one GF(2) product |
-| Memory objective | `memory_objective` | logical error rate per round of an `R`-round syndrome-extraction circuit | proxy, exact-ML or lookup sampling, or BP+OSD sampling |
+| Memory objective | `memory_objective` | logical error rate per round of an `R`-round syndrome-extraction circuit | proxy, exact-ML or lookup sampling, BP+OSD sampling, or Tesseract sampling |

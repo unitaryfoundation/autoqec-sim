@@ -16,13 +16,15 @@ release, append its tag, for example `...autoqec-sim@v0.2.0`.
 | Extra | Adds | Needed for |
 |---|---|---|
 | `rl` | `torch` | the PPO agent, `autoqec-ppo`, `autoqec-schedule`, and the torch backend |
+| `tesseract` | `tesseract-decoder` | the `tesseract` tier of `evaluate_code` and the memory objective (PyPI has dev releases only) |
 
 ```bash
 pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"
 ```
 
-Without the extra, the evolutionary search, `autoqec-regress`, and every
-reward run on numpy.
+Without the extras, the evolutionary search, `autoqec-regress`, every
+reward, and the proxy and sampled tiers of `evaluate_code` run on numpy
+and stim.
 
 ## GPU
 

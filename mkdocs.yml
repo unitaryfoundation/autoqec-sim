@@ -96,6 +96,7 @@ nav:
       - Choose a Workflow: getting-started/choosing-a-workflow.md
   - User Guide:
       - Overview: guide.md
+      - Evaluate a code: evaluate.md
       - Discovery:
           - Rediscovery regression: regression.md
           - Experiments: experiments.md

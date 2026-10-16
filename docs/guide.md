@@ -24,7 +24,7 @@ on.
 | Knill-Laflamme undetected mass [@knill1997] and exact distance, the default of the regression targets | [Rediscovery regression](regression.md) |
 | LDPC sparsity, as a hard constraint (`terminate`, `mask`, `final`) or a penalty | [LDPC constraint](ldpc.md) |
 | Circuit-level noise of the encoding circuit under a device profile | [Noise interface](noise.md), [Device presets](noise_presets.md) |
-| Multi-round memory experiment with a decoder, three fidelity tiers | [Memory objective](memory_objective.md) |
+| Multi-round memory experiment with a decoder, four fidelity tiers | [Memory objective](memory_objective.md) |
 
 `regress.make_reward(target)` composes the Knill-Laflamme term with the
 low-weight-stabilizer penalty and, on LDPC targets, the sparsity term.

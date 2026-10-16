@@ -104,6 +104,12 @@ rounds `R` (default the target distance), a layout, and a tier.
      30 iterations, scaling 0.625, OSD-CS order 10 clamped to the
      redundancy), sampled; validation only, optional dependency
      (`uv run --with ldpc`).
+   - `tesseract`: Tesseract [@beni2025], a most-likely-error search
+     decoder that takes the DEM without decomposition, sampled with every
+     distinct syndrome decoded once; optional dependency (`tesseract`
+     extra). On the rotated surface code under uniform depolarizing noise
+     at 1e-3 it agrees with the sampled tier within shot noise (0.0085
+     against 0.0088 per round at 20,000 shots per basis).
 7. Per-round rate: `p_round = 1 - (1 - p_shot)^(1/R)` per basis, summed
    over the two bases. `MemoryResult` carries the per-basis dictionaries
    (mechanisms, detectors, gates, layers, batches, expected faults per

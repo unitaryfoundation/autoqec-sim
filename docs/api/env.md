@@ -11,3 +11,5 @@
 ::: autoqec_sim.circuit_noise
 
 ::: autoqec_sim.memory_objective
+
+::: autoqec_sim.evaluate

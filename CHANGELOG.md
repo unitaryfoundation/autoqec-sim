@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `autoqec_sim.evaluate_code(code, profile)`: one call for the logical
+  error per round of a chosen tier, the exact circuit-level distance and
+  its fault mass per basis, and the most probable minimum-weight
+  undetectable fault sets explained to circuit locations
+  (`docs/evaluate.md`). `memory_objective` gains a `tesseract` tier
+  (Tesseract sampling, `tesseract` extra) and `undetectable_sets`.
 - `experiments.qdx_targets`: QDX's published all-to-all target set
   through this package's PPO at matched settings, verified by exact
   distance (`experiments/qdx_targets/REPORT.md`). `experiments.sat_codes`:
