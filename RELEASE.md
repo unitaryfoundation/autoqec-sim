@@ -19,10 +19,12 @@ mechanical once the OWNER steps before them are settled.
 
 ## Remaining steps
 
-1. OWNER: the institutional copyright holder (LICENSE, first lines), the
-   commit identity of the public history, and whether the package goes to
-   PyPI. CITATION.cff: fill the ORCID and set `date-released` to the tag
-   date; CHANGELOG.md: replace TBD.
+1. OWNER: the institutional copyright holder (LICENSE, first lines; a
+   question for UF agreements and IonQ given the PI transfer). Decided: no
+   PyPI (the proposal and the data-management plan ask for a public GitHub
+   release with a Zenodo DOI); commit identity is vprusso throughout.
+   CITATION.cff: fill the ORCID and set `date-released` to the tag date;
+   CHANGELOG.md: replace TBD.
 
 2. RUN: make the repository public, wait for CI on `main`.
 
@@ -40,6 +42,7 @@ mechanical once the OWNER steps before them are settled.
    gh release view v0.2.0        # sdist and wheel attached
    ```
 
-4. OWNER then RUN: if PyPI, add a `pypa/gh-action-pypi-publish` step and a
-   trusted publisher; Zenodo DOI through the GitHub integration, then paste
-   the concept DOI into CITATION.cff and commit.
+4. RUN: Zenodo DOI through the GitHub integration (enable the repository
+   on zenodo.org before the tag is pushed), then paste the concept DOI into
+   CITATION.cff and commit. Enable GitHub Pages (source: gh-pages) at the
+   same time; the docs workflow already publishes the branch.
