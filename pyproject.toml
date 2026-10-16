@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "autoqec-sim"
 version = "0.2.0"
-description = "Vectorized stabilizer-tableau reward engine and RL environment for stabilizer-code discovery."
+description = "Evaluation of stabilizer codes under device noise, and search for codes, encoders, and syndrome-extraction schedules."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"

@@ -59,15 +59,15 @@ for the gate updates and the parity masks.
 ## Quick Example
 
 Install with `pip install git+https://github.com/unitaryfoundation/autoqec-sim`,
-then search for a distance-3 code on five qubits:
+then score three known codes under the IonQ Forte preset:
 
 ```python
---8<-- "docs/examples/quickstart.py:quickstart"
+--8<-- "docs/examples/quickstart.py:score"
 ```
 
-The search returns a [[5,1,3]] code in under a second. The
-[Quick Start](getting-started/quickstart.md) verifies it against the
-reference code and scores its encoder under a device noise profile.
+The [Quick Start](getting-started/quickstart.md) adds the search for a
+code, its verification against the reference, and the encoder score under
+a device profile.
 
 ## Key Features
 

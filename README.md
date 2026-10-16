@@ -62,23 +62,6 @@ input.
   search, an LDPC sparsity constraint, and a batched tableau simulator on
   numpy with a bit-identical torch and CUDA path.
 
-## Rediscovery
-
-autoqec-sim rediscovers the [[5,1,3]], Steane, and rotated surface codes in
-between one second and half a minute on a laptop CPU. From the full-budget
-regression at seed 0: the states each agent evaluated before a code was
-found and verified against the reference, with the wall time of the run
-next to each marker.
-
-<p align="center">
-  <img src="docs/assets/figures/rediscovery.png" alt="States evaluated up to a verified rediscovery by the evolutionary search and PPO on three targets" width="700">
-</p>
-
-PPO reaches a verified rediscovery with 3 to 17 times fewer state
-evaluations than the evolutionary search. See [Rediscovery regression](https://unitaryfoundation.github.io/autoqec-sim/stable/regression/)
-for the targets, budgets, LDPC-constrained variants, and the verification,
-and [Reproduce](https://unitaryfoundation.github.io/autoqec-sim/stable/reproduce/) to rerun both.
-
 ## Installation
 
 ```bash
@@ -92,6 +75,25 @@ package.
 
 ## Quick Start
 
+Score three known codes under a device noise profile: a three-round memory
+experiment under the IonQ Forte preset, at the proxy tier.
+
+```python
+from autoqec_sim import known_codes
+from autoqec_sim.memory_objective import MemoryObjective
+from autoqec_sim.noise import presets
+
+# A three-round memory experiment under the IonQ Forte preset at a quarter of
+# its measured rates, scored by the low-weight maximum-likelihood proxy.
+objective = MemoryObjective(presets.forte("sequential"), scale=0.25, rounds=3)
+for name in ("five_qubit", "steane", "rotated_surface_9"):
+    code = known_codes.get(name)
+    print(name, code.parameters(), f"error per round {objective.evaluate(code).p_round:.2e}")
+```
+
+Search for a code on five qubits with the evolutionary agent, and read the
+code off the circuit it found:
+
 ```python
 from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
 
@@ -102,11 +104,11 @@ code = StabilizerCode.from_gates(5, 1, result.gates)
 print(code.parameters(), code.stabilizer_strings())
 ```
 
-The search returns a [[5,1,3]] code in under a second on a laptop. Continue
-with the [Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/), which verifies the
-code against the reference and scores its encoder under a device noise
-profile, or use [Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/)
-to pick a reward, agent, and entry point by the result you need.
+Both run in about a second on a laptop. Continue with the
+[Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/), which verifies a found code
+against the reference and scores its encoder under a device profile, or use
+[Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/) to pick a
+reward, agent, and entry point by the result you need.
 
 ## Commands
 

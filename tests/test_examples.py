@@ -18,9 +18,11 @@ def _section(path: str, name: str) -> str:
 
 def test_readme_quick_start_equals_the_example():
     readme = (ROOT / "README.md").read_text()
-    m = re.search(r"## Quick Start\n\n```python\n(.*?)```", readme, re.S)
-    assert m is not None
-    assert m.group(1).strip() == _section("docs/examples/quickstart.py", "quickstart")
+    section = readme[readme.index("## Quick Start"):readme.index("## Commands")]
+    blocks = re.findall(r"```python\n(.*?)```", section, re.S)
+    assert len(blocks) == 2
+    assert blocks[0].strip() == _section("docs/examples/quickstart.py", "score")
+    assert blocks[1].strip() == _section("docs/examples/quickstart.py", "search")
 
 
 def test_quick_start_runs_and_finds_a_distance_3_code():
@@ -28,4 +30,4 @@ def test_quick_start_runs_and_finds_a_distance_3_code():
         [sys.executable, str(ROOT / "docs" / "examples" / "quickstart.py")],
         capture_output=True, text=True, check=True, timeout=300,
     )
-    assert proc.stdout.startswith("(5, 1, 3)"), proc.stdout
+    assert "steane (7, 1, 3)" in proc.stdout and "(5, 1, 3)" in proc.stdout, proc.stdout

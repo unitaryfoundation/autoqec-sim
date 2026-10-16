@@ -1,6 +1,19 @@
 # Quick Start
 
-## Find a code
+## Score a code
+
+`MemoryObjective` builds the syndrome-extraction circuit of any stabilizer
+code, noisifies it under a device profile, and returns the logical error
+per round from its detector error model. Here the three codes are known
+ones; a code from any other tool goes in the same way through
+`StabilizerCode.from_stabilizers`. The Forte preset runs at a quarter of
+its measured rates, the scale the experiments use.
+
+```python
+--8<-- "docs/examples/quickstart.py:score"
+```
+
+## Search for a code
 
 A `CodeDiscoveryEnv` holds `batch_size` encoding circuits on `n` qubits
 encoding `k` logical qubits. Its default reward is the Knill-Laflamme
@@ -11,7 +24,7 @@ reward, and `StabilizerCode.from_gates` reads the code off the winning
 circuit. This is `docs/examples/quickstart.py`; it runs in under a second.
 
 ```python
---8<-- "docs/examples/quickstart.py:quickstart"
+--8<-- "docs/examples/quickstart.py:search"
 ```
 
 The output is `(5, 1, 3)` followed by four stabilizer generators: a
