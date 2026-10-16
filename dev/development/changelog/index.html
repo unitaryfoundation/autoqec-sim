@@ -1,0 +1,2316 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Batched stabilizer-code simulator and reinforcement-learning environment for discovering small quantum error-correcting codes.">
+      
+      
+      
+        <link rel="canonical" href="https://unitaryfoundation.github.io/autoqec-sim/dev/development/changelog/">
+      
+      
+        <link rel="prev" href="../releasing/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Changelog - autoqec-sim</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="autoqec-sim" class="md-header__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            autoqec-sim
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guide/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../modules/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../contributing/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="autoqec-sim" class="md-nav__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    autoqec-sim
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/choosing-a-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choose a Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rediscovery regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rewards and constraints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rewards and constraints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ldpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDPC constraint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../memory_objective/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory objective
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Noise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../noise_presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device presets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Execution
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CPU profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reproduce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/autoqec_sim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    autoqec_sim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment and rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codes and tableaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schedule synthesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backends, agents, search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../releasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#020-2026-10-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 (2026-10-16)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2026-09-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.0 (2026-09-20)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#020-2026-10-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 (2026-10-16)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2026-09-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.0 (2026-09-20)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
+<h2 id="020-2026-10-16">0.2.0 (2026-10-16)<a class="headerlink" href="#020-2026-10-16" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Repository layout: <code>tools/</code> (release and reproduce scripts), <code>benchmarks/</code>
+  (the CPU profile and the CUDA kernel benchmark), one <code>experiments/&lt;name&gt;/</code>
+  directory per experiment with raw output under <code>experiments/&lt;name&gt;/runs/</code>
+  (not tracked) and the regression JSONs under <code>experiments/regression/</code>,
+  and the quick-start scripts under <code>docs/examples/</code>, snippeted into the
+  documentation and checked against the README by <code>tests/test_examples.py</code>.</li>
+<li>Documentation bibliography: <code>docs/refs.bib</code> (every entry checked against
+  arXiv or Crossref) rendered by mkdocs-bibtex; pages cite sources by key
+  and end with their references instead of inline arXiv numbers.</li>
+<li><code>experiments/regression/figure.py</code>: states evaluated up to a verified
+  rediscovery for both agents, from the regression records, as
+  <code>docs/assets/figures/rediscovery.png</code> in the README and the regression page.</li>
+<li><code>StabilizerCode.from_gates(n, k, gates)</code> reads the code off a gate
+  sequence such as <code>SearchResult.gates</code>, and <code>EvolutionarySearch</code> is
+  exported from the package root, so the README quick start is a search,
+  a code, and its stabilizers (<code>docs/examples/quickstart.py</code>). The longer
+  rediscover, verify, and score walkthrough is
+  <code>docs/examples/rediscover_and_score.py</code>. README after clifft's: logo, badges,
+  one-line install, short quick start; CODE_OF_CONDUCT.md (Contributor
+  Covenant 2.1).</li>
+<li>
+<p><code>backends.cuda_kernels</code>: two opt-in fused CUDA kernels (CuPy, NVRTC) behind
+  the torch backend, a per-element gate kernel and a bit-packed popcount
+  parity kernel; agreement tests against the torch path; benchmark script
+  and A100 numbers in <code>docs/gpu.md</code>.
+First tagged release. Three additions on top of 0.1.0: the noise module
+in the circuit-level reward, an LDPC sparsity constraint, and a PPO
+agent with its own rediscovery regression.</p>
+</li>
+<li>
+<p>The noise module ships as the <code>autoqec_sim.noise</code> subpackage: biased,
+  correlated, and leakage-aware Pauli channels, device timing, topologies,
+  and sourced presets for IonQ Forte, a long ion chain, IBM Heron, and the
+  qldpc-challenge recipe. <code>circuit_noise</code> accepts a <code>autoqec_sim.noise.Profile</code>,
+  a preset name, or any <code>stim.Circuit -&gt; stim.Circuit</code> callable
+  (<code>resolve_noise_model</code>); profiles run through <code>autoqec_sim.noise.noisifier</code>
+  with <code>scale</code>. Gate lists are laid out as TICK-layered skeletons
+  (<code>gates_to_layered_circuit</code>, as-soon-as-possible scheduling), so the
+  profile's timing model and idle channel apply. Fault mechanisms are
+  enumerated from every noise instruction the module emits (<code>DEPOLARIZE1/2</code>,
+  <code>X/Y/Z_ERROR</code>, <code>PAULI_CHANNEL_1/2</code>, <code>CORRELATED_ERROR</code> and
+  <code>ELSE_CORRELATED_ERROR</code> chains with absolute probabilities,
+  <code>HERALDED_ERASE</code> as heralded, hence detected) and propagated through
+  the remaining gates as before. <code>dem_undetected_mass</code> derives the same
+  undetected mass from stim's detector error model of the circuit plus
+  an ideal stabilizer and logical readout, used as a cross-check (agreement
+  to <code>O(p^2)</code>, the merging error of the DEM). The placeholder
+  <code>depolarizing_noise_model</code> stays and gained an <code>idle</code> rate; with
+  <code>p1=None, p2=p, idle=p</code> it reproduces the board preset mechanism for
+  mechanism.</p>
+</li>
+<li><code>graphs</code> delegates every builder to <code>autoqec_sim.noise.topology</code>, with
+  <code>from_topology</code>, <code>Graph.to_topology</code>, and <code>as_graph</code>; the environment
+  accepts either graph class and exposes <code>env.topology</code>. A profile
+  without a graph takes the environment's graph in <code>resolve_noise_model</code>
+  and <code>make_circuit_level_reward</code>; a profile whose graph differs is
+  refused. <code>heavy_hex(rows, cols)</code> is now the <code>autoqec_sim.noise</code> honeycomb
+  construction (rows x cols hexagons), not the earlier brick-wall one.</li>
+<li><code>ldpc</code>: bit-packed batched GF(2) elimination; exact minimum bottleneck
+  weight <code>w*</code> (smallest <code>w</code> such that the weight-<code>&lt;= w</code> elements generate
+  the group) for <code>n - k &lt;= 14</code> by enumerating the <code>2^(n-k)</code> group elements,
+  a greedy pairwise generator reduction as the fallback bound; the
+  sparsest basis and its maximum qubit degree; <code>ldpc_feasible</code>,
+  <code>ldpc_penalty</code>, <code>make_ldpc_penalty</code>.</li>
+<li><code>env</code>: hard LDPC constraint <code>ldpc_w_max</code> with modes <code>terminate</code>, <code>mask</code>
+  (revert to a no-op, plus <code>feasible_action_mask()</code> for agents that mask
+  logits), and <code>final</code> (feasibility gates success only). <code>info["success"]</code>
+  distinguishes success from termination by violation; <code>rollout</code> uses it.</li>
+<li><code>search</code>: the reported best circuit is the executed history (masked
+  actions dropped) and is chosen among successful elements when any
+  exist; before, an element at the reward threshold but outside the
+  constraint could be reported as the solution.</li>
+<li><code>regress</code>: <code>LdpcSpec</code> on targets, exclusion targets
+  (<code>expect_success=False</code>, <code>passed</code> field), <code>min_max_generator_weight</code>
+  and <code>max_qubit_degree</code> in every verification, five new targets
+  (<code>rotated_surface_9_ldpc</code>, <code>rotated_surface_9_ldpc_penalty</code>,
+  <code>steane_ldpc_w4</code>, <code>seven_qubit_w3_excluded</code>, <code>five_qubit_w3_excluded</code>).</li>
+<li>Finding from the <code>w*</code> column of the regression: the unconstrained
+  surface-code result of 0.1.0 (seed 20) has the surface code's weight
+  enumerators of <code>S</code> and <code>N(S)</code> but <code>w* = 6</code> (its 26 elements of weight
+  at most 4 span a rank-7 subgroup, the reference's span rank 8), so equal
+  enumerators do not imply local-Clifford equivalence; the mask-constrained
+  target's match has <code>w* = 4</code>.</li>
+<li>PPO agent (<code>agents.ppo</code>): clipped objective, GAE, shared value head,
+  entropy bonus, action masking (static graph mask, dynamic undo mask, and
+  any mask the environment exposes), PyTorch on CPU with a six-thread cap.
+  torch is the optional <code>rl</code> extra and is imported lazily.</li>
+<li>PPO rediscovery regression (<code>agents.ppo_regress</code>, run as <code>python -m</code>):
+  same targets, reward, and enumerator verification as <code>regress</code>; every
+  distinct code a run produces is verified. Full-budget results in
+  <code>experiments/regression/regression_ppo.json</code>: [[5,1,3]], Steane, and the rotated surface
+  code all matched on seed 0 with 3 to 17 times fewer state evaluations
+  than the evolutionary search.</li>
+<li><code>tests/test_ppo.py</code> (6 tests, skipped without torch; 15 items with the
+  policy tests below), including a reduced-budget [[5,1,3]] rediscovery
+  that trains PPO in about 1.5 s.</li>
+<li><code>autoqec-ppo</code> console script for the PPO regression (<code>uv run --extra rl autoqec-ppo</code>).</li>
+<li>Noise-aware discovery experiment (<code>experiments.noise_aware</code>, run as
+  <code>python -m</code>): PPO under three <code>autoqec_sim.noise</code> profiles (board depolarizing,
+  Forte ion chain with sequential timing, Heron rates on the setting's
+  graph) scaled to equal total fault mass, in three settings (7 qubits
+  all-to-all with H, S, CNOT; 3x3 and 4x4 square lattices with H, CNOT),
+  five seeds per cell. Reward: shifted distance reward (fractional below
+  the target on 4x4) and the padding penalty of the regression, plus, on
+  states at the target distance with no idle qubit, the circuit-level
+  undetected fault mass (<code>normalize=False</code>, weight <code>2 / M_0</code>) and the LDPC
+  penalty at <code>w_max = 4</code>; such a state ends the episode through the new
+  <code>success_fn</code> hook of <code>CodeDiscoveryEnv</code>. Per seed: the best and the most visited
+  target-distance codes with exact <code>d</code>, pure-X and pure-Z distances,
+  local-Clifford CSS-frame search, <code>w*</code>, enumerators, and the undetected
+  mass under all three profiles (cross-evaluation); known codes (Steane,
+  rotated surface, XZZX, Hadamard-deformed surface, Shor, transposed Shor
+  at <code>n = 9</code> and <code>n = 16</code>) with standard-form encoders routed onto the
+  lattice and polished per profile; training-curve CSVs and figures
+  (<code>experiments.figstyle</code>, one style); <code>experiments/noise_aware/runs/REPORT.md</code>.</li>
+<li>RL scaling probe (<code>experiments.scaling</code>, run as <code>python -m</code>; report in
+  <code>experiments/scaling/REPORT.md</code>, runs in <code>experiments/scaling/runs/</code>). Diagnosis
+  of the 4x4 failure of the noise-aware experiment (<code>[[16, 1, 4]]</code>, H and
+  CNOT on the lattice, 50-gate episodes): a distance-4 state is reachable
+  at 50 gates (evolutionary search finds one after 369k circuits) but rare
+  (0 of 8192 random 50-gate sequences, 2 at d = 3), the default agent never
+  evaluates one in 21M to 24M env steps, and its terminal states are no
+  better than random on the padding term (8 idle qubits, 87 to 91 percent
+  CNOT actions), so the failure is exploration, not credit assignment or
+  representational capacity. Variants, one change each: a target-distance
+  curriculum learns d = 3 at n = 16 but not d = 4; CZ plus plaquette
+  macros reach d = 4 in 23k to 38k steps by raising the gate budget to
+  about 200 per episode; a per-qubit permutation-equivariant policy
+  (<code>scaling.equivariant_actor_critic</code>, 124k parameters) reaches a clean
+  d = 4 at the 50-gate cap in 217k to 258k env steps on 3 of 3 seeds (71
+  to 110 s) and produces d = 4 codes in 56 to 64 percent of episodes after
+  1M steps; 1024 parallel episodes with entropy coefficient 0.001 reach it
+  with the flat MLP in 4.2M to 4.7M steps; the baseline alone needs an
+  80-gate cap (3.1M and 5.4M steps) and fails at 60 and 70 in 30 minutes.
+  The LDPC penalty form of the regression does not scale past n = 9: in 18
+  runs at n = 12 and 16, k = 2 and 4, on all-to-all and square graphs (penalty
+  scales 0.25 and 0.05, flat and equivariant policies, 20 minutes each) no run
+  reached a distance-3 code with w* &lt;= 4; every policy converges to sparse
+  stabilizer groups of distance 1, because the normalized Knill-Laflamme term
+  pays 1/630 to 1/1128 per detected error against 0.25 per unit of w* excess.</li>
+<li>Three-topology run matrix (<code>experiments.topologies</code>, run as <code>python -m</code>;
+  report in <code>experiments/topologies/runs/REPORT.md</code>). The PPO agent alone, not the
+  LLM meta-agent of milestone M2, on square, triangular, and heavy-hex
+  lattices at two tiers (<code>3x3</code> and <code>4x4</code>; heavy-hex <code>1x1</code> with 12 qubits and
+  <code>2x1</code> with 18, the nearest sizes the honeycomb construction allows), one
+  objective (<code>[[n, 1, 3]]</code>, no idle qubit, H and CNOT on lattice edges,
+  50-gate cap, level distance reward), <code>PPOConfig</code> defaults with
+  <code>policy="auto"</code>, three seeds per cell, 2M or 4M env steps and 12 min per
+  run. Common metrics per cell: steps and wall time to first success, exact
+  <code>d</code>, <code>w*</code>, qubit degree, CSS test, weight enumerators, undetected fault
+  mass of the encoder under the Heron preset on the cell's graph and under
+  the board preset, and the routed rotated surface encoder's mass where one
+  exists. All 18 runs reached distance 3: within the first three updates on
+  the 9-qubit lattices, 49k to 113k env steps at 12 and 16 qubits, 307k to
+  345k on the 18-qubit heavy-hex graph. <code>tests/test_topologies.py</code> (3 tests,
+  skipped without torch).</li>
+<li><code>circuit_noise.fault_set</code> propagates fault mechanisms with a GF(2)
+  product against the symplectic map of the circuit suffix (15 to 25
+  times faster than the stim <code>PauliString.after</code> loop, now
+  <code>fault_set_reference</code>, which the tests compare against mechanism for
+  mechanism); <code>gates_to_layered_circuit</code> builds the skeleton from text in
+  one parse.</li>
+<li><code>env.CodeDiscoveryEnv(success_fn=...)</code>: an optional success criterion
+  replacing the reward threshold.</li>
+<li><code>matplotlib</code> in the <code>dev</code> dependency group (figures of the experiment).</li>
+<li>Tests: 44 to 71 for these modules (noise wiring, DEM cross-check, ion
+  timing ranking, heavy-hex rejection, graph round trip, LDPC statistics,
+  constraint modes, regression); 78 with the PPO agent's 6 and the
+  version check.</li>
+<li><code>agents.policies</code>: the two actor-critics of the PPO agent, the flat MLP
+  (moved out of <code>agents.ppo</code> unchanged) and the permutation-equivariant
+  per-qubit network of the scaling probe (moved from
+  <code>experiments.scaling.equivariant_actor_critic</code>, now also accepting the
+  <code>check_matrix</code> observation). <code>PPOConfig.policy</code> with values <code>mlp</code>,
+  <code>equivariant</code>, and <code>auto</code> (the default: equivariant from 12 qubits on,
+  mlp below, <code>EQUIVARIANT_MIN_QUBITS</code>), <code>PPOConfig.equivariant_hidden</code>
+  (128), <code>PPOAgent.policy</code> and <code>PPOAgent.build_model()</code>, and
+  <code>policy_resolved</code> in the result's config. Below 12 qubits the agent
+  builds the same network from the same torch RNG state as before, so the
+  reduced PPO regression reproduces <code>docs/reproduce.md</code> step for step
+  (counts, gates, and per-update history checked). <code>experiments.scaling</code>
+  keeps its recorded-run protocol (build the MLP, then swap the equivariant
+  network in) so <code>experiments/scaling/runs/</code> stays reproducible; it now passes
+  <code>policy="mlp"</code> explicitly. Seven test functions (nine items) in
+  <code>tests/test_ppo.py</code>, which now collects 15 items.</li>
+<li><code>known_codes.rotated_surface(d)</code> (the rotated surface code of any
+  distance on the <code>d x d</code> grid, the builder the noise-aware experiment
+  used) and <code>ROTATED_SURFACE_16</code> (<code>[[16, 1, 4]]</code>, <code>w* = 4</code>, degree 4) in
+  the known-code table.</li>
+<li>PPO-only rediscovery target <code>rotated_surface_16</code> in <code>agents.ppo_regress</code>
+  (<code>PPO_ONLY_TARGETS</code>): <code>[[16, 1, 4]]</code> on <code>square:4x4</code> with H and CNOT,
+  50-gate episodes, the regression's reward and enumerator match, a budget
+  of 1,000,000 env steps in one attempt (<code>TARGET_BUDGETS</code>), skipped by the
+  <code>reduced</code> budget (<code>REDUCED_SKIP</code>); <code>target_budget()</code> and <code>--threads</code>.
+  Result at 2 threads (<code>experiments/regression/regression_ppo_4x4_seed{0,1}.json</code>): both
+  seeds reach a verified <code>[[16, 1, 4]]</code> code (88,576 and 268,288 env
+  steps, 46 and 48 gates, non-CSS, <code>w*</code> 5 and 6), 66 and 2 distinct
+  codes over 1M steps, none with the rotated surface enumerators, so the
+  target is not rediscovered at this budget.</li>
+<li><code>regress.verify</code> computes <code>w*</code> exactly up to <code>n - k = 15</code>
+  (<code>VERIFY_EXACT_GENERATORS</code>), so the 4x4 target's codes report the exact
+  bottleneck weight instead of the greedy bound.</li>
+<li><code>ldpc.LdpcObjective</code>: reward and success criterion of an
+  LDPC-constrained <code>[[n, k, d]]</code> target in four forms (<code>LDPC_FORMS</code>):
+  <code>penalty</code> (the regression's normalized form), <code>unnormalized</code> (one
+  undetected error costs one unit against <code>scale</code> per unit of <code>w*</code>
+  excess, divided by the initial state's undetected count),
+  <code>final</code> (hard final-state constraint, no LDPC term in the reward), and
+  <code>schedule</code> (distance first, penalty switched on by <code>activate()</code>). The
+  exact <code>w*</code> is evaluated on candidate states only (every error detected,
+  no idle qubit), the greedy bound elsewhere. <code>DEFAULT_LDPC_FORM</code> is the
+  form the comparison below selected.</li>
+<li><code>ldpc.LdpcObjective</code> forms <code>shaped</code> (dense per-step term <code>-shaping *
+  excess</code> in reward units, greedy bound on ordinary states, exact on
+  candidates) and <code>terminal</code> (no path term; any candidate ends the episode
+  with reward <code>1 - h / (n - k)</code>, <code>h</code> the number of generators of the
+  sparsest basis above <code>w_max</code>); <code>ldpc.heavy_generator_count</code> (<code>m</code> minus
+  the rank of the light elements, basis independent) and
+  <code>ldpc.greedy_action_mask</code> (per-action greedy <code>w*</code> bound, all two-qubit
+  trials in one batched call, single-qubit gates always allowed).</li>
+<li>Sparsity comparison (<code>experiments.ldpc_sparsity</code>, run as <code>python -m</code>;
+  report in <code>experiments/ldpc_sparsity/REPORT.md</code>, runs in
+  <code>experiments/ldpc_sparsity/runs/</code>): <code>shaped</code> at <code>c</code> = 0.05, 0.1, 0.2, <code>terminal</code>,
+  and <code>mask</code> against <code>unnormalized</code> at 1.5M env steps on <code>[[12, 2, 3]]</code>
+  (all-to-all, <code>square:3x4</code>) and <code>[[16, 4, 3]]</code> (<code>square:4x4</code>), equivariant
+  policy, on the RunPod pod's CPU with every run under the compute ledger's
+  <code>wrap</code>. Measured: the fraction of terminal states at distance 3 with exact
+  <code>w* &lt;= 4</code>. On the two 12-qubit cells (<code>[[16, 4, 3]]</code> pending): the
+  <code>mask</code> variant makes the bound a property of the policy on
+  <code>all_to_all:12</code> (three seeds: 91, 68, and 89 percent of the terminal
+  states of the last 25 updates at distance 3, every one at <code>w* = 4</code>, 769
+  to 2,248 distinct feasible codes per run; the reference: 50 to 62
+  percent at distance 3, <code>w*</code> 5 to 6, none inside) and traps on
+  <code>square:3x4</code> (every terminal state at <code>w* = 4</code> and distance 1); the
+  same mask on top of the <code>terminal</code> reward (<code>mask_terminal</code>, seed 0)
+  does it on both cells (95 and 98 percent at distance 3, all at
+  <code>w* = 4</code>, 2,151 and 166 distinct feasible codes). <code>shaped</code> traps at
+  distance 1 at every <code>c</code>; <code>terminal</code> alone collapses onto one dense code
+  (<code>h = 2</code>, <code>w* = 7</code> all-to-all; <code>h = 3</code>, <code>w*</code> 5 to 6 on the lattice)
+  because it optimizes the heavy-generator count, not <code>w*</code>;
+  <code>unnormalized</code> at 3M env steps keeps <code>w*</code> 5 to 6. <code>DEFAULT_LDPC_FORM</code>
+  stays <code>unnormalized</code> (the mask is an environment constraint, not a
+  form). The mask costs 1.3 to 2 times the wall time per env step.</li>
+<li><code>experiments.ldpc_sparsity</code> scaling preparation: <code>--device cuda</code> puts the
+  policy, the PPO update, the reward's base terms (<code>LdpcObjective(device=
+  ...)</code>, the error set on the device as float32, tableau copied once per
+  call) and the terminal-state distance on the torch device; four
+  all-to-all cells (<code>n16_k4_all_to_all</code>, <code>n20_k4_all_to_all</code>,
+  <code>n25_k1_d4_all_to_all</code>, <code>n25_k1_d5_all_to_all</code>) with per-cell <code>d</code> and
+  episode length (<code>CELL_SPECS</code>), the greedy <code>w*</code> bound as the success test
+  above 15 generators (<code>w_star_test</code> in the JSON), and a capped code
+  description above 20 qubits. <code>ldpc.greedy_action_mask(method="basis")</code>,
+  now the default, applies every CNOT to the current state's greedy basis
+  as packed bit operations and re-reduces only the rows the gate made
+  heavy (<code>_packed_cnot</code>, <code>_greedy_within</code>): 0.05 s against 4.1 s per step
+  at <code>n = 25</code>, batch 256, same bound, sound against the exact test; the
+  <code>n = 12</code> runs used <code>method="tableau"</code>, which stays available.
+  First scaling runs (<code>mask_terminal</code>, seed 0, batch 1024, 3M env steps,
+  A40 shared with another job): <code>[[16, 4, 3]]</code> and <code>[[20, 4, 3]]</code> on the
+  all-to-all graph never reach a distance-3 terminal state (57 to 59
+  percent of two-qubit actions masked at the end, 823 and 520 env
+  steps/s); the <code>[[25, 1]]</code> cells are queued behind the pod's other GPU
+  work.</li>
+<li><code>ldpc.greedy_action_mask(method="exact")</code>: the exact feasibility test
+  in the action mask for <code>n - k &lt;= 15</code>. The greedy basis bound stays as
+  the pre-filter; every (state, action) pair it rejects gets the exact
+  test: a CNOT changes the weight of a Pauli by at most one, so the
+  elements of weight <code>&lt;= w_max + 1</code> of the current group (enumerated once
+  per state from the <code>2^(n - k)</code> group elements, shared by all of the
+  state's actions, kept across steps in an <code>ExactMaskCache</code> keyed by the
+  greedy basis) are the only ones the gate can leave within the bound;
+  the gate is admitted iff those it leaves at weight <code>&lt;= w_max</code> span the
+  heavy rows of the gate-transformed basis (a GF(2) rank over the
+  coefficient bits, uint16 rows, weights from a 16-entry table on the
+  local Paulis of the control and the target). Identical states in the
+  batch share one test per action. Above 15 generators the method is the
+  greedy basis bound and says so in <code>stats</code>; two-qubit gates other than
+  CNOT are tested on tableau copies of the rejected pairs. Tests: equal to
+  <code>ldpc_feasible</code> on every trial action, admits everything the greedy
+  bound admits, admits some moves the bound forbids, cache hits on
+  repeated states. <code>experiments.ldpc_sparsity</code>: <code>--mask-method exact</code>,
+  the run JSON's <code>mask</code> entry with the pre-filter and final masked
+  fractions, exact tests and admissions per call, and cache counts;
+  <code>bench-mask</code> (cost per env step of the mask methods on one cell);
+  <code>run_name</code> tags the exact method (<code>_exact</code>) and a batch other than 256
+  (<code>_b1024</code>); <code>label</code> carries the mask method and batch. Cost on the pod's
+  CPU (6 threads, 96-core host at load 30 to 90 from other tenants):
+  0.6 s per env step on <code>all_to_all:16</code> at batch 256 (0.2 s greedy
+  pre-filter, 0.4 s exact test over 34,000 rejected pairs per call), 27
+  percent of the wall time; 0.08 s on <code>square:4x4</code>, 9 percent. Runs
+  (<code>mask_terminal</code>, 3M env steps, exact mask at batch 256 on three seeds
+  and at batch 1024 on one, greedy controls at batch 256; report section
+  "Exact feasibility mask"): negative on both <code>[[16, 4, 3]]</code> cells. On
+  <code>all_to_all:16</code> the exact test admits 4 to 7 percent of the pairs the
+  greedy bound rejects (masked 53 to 58 percent of two-qubit actions
+  against 58 for the greedy control), so the bound was nearly exact and
+  the constrained set itself blocks distance 3 under a 40-gate episode;
+  one feasible <code>[[16, 4, 3]]</code> in 9M env steps over three seeds, half the
+  terminal states at distance 2 at the end on seed 0 (greedy control: 6
+  percent). On <code>square:4x4</code> it admits 12 to 30 percent (masked 31 to 39
+  against 42), and every run ends at distance 1. The greedy control at
+  batch 256 is as negative as the earlier batch-1024 run, so the update
+  count was not the confound. At batch 1024 the exact mask is negative on
+  both graphs too (1.7 s per env step on the all-to-all cell, 29 percent
+  of the wall time). <code>n = 20</code> (<code>n - k =
+  16</code>) is beyond the exact range and, on this evidence, would not change
+  with it; the routes left are a gate set that moves weight inside the
+  feasible set (CZ, SWAP), a longer episode, or a curriculum from the
+  distance-2 groups. The batch-1024 records of the scaling section were
+  renamed to the <code>_b1024</code> tag; the tableau-method <code>square:4x4</code> record
+  carries <code>_tableau</code>.</li>
+<li>LDPC-form comparison (<code>experiments.ldpc_scaling</code>, run as <code>python -m</code>;
+  report in <code>experiments/ldpc_scaling/REPORT.md</code>, runs in
+  <code>experiments/ldpc_scaling/runs/</code>): the forms
+  <code>unnormalized</code>, <code>final</code>, and <code>schedule</code> on <code>[[12, 2, 3]]</code> and
+  <code>[[16, 4, 3]]</code> with <code>w_max = 4</code>, all-to-all and square graphs, three
+  seeds each, equivariant policy, 1.5M env steps or 20 minutes per run
+  (36 runs plus 4 scale variants). <code>unnormalized</code> learns distance-3 codes
+  at <code>n = 12</code> to <code>16</code> where the penalty form never did (61 to 69 percent
+  of terminal states at distance 3 on five of six <code>[[12, 2, 3]]</code> runs) and
+  is the only form that produced codes within the bound (3 of 12 runs, all
+  <code>[[12, 2, 3]]</code>, at 303k, 354k, and 950k env steps), as single episodes:
+  its policies' codes stay at <code>w*</code> 5 to 6 (<code>n = 12</code>) and 7 to 8 (<code>n = 16</code>).
+  <code>final</code> reaches distance 3 and never a sparse code (0 of 12); <code>schedule</code>
+  switches its penalty on at 0.63M to 0.91M env steps at <code>n = 12</code> and then
+  falls into the penalty form's distance-1 trap (0 of 12). <code>unnormalized</code>
+  is <code>DEFAULT_LDPC_FORM</code>; <code>regress.LdpcSpec(mode="objective", form=...)</code>
+  puts any form on a regression target (<code>make_reward</code> returns the
+  objective, <code>env_kwargs(target, reward)</code> its <code>success_fn</code>; both
+  regressions pass it). Also existence
+  constructions for both targets (<code>experiments/ldpc_scaling/runs/existence.json</code>:
+  <code>[[5,1,3]]</code> plus Steane, and two copies of a searched <code>[[8,2,3]]</code> with
+  <code>w* = 4</code>).</li>
+<li>Tests: the 4x4 target and reference (<code>tests/test_ppo.py</code>), the four
+  objective forms on known codes and in environment rollouts
+  (<code>tests/test_ldpc.py</code>), one tiny run per form and the report tables
+  (<code>tests/test_ldpc_scaling.py</code>).</li>
+<li><code>benchmarks/profile_tableau.py</code> and <code>docs/profile.md</code>: CPU throughput and
+  memory profile of the vectorized simulator (numpy on the host, not the
+  GPU version the roadmap names) for <code>n</code> in 5 to 49 and batch 256 to 4096:
+  gate applications, reward evaluations, and environment steps per second,
+  bytes per batch element of the tableau and of the reward's intermediate
+  product, and a time breakdown of one environment step. The reward's
+  <code>(batch, M, n + k)</code> float32 product and its int64 copy for the mod-2
+  reduction are the memory bottleneck (GiB per batch at <code>n &gt;= 25</code>, against
+  kilobytes for the tableau) and the GEMM plus that cast are where the
+  time goes.</li>
+<li><code>backends.torch_backend</code>: the two hot paths of the reward engine on
+  torch tensors on any device (<code>cpu</code> or <code>cuda</code>), opt-in, with the numpy
+  path and its results unchanged. Gate kernels <code>apply_h</code>, <code>apply_s</code>,
+  <code>apply_s_dag</code>, <code>apply_x/y/z</code>, <code>apply_cnot</code>, <code>apply_cz</code>, <code>apply_swap</code>,
+  <code>apply_gate</code>, and an <code>ActionTable</code> with its lookup arrays on the device;
+  <code>symplectic_product</code>, <code>code_rows</code>, <code>undetected_mask</code>,
+  <code>in_stabilizer_mask</code>, <code>batched_distance</code>, <code>kl_reward</code>, <code>distance_reward</code>,
+  <code>low_weight_stabilizer_penalty</code>, <code>CompositeReward</code>, and the <code>make_*</code>
+  closures with the same names and semantics as the numpy ones;
+  <code>numpy_reward_adapter</code> plugs a torch reward into <code>CodeDiscoveryEnv</code>. The
+  parity test reduces the float32 product mod 2 in place and decides both
+  commutation tests with one matrix-vector product against a weight
+  vector, so the int64 copy and the two boolean <code>any()</code> reductions of the
+  numpy path (about 80 percent of its reward time on the CPU) and the
+  boolean <code>(batch, M, n + k)</code> array are gone; the peak intermediate is
+  <code>4 M (n + k)</code> bytes per element instead of <code>12 M (n + k)</code>. On CPU torch
+  the reward runs 1.9 times faster than numpy at <code>n = 9</code> and 2.3 times at
+  <code>n = 16</code> (batch 1024); the gate kernels, one to two percent of a step,
+  run at about half the numpy rate. <code>tests/test_torch_backend.py</code> (43
+  items, skipped without torch) checks every kernel and every mask
+  against numpy bit for bit on random tableaux and the known codes at
+  <code>n</code> in 5, 9, 16.</li>
+<li><code>benchmarks/profile_tableau.py</code>: <code>--backend {numpy,torch}</code>, <code>--device
+  {cpu,cuda}</code>, <code>--json</code> (record a run), <code>--render</code> (tables from records),
+  <code>--no-breakdown</code>. <code>docs/gpu.md</code>: running the profile on a RunPod GPU,
+  the A40 result (<code>experiments/profile_pod/runs/</code>), and what stays cuQuantum-specific.</li>
+<li>Packaging for release: SPDX license metadata, ruff configuration, CI and release workflows,
+  <code>tools/reproduce.sh</code>, <code>docs/reproduce.md</code>, CITATION.cff. The
+  <code>autoqec-ppo</code> console script runs the PPO regression.</li>
+<li>All-to-all ion-chain cells (<code>experiments.ion_chain</code>, run as <code>python -m</code>;
+  report in <code>experiments/ion_chain/runs/REPORT.md</code>): the noise-aware 4x4 protocol
+  of <code>experiments.gpu_scale</code> (equivariant PPO, batch 1024, 8M env steps,
+  40 min cap, three profiles calibrated to equal total fault mass, three
+  seeds) with the graph changed to <code>all_to_all:16</code>, in two settings
+  defined in the module (<code>a2a16</code> with H, S, CNOT and <code>a2a16_hc</code> with H,
+  CNOT, the lattice gate set). Imports the reward, calibration, tracker,
+  and code analysis from <code>noise_aware</code> and the GPU reward and run plumbing
+  from <code>gpu_scale</code>; adds nothing to <code>noise_aware.SETTINGS</code>. The report
+  gives the cross-evaluation matrix per setting and compares the
+  all-to-all codes under the ion profile with the 4x4 lattice cells of
+  <code>experiments/gpu_scale/runs/</code> (read from their JSON files), the rotated surface
+  code's polished lattice encoder (<code>experiments/noise_aware/runs/baselines_4x4.json</code>)
+  and, from the <code>baselines</code> subcommand, its all-to-all encoder, and the
+  <code>n = 16</code> codes of <code>known_codes</code>, with seed-level permutation tests.
+  <code>tests/test_ion_chain.py</code> (2 items, skipped without torch).</li>
+<li>Multi-round memory objective (<code>memory_objective</code>; design note
+  <code>docs/memory_objective.md</code>, runs in <code>experiments/memory_objective/REPORT.md</code>).
+  A code is scored by the logical error rate per round of an <code>R</code>-round
+  syndrome-extraction memory experiment instead of by its encoder's
+  single-fault mass, which cannot see a local-Clifford deformation of the
+  code (<code>experiments/noise_aware/runs/REPORT.md</code>). <code>build_memory_circuit</code> builds
+  the circuit for arbitrary (non-CSS) generators: one ancilla per
+  generator with controlled-X/Y/Z gates, hook-aware gate orders
+  (<code>hook_orders</code>, the ion-search suffix and segment criterion, exact
+  completion cost from the Knill-Laflamme kernel), generators that share a
+  qubit with different letters in separate batches so the interleaved
+  gates commute (X block then Z block for CSS codes), optional one-flag
+  ancillas, noiseless <code>MPP</code> preparation and readout, detectors between
+  consecutive rounds. Layouts: all-to-all (ion chain) and <code>square:RxC</code>
+  with ancilla sites at the plaquette centers and nearest-neighbour CNOT
+  ladders for non-local generators. Tiers: <code>proxy</code> (leading-order failure
+  of the maximum-likelihood decoder over fault sets of weight at most two
+  from the DEM, plus exact <code>d_circ</code> up to weight 4, <code>exact_dcirc</code> ported
+  from <code>ion-search/lib.py</code>), <code>sampled</code> (exact ML decoder by dynamic
+  program when <code>D + O &lt;= 20</code>, else a weight-2 lookup decoder), <code>bposd</code>
+  (the board's pinned BP+OSD, needs <code>ldpc</code>, validation only).
+  <code>MemoryReward</code> is the environment reward (distance and padding terms of
+  the noise-aware experiment plus <code>weight * log10(p_ref / p_round)</code> on
+  target-distance states, cached per code) and exposes <code>success_fn</code>;
+  <code>CodeDiscoveryEnv</code> adopts a reward's <code>success_fn</code> attribute when none is
+  given. <code>experiments.memory_objective</code> (run as <code>python -m</code>): tier
+  benchmark on [[5,1,3]], Steane, rotated surface, the board's
+  [[16,4,4]], and a discovered non-CSS [[9,1,3]] under the chain, board,
+  and Heron profiles; Spearman correlation of the proxy against bposd on
+  32 random [[9,1,3]] codes; the XZZX bias-sensitivity sweep; the lattice
+  routing comparison; a PPO smoke run on the 3x3 lattice under the ion
+  profile. <code>tests/test_memory_objective.py</code> (14 items, the PPO smoke
+  regression skipped without torch).</li>
+<li>PPO with the memory objective on the 4x4 setting
+  (<code>experiments.memory_ppo</code>, run as <code>python -m</code>; report in
+  <code>experiments/memory_ppo/REPORT.md</code>, runs in <code>experiments/memory_ppo/runs/</code>): the
+  noise-aware 4x4 protocol of <code>gpu_scale</code> (equivariant policy, batch 1024,
+  H and CNOT on <code>square:4x4</code>, 50-gate episodes, fractional distance term,
+  padding and LDPC penalties) with the memory term of <code>MemoryReward</code>
+  (<code>R = 4</code> rounds, all-to-all layout, proxy tier, both bases) in place of
+  the encoder's undetected fault mass, on four cells: the chain preset at
+  scale 0.25 with bare and with one-flag ancillas, the board recipe at
+  0.25, and the Heron rates at 0.05 (the benchmark scales board 1 and
+  Heron 0.1 put the <code>R = 4</code> circuits above one expected fault per shot,
+  outside the tiers' regime). <code>TorchMemoryReward</code> evaluates the distance,
+  fractional, and padding terms on the device through
+  <code>gpu_scale.DistanceKernel</code> and the memory term on the host in a spawn
+  process pool (<code>MemoryTermPool</code>, one evaluation per distinct stabilizer
+  group, synchronous with the training loop). <code>score</code> evaluates the best
+  code of every run, the nine encoder-objective 4x4 codes of
+  <code>experiments/gpu_scale/runs</code>, and the rotated surface <code>[[16,1,4]]</code> with its XZZX
+  deformation under the four profiles at the proxy and the bposd tier;
+  <code>report</code> writes the tables and figures. Result of the 12-run matrix
+  (RunPod A40, 150 min per run, host CPU capped at four cores): every run
+  reaches <code>d = 4</code>, but under the validation decoder the memory-trained
+  best codes are 8.9 to 50 times worse than the rotated surface code on
+  their training profile and not distinguishable from the encoder-trained
+  codes; no Hadamard frame or <code>d_X</code>/<code>d_Z</code> asymmetry beyond the encoder's
+  own appears under the ion profile; the proxy tier underestimates the
+  discovered codes 5 to 20 times (sampled tier agrees with bposd) because
+  their memory circuits carry 0.9 to 1.5 expected faults per shot.
+  Run 2 (<code>--variant run2</code>, <code>experiments/memory_ppo/runs/run2/</code>, second section of
+  the report): no LDPC term, selection by the training <code>p_round</code>, a
+  gate-count term above 1.25 times the surface code's two-qubit gates per
+  round, the sampled tier for candidates above 0.8 expected faults per
+  shot, and every code evaluated on the sparsest basis of its stabilizer
+  group (<code>sparsest_code</code>; the memory circuit measures the generators it is
+  given, and the encoder tableau's basis is denser than the sparsest one,
+  which inflated every run-1 discovered-code number 3 to 10 times). The
+  run-2 selected codes are 0.8 to 3.1 times the surface code under bposd on
+  their training profile (median 1.8) against 1.8 to 5.3 (median 2.6) for
+  the run-1 codes re-scored the same way; one board seed is at parity.
+  <code>tests/test_memory_ppo.py</code> (5 items, skipped without torch).</li>
+<li><code>memory_objective._joint_ids</code>: the multi-word path (more than 64
+  detectors, every <code>n = 16</code> memory circuit) labels the pair signatures by
+  a lexsort of the word columns instead of <code>np.unique(axis=0)</code> (whose
+  structured-view argsort took 14 of the 19 s of one proxy evaluation of
+  a dense <code>[[16,1,4]]</code> code), and shifts the labels when the all-zero
+  signature is absent, since the maximum-likelihood grouping tests
+  <code>id == 0</code> for the zero syndrome (before, the smallest nonzero signature
+  took that role). Test added.</li>
+</ul>
+<h2 id="010-2026-09-20">0.1.0 (2026-09-20)<a class="headerlink" href="#010-2026-09-20" title="Permanent link">&para;</a></h2>
+<p>First cut.</p>
+<ul>
+<li>Batched Aaronson-Gottesman tableau (<code>tableau</code>) with H, S, S_DAG, CNOT, CZ,
+  SWAP, and Pauli frames applied to selected batch elements with per-element
+  qubit indices; stim conversion and random-circuit agreement tests.</li>
+<li>Symplectic and GF(2) helpers (<code>symplectic</code>): logical operators by
+  symplectic Gram-Schmidt, tableau completion from stabilizers.</li>
+<li>Pauli error sets by weight and by channel probability (<code>errors</code>).</li>
+<li>Knill-Laflamme reward of Olle et al., batched exact-distance reward,
+  low-weight-stabilizer penalty, composite rewards (<code>reward</code>).</li>
+<li><code>StabilizerCode</code> with exact distance for <code>n &lt;= 20</code>, randomized upper bound
+  with witness for larger <code>n</code>, CSS test, weight enumerators (<code>code</code>);
+  reference codes [[5,1,3]], Steane, Shor, rotated surface [[9,1,3]],
+  [[4,2,2]] (<code>known_codes</code>).</li>
+<li>Connectivity graphs: all-to-all, linear, square, triangular, heavy-hex
+  (<code>graphs</code>).</li>
+<li>Gymnasium-style batched environment (<code>env</code>), no gymnasium dependency.</li>
+<li>Circuit-level noise hook with single-fault propagation through stim and a
+  placeholder depolarizing model (<code>circuit_noise</code>).</li>
+<li>Random and evolutionary search agents (<code>search</code>); rediscovery regression
+  for [[5,1,3]], Steane, and the rotated surface code with results JSON
+  (<code>regress</code>, <code>autoqec-regress</code> CLI).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Vincent Russo. Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,78 @@
+{
+ "device": "NVIDIA A100-SXM4-80GB",
+ "torch": "2.8.0+cu129",
+ "rows": [
+  {
+   "n": 5,
+   "k": 1,
+   "batch": 1024,
+   "errors": 105,
+   "apply_torch_us": 2414.9038124680656,
+   "apply_kernel_us": 490.95796957263366,
+   "mask_torch_ms": 0.2412157916076759,
+   "mask_kernel_ms": 0.39050819203092163,
+   "apply_speedup": 4.918758757639025,
+   "mask_speedup": 0.6176971355022833
+  },
+  {
+   "n": 9,
+   "k": 1,
+   "batch": 1024,
+   "errors": 351,
+   "apply_torch_us": 2454.094784280089,
+   "apply_kernel_us": 483.00530792382085,
+   "mask_torch_ms": 0.25303173255324896,
+   "mask_kernel_ms": 0.3775917094328248,
+   "apply_speedup": 5.080885746015748,
+   "mask_speedup": 0.6701199370434388
+  },
+  {
+   "n": 16,
+   "k": 1,
+   "batch": 1024,
+   "errors": 1128,
+   "apply_torch_us": 2434.9587038865775,
+   "apply_kernel_us": 485.5768708738236,
+   "mask_torch_ms": 0.9007019558477095,
+   "mask_kernel_ms": 0.37589233809369066,
+   "apply_speedup": 5.014568958988365,
+   "mask_speedup": 2.3961700321308776
+  },
+  {
+   "n": 16,
+   "k": 1,
+   "batch": 4096,
+   "errors": 1128,
+   "apply_torch_us": 2436.8975970451042,
+   "apply_kernel_us": 485.08643840912055,
+   "mask_torch_ms": 3.487791408037646,
+   "mask_kernel_ms": 0.408582257523554,
+   "apply_speedup": 5.023635797853066,
+   "mask_speedup": 8.536326146850813
+  },
+  {
+   "n": 25,
+   "k": 1,
+   "batch": 1024,
+   "errors": 2775,
+   "apply_torch_us": 2413.78154812712,
+   "apply_kernel_us": 502.7343155745997,
+   "mask_torch_ms": 3.1788763290299387,
+   "mask_kernel_ms": 0.39715272698289017,
+   "apply_speedup": 4.801306521851986,
+   "mask_speedup": 8.00416593681576
+  },
+  {
+   "n": 25,
+   "k": 1,
+   "batch": 1024,
+   "errors": 64875,
+   "apply_torch_us": 2566.490297426637,
+   "apply_kernel_us": 485.4270446160086,
+   "mask_torch_ms": 72.32849859700316,
+   "mask_kernel_ms": 5.587890949317614,
+   "apply_speedup": 5.2870772774039185,
+   "mask_speedup": 12.94379207701536
+  }
+ ]
+}
