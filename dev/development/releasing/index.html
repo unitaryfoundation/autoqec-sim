@@ -1615,6 +1615,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-the-first-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before the first release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prepare" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1729,6 +1740,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-the-first-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before the first release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prepare" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1796,6 +1818,26 @@
 <p>Releases are tagged on <code>main</code>. There is no PyPI package: the release
 artifacts are the sdist and wheel attached to the GitHub release, the
 Zenodo DOI, and the versioned documentation.</p>
+<h2 id="before-the-first-release">Before the first release<a class="headerlink" href="#before-the-first-release" title="Permanent link">&para;</a></h2>
+<p>Decisions that only the owner can take, each needed before <code>v0.2.0</code> is
+tagged:</p>
+<ul>
+<li>The institutional copyright holder named in <code>LICENSE</code> (a question for
+  Unitary Foundation agreements and IonQ).</li>
+<li>The author list of <code>CITATION.cff</code>, which currently has none. GitHub's
+  "Cite this repository" button and Zenodo's author metadata both read it.</li>
+<li>Whether to publish on PyPI. The current decision is no: the proposal and
+  the data-management plan ask for a public GitHub release with a Zenodo
+  DOI, and the release workflow attaches the sdist and wheel to the GitHub
+  release only.</li>
+</ul>
+<p>Zenodo must be enabled for the repository on zenodo.org before the tag is
+pushed, since its GitHub integration archives only releases created after
+it is switched on, and the repository must be public for that. Once the
+release exists, paste the concept DOI into <code>CITATION.cff</code> and commit.</p>
+<p><code>tools/release.sh vX.Y.Z</code> runs the mechanical part: it dates <code>CITATION.cff</code>
+and <code>CHANGELOG.md</code>, switches the README's documentation links from <code>dev/</code> to
+<code>stable/</code>, commits, makes the repository public, tags, and pushes.</p>
 <h2 id="prepare">Prepare<a class="headerlink" href="#prepare" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Set the version in <code>pyproject.toml</code> and <code>autoqec_sim.__version__</code>;
