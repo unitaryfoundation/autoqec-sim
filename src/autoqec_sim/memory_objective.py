@@ -14,7 +14,7 @@ to 4 and 6). This module builds, for a code given by its stabilizer
 generators and logicals, an ``R``-round syndrome-extraction circuit with
 one ancilla per generator, applies a ``autoqec_sim.noise.Profile`` with its
 timing model, derives stim's detector error model, and estimates the
-logical error rate per round with one of three fidelity tiers:
+logical error rate per round with one of four fidelity tiers:
 
 ``proxy``
     closed form from the DEM: the failure probability of the
@@ -34,6 +34,14 @@ logical error rate per round with one of three fidelity tiers:
 ``bposd``
     full sampling with the board's pinned BP+OSD decoder (``ldpc``,
     optional dependency, validation only).
+``tesseract``
+    full sampling with Tesseract (``tesseract-decoder``, optional
+    dependency), a most-likely-error search decoder that takes the DEM as
+    it is, without decomposition; distinct syndromes are decoded once.
+
+:func:`undetectable_sets` lists the minimum-weight undetectable logical
+fault sets of a DEM up to weight 3 by probability, for the fault report
+of :func:`autoqec_sim.evaluate_code`.
 
 Circuits (:func:`build_memory_circuit`). Every generator ``g_j`` gets an
 ancilla prepared in ``|+>``, controlled-``P`` gates (``CX``, ``CY``,
@@ -122,10 +130,11 @@ __all__ = [
     "pfail_low_weight",
     "sample_failures",
     "square_layout",
+    "undetectable_sets",
 ]
 
 BASES = ("Z", "X")
-TIERS = ("proxy", "sampled", "bposd")
+TIERS = ("proxy", "sampled", "bposd", "tesseract")
 _LETTER = {(1, 0): "X", (1, 1): "Y", (0, 1): "Z"}
 _CONTROLLED = {"X": "CX", "Y": "CY", "Z": "CZ"}
 # basis change so that a controlled-P becomes a routed controlled-X:
@@ -1024,6 +1033,94 @@ def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
     return {"d_circ": None, "count": 0, "mass": 0.0, "witness": None}
 
 
+def _top_sets(sets: list[tuple[np.ndarray, np.ndarray]], limit: int) -> list[tuple[tuple[int, ...], float]]:
+    idx = np.concatenate([s for s, _ in sets], axis=0)
+    prob = np.concatenate([p for _, p in sets])
+    order = np.argsort(-prob, kind="stable")[:limit]
+    return [(tuple(int(v) for v in idx[r]), float(prob[r])) for r in order]
+
+
+def undetectable_sets(sig: Signature, wmax: int = 3, limit: int = 10, chunk: int = 1_000_000) -> dict:
+    """The minimum-weight undetectable logical fault sets of a DEM up to
+    weight ``wmax`` (at most 3), listed by probability: the smallest ``w``
+    such that some ``w`` mechanisms together flip no detector and some
+    observable, the number of such sets, and the ``limit`` most probable
+    of them as ``(mechanism indices, probability product)`` pairs in
+    decreasing probability. ``weight`` is ``None`` and the list empty when
+    no set of weight ``<= wmax`` exists. The weight is the ``d_circ`` of
+    :func:`exact_dcirc` whenever that is at most ``wmax``; the count agrees
+    with it. Triples are found as a pair plus a single with the pair's
+    detector signature, scanned ``chunk`` pairs at a time."""
+    if wmax > 3:
+        raise ValueError("undetectable_sets enumerates up to weight 3")
+    m = len(sig)
+    none = {"weight": None, "count": 0, "sets": []}
+    if m == 0:
+        return none
+    det, obs, probs = sig.det, sig.obs, sig.probs
+    zero = (det == 0).all(axis=1)
+    hit = np.flatnonzero(zero & (obs != 0))
+    if len(hit):
+        sets = [(hit.reshape(-1, 1), probs[hit])]
+        return {"weight": 1, "count": len(hit), "sets": _top_sets(sets, limit)}
+    if wmax < 2 or m < 2:
+        return none
+    (d1,) = _joint_ids(det)
+    o1 = np.argsort(d1, kind="stable")
+    s1 = d1[o1]
+    # weight 2: two mechanisms with the same detector signature and
+    # different observable flips
+    starts = np.flatnonzero(np.concatenate([[True], s1[1:] != s1[:-1]]))
+    ends = np.concatenate([starts[1:], [m]])
+    found, count = [], 0
+    for s, e in zip(starts[ends - starts > 1], ends[ends - starts > 1]):
+        members = o1[s:e]
+        a, b = np.triu_indices(len(members), 1)
+        i, j = members[a], members[b]
+        keep = obs[i] != obs[j]
+        if keep.any():
+            i, j = i[keep], j[keep]
+            count += len(i)
+            found.append((np.stack([np.minimum(i, j), np.maximum(i, j)], 1), probs[i] * probs[j]))
+    if count:
+        return {"weight": 2, "count": count, "sets": _top_sets(found, limit)}
+    if wmax < 3 or m < 3:
+        return none
+    # weight 3: a pair (i < j) plus a single k > j whose detector signature
+    # equals the pair's; each triple is counted once, from its two
+    # smallest members
+    i_all, j_all = _pairs(m)
+    d1_ids, d2_ids = _joint_ids(det, det[i_all] ^ det[j_all])
+    o1 = np.argsort(d1_ids, kind="stable")
+    s1 = d1_ids[o1]
+    best_idx, best_prob = np.zeros((0, 3), dtype=np.int64), np.zeros(0)
+    for start in range(0, len(i_all), chunk):
+        i, j, d2 = i_all[start : start + chunk], j_all[start : start + chunk], d2_ids[start : start + chunk]
+        lo = np.searchsorted(s1, d2, side="left")
+        hi = np.searchsorted(s1, d2, side="right")
+        n_cand = hi - lo
+        has = np.flatnonzero(n_cand > 0)
+        if not len(has):
+            continue
+        reps = n_cand[has]
+        pair = np.repeat(has, reps)
+        offset = np.arange(int(reps.sum())) - np.repeat(np.cumsum(reps) - reps, reps)
+        k = o1[lo[pair] + offset]
+        ii, jj = i[pair], j[pair]
+        keep = (k > jj) & ((obs[ii] ^ obs[jj] ^ obs[k]) != 0)
+        if not keep.any():
+            continue
+        ii, jj, k = ii[keep], jj[keep], k[keep]
+        count += len(k)
+        best_idx = np.concatenate([best_idx, np.stack([ii, jj, k], 1)], axis=0)
+        best_prob = np.concatenate([best_prob, probs[ii] * probs[jj] * probs[k]])
+        order = np.argsort(-best_prob, kind="stable")[:limit]
+        best_idx, best_prob = best_idx[order], best_prob[order]
+    if count:
+        return {"weight": 3, "count": count, "sets": _top_sets([(best_idx, best_prob)], limit)}
+    return none
+
+
 # --------------------------------------------------------------------------
 # decoders
 # --------------------------------------------------------------------------
@@ -1140,6 +1237,36 @@ def _bposd_decoder(sig: Signature):
     )
 
 
+def _tesseract_decoder(dem: stim.DetectorErrorModel):
+    try:
+        from tesseract_decoder import tesseract as T
+    except ImportError as exc:  # pragma: no cover
+        raise ImportError(
+            "the tesseract tier needs the `tesseract-decoder` package "
+            "(uv run --with tesseract-decoder ..., or the `tesseract` extra)"
+        ) from exc
+    return T.TesseractDecoder(T.TesseractConfig(dem=dem))
+
+
+def _decode_batch_cached(dec, dets: np.ndarray, words: np.ndarray, cache: dict, num_observables: int) -> np.ndarray:
+    """Observable masks predicted by a batch decoder (``decode_batch`` on
+    ``(shots, D)`` booleans to ``(shots, O)`` booleans), each distinct
+    syndrome decoded once through ``cache``."""
+    keys = [words[s].tobytes() for s in range(dets.shape[0])]
+    todo: dict[bytes, int] = {}
+    for s, key in enumerate(keys):
+        if key not in cache:
+            todo.setdefault(key, s)
+    if todo:
+        rows = np.fromiter(todo.values(), dtype=np.int64, count=len(todo))
+        flips = np.asarray(dec.decode_batch(dets[rows].astype(bool))).reshape(len(rows), -1)
+        shifts = np.arange(num_observables, dtype=np.int64)
+        vals = (flips.astype(np.int64)[:, :num_observables] << shifts).sum(axis=1)
+        for key, v in zip(todo, vals):
+            cache[key] = int(v)
+    return np.fromiter((cache[k] for k in keys), dtype=np.int64, count=len(keys))
+
+
 def sample_failures(
     dem: stim.DetectorErrorModel,
     sig: Signature,
@@ -1151,8 +1278,8 @@ def sample_failures(
 ) -> dict:
     """Monte Carlo logical failures of ``dem`` under ``decoder``.
 
-    Distinct syndromes are decoded once (both decoders are deterministic
-    functions of the syndrome). Shots grow in doublings until
+    Distinct syndromes are decoded once (every decoder here is a
+    deterministic function of the syndrome). Shots grow in doublings until
     ``min_failures`` failures or ``max_shots``.
 
     Parameters
@@ -1162,7 +1289,7 @@ def sample_failures(
     sig
         Its :class:`Signature`.
     decoder
-        ``"lookup"`` or ``"bposd"``.
+        ``"lookup"``, ``"bposd"``, or ``"tesseract"``.
     shots
         Initial number of shots.
     seed
@@ -1180,14 +1307,16 @@ def sample_failures(
     """
     t0 = time.perf_counter()
     sampler = dem.compile_sampler(seed=seed)
+    lg = None
     if decoder == "lookup":
         dec = LookupDecoder(sig)
-        lg = None
     elif decoder == "bposd":
         dec = _bposd_decoder(sig)
         _, lg = sig.matrices()
+    elif decoder == "tesseract":
+        dec = _tesseract_decoder(dem)
     else:
-        raise ValueError("decoder must be lookup or bposd")
+        raise ValueError("decoder must be lookup, bposd, or tesseract")
     max_shots = shots if max_shots is None else max_shots
     failures = 0
     done = 0
@@ -1200,19 +1329,22 @@ def sample_failures(
         obs_mask = np.zeros(batch, dtype=np.int64)
         for o in range(sig.num_observables):
             obs_mask |= obs[:, o].astype(np.int64) << o
-        pred = np.empty(batch, dtype=np.int64)
-        for s in range(batch):
-            key = words[s].tobytes()
-            v = cache.get(key)
-            if v is None:
-                if decoder == "lookup":
-                    v = dec.decode_words(words[s])
-                else:
-                    e = dec.decode(dets[s])
-                    flips = (lg.astype(np.int64) @ e.astype(np.int64)) % 2
-                    v = int(sum(int(f) << o for o, f in enumerate(flips)))
-                cache[key] = v
-            pred[s] = v
+        if decoder == "tesseract":
+            pred = _decode_batch_cached(dec, dets, words, cache, sig.num_observables)
+        else:
+            pred = np.empty(batch, dtype=np.int64)
+            for s in range(batch):
+                key = words[s].tobytes()
+                v = cache.get(key)
+                if v is None:
+                    if decoder == "lookup":
+                        v = dec.decode_words(words[s])
+                    else:
+                        e = dec.decode(dets[s])
+                        flips = (lg.astype(np.int64) @ e.astype(np.int64)) % 2
+                        v = int(sum(int(f) << o for o, f in enumerate(flips)))
+                    cache[key] = v
+                pred[s] = v
         failures += int((pred != obs_mask).sum())
         done += batch
         if failures >= min_failures or done >= max_shots:
@@ -1281,7 +1413,7 @@ class MemoryObjective:
         Noisy syndrome-extraction rounds (``None``: the target distance
         given to :meth:`evaluate`, else fixed).
     tier
-        ``"proxy"``, ``"sampled"``, or ``"bposd"``.
+        ``"proxy"``, ``"sampled"``, ``"bposd"``, or ``"tesseract"``.
     connectivity
         ``"all_to_all"``, ``"square:RxC"``, or a :class:`Layout`.
     flags, order, seed
@@ -1296,7 +1428,7 @@ class MemoryObjective:
     exact_ml_bits
         Largest ``D + O`` for the exact ML decoder of the sampled tier.
     shots, min_failures, max_shots
-        Sampling budget of the sampled and bposd tiers.
+        Sampling budget of the sampled, bposd, and tesseract tiers.
     schedule_trials
         With ``order="random"``, the number of random gate orders tried
         per code (seeds ``seed .. seed + trials - 1``, the same order for
@@ -1363,9 +1495,15 @@ class MemoryObjective:
         return mc, memory_dem(mc, self.profile, self.scale)
 
     def evaluate_basis(self, code: StabilizerCode, basis: str, rounds: int, tier: str | None = None, seed: int | None = None, orders=None) -> dict:
-        tier = self.tier if tier is None else tier
-        t0 = time.perf_counter()
         mc, dem = self.dem(code, basis, rounds, seed, orders)
+        return self.score_basis(mc, dem, tier)
+
+    def score_basis(self, mc: MemoryCircuit, dem: stim.DetectorErrorModel, tier: str | None = None) -> dict:
+        """The per-basis dictionary of ``tier`` for a memory circuit and
+        its detector error model (``evaluate_basis`` without the build)."""
+        tier = self.tier if tier is None else tier
+        basis, rounds = mc.basis, mc.rounds
+        t0 = time.perf_counter()
         sig = dem_signature(dem)
         out = {
             "basis": basis, "rounds": rounds, "mechanisms": len(sig), "detectors": sig.num_detectors,
@@ -1391,10 +1529,10 @@ class MemoryObjective:
                 out["p_fail"] = r["p_fail"]
                 out["decoder"] = "lookup"
                 out["sampling"] = r
-        elif tier == "bposd":
-            r = sample_failures(dem, sig, "bposd", self.shots, self.seed, self.min_failures, self.max_shots)
+        elif tier in ("bposd", "tesseract"):
+            r = sample_failures(dem, sig, tier, self.shots, self.seed, self.min_failures, self.max_shots)
             out["p_fail"] = r["p_fail"]
-            out["decoder"] = "bposd"
+            out["decoder"] = tier
             out["sampling"] = r
         else:
             raise ValueError(tier)

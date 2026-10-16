@@ -28,6 +28,10 @@ test = ["pytest>=7.0"]
 rl = [
     "torch>=2.14.0",
 ]
+# Tesseract decoder tier of the memory objective (PyPI has dev releases only).
+tesseract = [
+    "tesseract-decoder>=0.1.1.dev0",
+]
 
 [project.scripts]
 autoqec-ppo = "autoqec_sim.agents.ppo_regress:main"
