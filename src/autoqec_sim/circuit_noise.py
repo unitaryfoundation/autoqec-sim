@@ -3,16 +3,16 @@
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
-"""Circuit-level noise for the reward, wired to ``genesis/noise-model``.
+"""Circuit-level noise for the reward, wired to :mod:`autoqec_sim.noise`.
 
 A *noise model* is any callable ``stim.Circuit -> stim.Circuit`` that
 inserts Pauli noise into a noiseless encoding circuit. Three forms are
 accepted wherever a noise model is expected (see :func:`resolve_noise_model`):
 
-- a ``noise_model.Profile`` (``presets.board()``, ``presets.chain()``,
+- a ``autoqec_sim.noise.Profile`` (``presets.board()``, ``presets.chain()``,
   ``presets.forte()``, ``presets.heron()``, ``presets.depolarizing(p)``,
   or a variant built with ``with_bias``, ``with_timing``, ``with_params``),
-  applied through ``noise_model.noisifier(profile, scale)``;
+  applied through ``autoqec_sim.noise.noisifier(profile, scale)``;
 - a preset name (``"board-rfc0001"``, ``"chain-2606.06455"``,
   ``"forte-2308.05071"``, ``"heron-r2"``);
 - a plain callable, such as the placeholder
@@ -55,8 +55,8 @@ from dataclasses import dataclass
 import numpy as np
 import stim
 
-from noise_model import ConnectivityError, Profile, noisifier, presets
-from noise_model.skeleton import ANNOTATIONS
+from autoqec_sim.noise import ConnectivityError, Profile, noisifier, presets
+from autoqec_sim.noise.skeleton import ANNOTATIONS
 
 from .graphs import as_graph
 from .reward import undetected_mask
@@ -180,7 +180,7 @@ def depolarizing_noise_model(p1: float | None = 1e-3, p2: float = 1e-2, idle: fl
 def resolve_noise_model(spec, scale: float = 1.0, graph=None, n: int | None = None, **apply_kw) -> NoiseModel:
     """Turn ``spec`` into a ``stim.Circuit -> stim.Circuit`` callable.
 
-    ``spec`` is a ``noise_model.Profile``, a preset name, or a callable
+    ``spec`` is a ``autoqec_sim.noise.Profile``, a preset name, or a callable
     (returned unchanged; ``scale`` and ``graph`` then do not apply). For a
     profile, ``graph`` (either graph class) becomes the profile's
     connectivity graph when the profile has none, and must have the same
@@ -491,7 +491,7 @@ def circuit_level_reward(
     ``normalize``) for the encoding circuits ``gate_lists`` whose final
     tableaux are the rows of ``tab``.
 
-    ``noise_model`` is anything :func:`resolve_noise_model` accepts;
+    ``autoqec_sim.noise`` is anything :func:`resolve_noise_model` accepts;
     ``scale`` and ``graph`` apply to profiles. A two-qubit gate on a
     non-edge of the profile's graph raises ``ConnectivityError``
     (``on_violation="raise"``) or scores ``violation_reward``

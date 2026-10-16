@@ -20,6 +20,17 @@ batch elements times steps), ``episodes`` (circuits), and wall time. One
 evolutionary-search evaluation in :mod:`autoqec_sim.regress` is one
 circuit and costs up to ``max_steps`` state evaluations.
 
+PPO-only targets. ``PPO_ONLY_TARGETS`` holds targets that the evolutionary
+regression does not attempt: the 4x4 rotated surface code ``[[16, 1, 4]]``
+on the square lattice with H and CNOT, 50-gate episodes, budget 1,000,000
+env steps per attempt (the RL scaling probe reached a clean distance-4
+state in 217k to 258k env steps with the equivariant policy, which
+``PPOConfig(policy="auto")`` selects at 16 qubits). Its reward is the one
+of every other target (normalized Knill-Laflamme term over the 16,248
+Paulis of weight at most 3 plus the padding penalty) and the match
+criterion is the same (enumerators of ``S`` and ``N(S)`` against
+``known_codes.ROTATED_SURFACE_16``). The ``reduced`` budget skips it.
+
 Run as ``python -m autoqec_sim.agents.ppo_regress --budget full --out
 results/regression_ppo.json``.
 """
@@ -40,9 +51,30 @@ import numpy as np
 
 from .. import graphs
 from ..env import CodeDiscoveryEnv
-from ..regress import TARGETS, Target, make_reward, replay, verify
+from ..regress import TARGETS as EVO_TARGETS
+from ..regress import Target, env_kwargs, make_reward, replay, verify
 from ..symplectic import rref
 from .ppo import PPOAgent, PPOConfig
+
+PPO_ONLY_TARGETS = {
+    # 4x4 rotated surface code: n = 16, d = 4, square lattice, H and CNOT,
+    # 50-gate episodes as in the scaling probe; only weight-1 stabilizers
+    # (idle qubits) are forbidden, as for the 3x3 target.
+    "rotated_surface_16": Target(
+        "rotated_surface_16", 16, 1, 4, "square:4x4", "rotated_surface_16", 50, 1, ("H", "CNOT")
+    ),
+}
+TARGETS = {**EVO_TARGETS, **PPO_ONLY_TARGETS}
+
+# Per-target overrides of the budget: env steps and wall cap per attempt.
+# The 4x4 target runs at about 1k env steps per second at 2 threads (the
+# reward evaluates 16,248 errors per state), so 1M steps need up to about
+# 20 minutes; the wall cap is set so that the step budget is the binding one.
+TARGET_BUDGETS = {
+    "rotated_surface_16": {"full": dict(max_env_steps=1_000_000, max_time_s=3600.0, max_attempts=1)},
+}
+# Targets outside the reduced budget (too expensive for the quick check).
+REDUCED_SKIP = frozenset({"rotated_surface_16"})
 
 BUDGETS = {
     # batch, state evaluations per attempt, wall cap per attempt, attempts,
@@ -150,6 +182,7 @@ def run_target(
             gates=gates,
             reward_fn=reward,
             seed=s,
+            **env_kwargs(target, reward),
         )
         agent = PPOAgent(env, config=config, seed=s)
         num_parameters = agent.num_parameters()
@@ -217,7 +250,7 @@ def run_all(budget: str = "reduced", seed: int = 0, targets=None, verbose=False,
     import torch
 
     cfg = BUDGETS[budget]
-    names = list(TARGETS) if targets is None else list(targets)
+    names = [n for n in TARGETS if budget != "reduced" or n not in REDUCED_SKIP] if targets is None else list(targets)
     out = {
         "agent": "ppo",
         "budget": budget,
@@ -228,11 +261,18 @@ def run_all(budget: str = "reduced", seed: int = 0, targets=None, verbose=False,
         "numpy": np.__version__,
         "torch": torch.__version__,
         "threads": os.environ.get("OPENBLAS_NUM_THREADS"),
+        "ppo_threads": (config or PPOConfig()).max_threads,
         "targets": {},
     }
     for name in names:
-        out["targets"][name] = run_target(TARGETS[name], seed=seed, verbose=verbose, config=config, **cfg)
+        out["targets"][name] = run_target(TARGETS[name], seed=seed, verbose=verbose, config=config, **target_budget(name, budget))
     return out
+
+
+def target_budget(name: str, budget: str) -> dict:
+    """The budget of ``name`` under ``budget``: ``BUDGETS[budget]`` with the
+    target's ``TARGET_BUDGETS`` overrides applied."""
+    return {**BUDGETS[budget], **TARGET_BUDGETS.get(name, {}).get(budget, {})}
 
 
 def comparison_table(ppo: dict, evo_path: str | Path | None = None) -> str:
@@ -272,9 +312,13 @@ def main(argv=None):
     ap.add_argument("--targets", nargs="*", default=None, choices=list(TARGETS))
     ap.add_argument("--out", default=None, help="results JSON path")
     ap.add_argument("--compare", default="results/regression.json", help="evolutionary results JSON")
+    ap.add_argument("--threads", type=int, default=None, help="torch and BLAS thread cap (default 6)")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args(argv)
-    res = run_all(args.budget, args.seed, args.targets, args.verbose)
+    # torch threads; BLAS threads are read from the environment at numpy
+    # import, so set OMP_NUM_THREADS and friends in the shell as well
+    config = None if args.threads is None else PPOConfig(max_threads=args.threads)
+    res = run_all(args.budget, args.seed, args.targets, args.verbose, config=config)
     for name, r in res["targets"].items():
         v = r["result"]["verification"] if r["result"] else None
         line = (

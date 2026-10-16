@@ -5,13 +5,12 @@
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
 """Connectivity graphs for the two-qubit action space.
 
-The graph definitions live in ``noise_model.topology`` (the sibling package
-``genesis/noise-model``), so the environment's action space and the noise
+The graph definitions live in ``autoqec_sim.noise.topology``, so the environment's action space and the noise
 profile's placement check are built from one edge set. :class:`Graph` is
 the environment-side view: ``n`` qubits numbered ``0..n-1`` and a sorted
 tuple of undirected edges ``(a, b)`` with ``a < b``. :func:`from_topology`
 and :meth:`Graph.to_topology` convert in both directions and round-trip
-exactly; every builder here delegates to the ``noise_model`` builder of the
+exactly; every builder here delegates to the ``autoqec_sim.noise`` builder of the
 same name (``all_to_all`` to ``complete``, ``linear`` to ``path``).
 """
 
@@ -19,7 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from noise_model import topology as topo
+from autoqec_sim.noise import topology as topo
 
 
 @dataclass(frozen=True)
@@ -63,7 +62,7 @@ class Graph:
         return len(seen) == self.n
 
     def to_topology(self) -> topo.Graph:
-        """The same graph as a ``noise_model.topology.Graph`` (nodes
+        """The same graph as a ``autoqec_sim.noise.topology.Graph`` (nodes
         ``0..n-1``, same edges, same name), for ``Profile.with_graph``."""
         return topo.Graph(self.name, tuple(range(self.n)), frozenset(frozenset(e) for e in self.edges))
 
@@ -80,8 +79,8 @@ def _mk(n, edges, name):
 
 
 def from_topology(g: topo.Graph) -> Graph:
-    """Environment graph from a ``noise_model.topology.Graph``. The nodes
-    must be ``0..n-1`` (every ``noise_model`` builder numbers them so)."""
+    """Environment graph from a ``autoqec_sim.noise.topology.Graph``. The nodes
+    must be ``0..n-1`` (every ``autoqec_sim.noise`` builder numbers them so)."""
     if tuple(g.nodes) != tuple(range(g.n)):
         raise ValueError("topology nodes must be 0..n-1 to serve as qubit indices")
     return _mk(g.n, g.edge_list(), g.name)
@@ -116,7 +115,7 @@ def triangular(rows: int, cols: int) -> Graph:
 
 def heavy_hex(rows: int, cols: int) -> Graph:
     """Heavy-hex lattice of ``rows x cols`` hexagons with a qubit on every
-    edge (degree at most 3), the ``noise_model`` construction."""
+    edge (degree at most 3), the ``autoqec_sim.noise`` construction."""
     return from_topology(topo.heavy_hex(rows, cols))
 
 

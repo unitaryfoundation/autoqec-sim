@@ -3,20 +3,20 @@
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
-"""Vectorized stabilizer-code reward engine for AutoQEC (Task 1, M1).
+"""Vectorized stabilizer-code reward engine and RL environment.
 
 Modules
 -------
 tableau        batched Aaronson-Gottesman tableaux and Clifford gates
 symplectic     GF(2) and symplectic helpers, tableau completion
-errors         Pauli error sets (by weight or by noise-model probability)
+errors         Pauli error sets (by weight or by noise-profile probability)
 reward         Knill-Laflamme, distance, and low-weight-stabilizer rewards
 code           code extraction, exact and randomized distance, enumerators
 known_codes    reference codes
-graphs         connectivity graphs (shared with noise_model.topology)
+graphs         connectivity graphs (shared with autoqec_sim.noise.topology)
 ldpc           LDPC sparsity: sparsest generator basis, constraint, penalty
 env            gymnasium-style batched environment (optional LDPC constraint)
-circuit_noise  circuit-level noise reward (noise_model profiles, stim)
+circuit_noise  circuit-level noise reward (autoqec_sim.noise profiles, stim)
 search         random and evolutionary search agents
 regress        rediscovery regression
 agents.ppo     PPO agent (optional torch dependency, imported lazily)

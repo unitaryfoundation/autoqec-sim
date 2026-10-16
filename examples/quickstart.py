@@ -7,9 +7,9 @@ import numpy as np
 from autoqec_sim import BatchTableau, StabilizerCode, known_codes
 from autoqec_sim.circuit_noise import circuit_level_reward
 from autoqec_sim.env import CodeDiscoveryEnv
+from autoqec_sim.noise import presets
 from autoqec_sim.regress import TARGETS, make_reward
 from autoqec_sim.search import EvolutionarySearch
-from noise_model import presets
 
 # Batched environment: 512 parallel episodes on 5 all-to-all qubits with
 # H, S, and CNOT, at most 14 gates; the reward is the Knill-Laflamme term

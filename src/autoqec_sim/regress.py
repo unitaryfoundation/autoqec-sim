@@ -53,7 +53,7 @@ from . import graphs, known_codes
 from .code import StabilizerCode
 from .env import CodeDiscoveryEnv
 from .errors import ErrorSet
-from .ldpc import make_ldpc_penalty, sparsest_basis_stats
+from .ldpc import LDPC_FORMS, LdpcObjective, make_ldpc_penalty, sparsest_basis_stats
 from .reward import CompositeReward, make_kl_reward, make_low_weight_penalty
 from .search import EvolutionarySearch
 from .tableau import BatchTableau
@@ -62,16 +62,28 @@ from .tableau import BatchTableau
 @dataclass(frozen=True)
 class LdpcSpec:
     """LDPC constraint of a target. ``mode`` is ``"mask"``, ``"terminate"``,
-    or ``"final"`` (hard constraint in the environment) or ``"penalty"``
-    (reward term ``-penalty_scale * excess``, see ``ldpc.ldpc_penalty``)."""
+    or ``"final"`` (hard constraint in the environment), ``"penalty"``
+    (reward term ``-penalty_scale * excess``, see ``ldpc.ldpc_penalty``,
+    the form of the ``n <= 9`` regression targets), or ``"objective"``:
+    the reward and success criterion are one :class:`autoqec_sim.ldpc.LdpcObjective`
+    in the form ``form`` (default ``ldpc.DEFAULT_LDPC_FORM``, the form the
+    comparison in ``experiments/ldpc_scaling/REPORT.md`` selected for
+    ``n >= 12``; ``penalty_scale`` is its ``scale``)."""
 
     w_max: int
     deg_max: int | None = None
     mode: str = "mask"
     penalty_scale: float = 0.25
+    form: str | None = None
+
+    def __post_init__(self):
+        if self.mode not in ("mask", "terminate", "final", "penalty", "objective"):
+            raise ValueError(f"unknown LDPC mode {self.mode!r}")
+        if self.form is not None and self.form not in LDPC_FORMS:
+            raise ValueError(f"form must be one of {LDPC_FORMS}")
 
     def to_dict(self):
-        return {"w_max": self.w_max, "deg_max": self.deg_max, "mode": self.mode, "penalty_scale": self.penalty_scale}
+        return {"w_max": self.w_max, "deg_max": self.deg_max, "mode": self.mode, "penalty_scale": self.penalty_scale, "form": self.form}
 
 
 @dataclass(frozen=True)
@@ -141,6 +153,8 @@ TARGETS = {
     ),
 }
 
+VERIFY_EXACT_GENERATORS = 15
+
 BUDGETS = {
     # batch, evaluations per attempt, max attempts, require enumerator match,
     # seeds run to exhaustion for exclusion targets
@@ -150,6 +164,16 @@ BUDGETS = {
 
 
 def make_reward(target: Target):
+    """The reward of ``target``; for an LDPC target in mode ``"objective"``
+    the :class:`autoqec_sim.ldpc.LdpcObjective` itself, whose ``success``
+    method :func:`env_kwargs` hands to the environment."""
+    if target.ldpc is not None and target.ldpc.mode == "objective":
+        from .ldpc import DEFAULT_LDPC_FORM
+
+        return LdpcObjective(
+            target.n, target.k, target.d, target.ldpc.w_max, form=target.ldpc.form or DEFAULT_LDPC_FORM,
+            scale=target.ldpc.penalty_scale, deg_max=target.ldpc.deg_max,
+        )
     errors = ErrorSet.up_to_weight(target.n, target.d - 1)
     terms = [
         (1.0, make_kl_reward(errors)),
@@ -160,10 +184,17 @@ def make_reward(target: Target):
     return CompositeReward(terms)
 
 
-def env_kwargs(target: Target) -> dict:
-    """Environment arguments of the hard LDPC constraint, if any."""
+def env_kwargs(target: Target, reward=None) -> dict:
+    """Environment arguments of the LDPC constraint, if any: the hard
+    constraint's ``ldpc_w_max`` and ``ldpc_mode``, or the ``success_fn`` of
+    an objective-mode target (``reward`` is the object ``make_reward``
+    returned)."""
     if target.ldpc is None or target.ldpc.mode == "penalty":
         return {}
+    if target.ldpc.mode == "objective":
+        if not isinstance(reward, LdpcObjective):
+            raise ValueError("objective-mode targets need the LdpcObjective that make_reward returned")
+        return {"success_fn": reward.success}
     return {"ldpc_w_max": target.ldpc.w_max, "ldpc_mode": target.ldpc.mode}
 
 
@@ -179,7 +210,8 @@ def verify(code: StabilizerCode, target: Target) -> dict:
     a, b = code.weight_enumerators()
     min_stab_w = int(np.flatnonzero(a[1:])[0] + 1) if a[1:].any() else 0
     nontrivial = min_stab_w > target.forbid_stabilizer_weight
-    st = sparsest_basis_stats(code.to_tableau(), code.k)
+    # exact w* up to n - k = 15 (the [[16, 1, 4]] PPO target); one code at a time
+    st = sparsest_basis_stats(code.to_tableau(), code.k, exact_max_generators=VERIFY_EXACT_GENERATORS)
     out = {
         "n": code.n,
         "k": code.k,
@@ -238,7 +270,7 @@ def run_target(
             gates=gates,
             reward_fn=reward,
             seed=s,
-            **env_kwargs(target),
+            **env_kwargs(target, reward),
         )
         res = EvolutionarySearch(env, seed=s).run(max_evaluations, verbose=verbose)
         total_evals += res.evaluations

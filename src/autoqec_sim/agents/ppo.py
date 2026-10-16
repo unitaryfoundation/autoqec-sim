@@ -31,12 +31,18 @@ itself exposes through an ``action_mask()`` method returning a ``(batch,
 num_actions)`` boolean array. Masked actions receive the logit
 ``MASK_LOGIT`` (a large negative number) before sampling.
 
+Policies. ``PPOConfig.policy`` chooses the actor-critic from
+:mod:`autoqec_sim.agents.policies`: the flat MLP (``"mlp"``), the per-qubit
+permutation-equivariant network (``"equivariant"``), or ``"auto"`` (the
+default: equivariant from 12 qubits on, mlp below). Both take the same
+observation and mask from :class:`EnvAdapter` and return logits in the
+order of the environment's action table plus a value.
+
 torch is imported lazily so that the rest of the package works without it.
 """
 
 from __future__ import annotations
 
-import functools
 import os
 import time
 from dataclasses import asdict, dataclass, field
@@ -46,8 +52,32 @@ import numpy as np
 from ..env import CodeDiscoveryEnv
 from ..graphs import Graph
 from ..tableau import ActionTable
+from .policies import (
+    EQUIVARIANT_MIN_QUBITS,
+    MASK_LOGIT,
+    POLICIES,
+    equivariant_actor_critic,
+    mlp_actor_critic,
+    mlp_actor_critic_class,
+    resolve_policy,
+)
 
-MASK_LOGIT = -1.0e9
+__all__ = [
+    "EQUIVARIANT_MIN_QUBITS",
+    "INVOLUTIONS",
+    "MASK_LOGIT",
+    "POLICIES",
+    "EnvAdapter",
+    "FoundCode",
+    "PPOAgent",
+    "PPOConfig",
+    "PPOResult",
+    "equivariant_actor_critic",
+    "graph_action_mask",
+    "mlp_actor_critic",
+    "resolve_policy",
+    "set_threads",
+]
 INVOLUTIONS = frozenset({"H", "CNOT", "CZ", "SWAP", "X", "Y", "Z"})
 
 
@@ -161,45 +191,9 @@ class EnvAdapter:
 
 
 # ----------------------------------------------------------------------
-# network
+# network (see policies.py)
 # ----------------------------------------------------------------------
-@functools.cache
-def _actor_critic_class():
-    torch = _torch()
-    nn = torch.nn
-
-    class ActorCritic(nn.Module):
-        """MLP trunk with a policy head (logits) and a value head."""
-
-        def __init__(self, obs_dim: int, num_actions: int, hidden=(256, 256)):
-            super().__init__()
-            layers = []
-            d = obs_dim
-            for h in hidden:
-                lin = nn.Linear(d, h)
-                nn.init.orthogonal_(lin.weight, gain=np.sqrt(2))
-                nn.init.zeros_(lin.bias)
-                layers += [lin, nn.Tanh()]
-                d = h
-            self.trunk = nn.Sequential(*layers)
-            self.pi = nn.Linear(d, num_actions)
-            nn.init.orthogonal_(self.pi.weight, gain=0.01)
-            nn.init.zeros_(self.pi.bias)
-            self.v = nn.Linear(d, 1)
-            nn.init.orthogonal_(self.v.weight, gain=1.0)
-            nn.init.zeros_(self.v.bias)
-
-        def forward(self, obs, mask=None):
-            h = self.trunk(obs)
-            logits = self.pi(h)
-            if mask is not None:
-                logits = torch.where(mask, logits, torch.full_like(logits, MASK_LOGIT))
-            return logits, self.v(h).squeeze(-1)
-
-        def num_parameters(self) -> int:
-            return sum(p.numel() for p in self.parameters())
-
-    return ActorCritic
+_actor_critic_class = mlp_actor_critic_class  # former name of the flat MLP class builder
 
 
 # ----------------------------------------------------------------------
@@ -207,8 +201,21 @@ def _actor_critic_class():
 # ----------------------------------------------------------------------
 @dataclass
 class PPOConfig:
+    """Hyperparameters of :class:`PPOAgent`.
+
+    ``policy`` selects the actor-critic (:mod:`autoqec_sim.agents.policies`):
+    ``"mlp"`` (flat MLP with layers ``hidden``), ``"equivariant"`` (per-qubit
+    permutation-equivariant network of width ``equivariant_hidden``), or
+    ``"auto"`` (equivariant when the environment has at least
+    ``EQUIVARIANT_MIN_QUBITS`` = 12 qubits, mlp otherwise). The flat MLP at
+    ``n >= 12`` needs ``rollout_steps * batch`` of about 16 x 1024 and
+    ``ent_coef = 0.001`` to make progress (``experiments/scaling/REPORT.md``).
+    """
+
     hidden: tuple = (256, 256)
     observation: str = "tableau"
+    policy: str = "auto"
+    equivariant_hidden: int = 128
     rollout_steps: int = 16  # env steps per update; transitions = batch * rollout_steps
     epochs: int = 4
     minibatch_size: int = 512
@@ -295,21 +302,28 @@ class PPOAgent:
     ``env.success_threshold`` (a code satisfying every term of the reward)
     or after ``env.max_steps`` gates. Truncated episodes are treated as
     terminal for the value bootstrap.
+
+    ``device`` (default ``"cpu"``) is the torch device of the network and
+    of the update: observations, masks, and rollout buffers are copied to
+    it, actions and values copied back. The environment and its reward
+    stay numpy on the host either way. On ``"cpu"`` every copy is a no-op
+    and the trajectory is the one of the version without the argument.
     """
 
-    def __init__(self, env: CodeDiscoveryEnv, config: PPOConfig | None = None, seed: int = 0):
+    def __init__(self, env: CodeDiscoveryEnv, config: PPOConfig | None = None, seed: int = 0, device=None):
         self.config = config or PPOConfig()
         self.threads = set_threads(self.config.max_threads)
         torch = _torch()
         self.torch = torch
+        self.device = torch.device(device) if device is not None else torch.device("cpu")
         self.env = env
         env.auto_reset = True
         self.seed = int(seed)
         self.rng = np.random.default_rng(self.seed)
         torch.manual_seed(self.seed)
         self.adapter = EnvAdapter(env, self.config.observation, self.config.mask_undo)
-        ActorCritic = _actor_critic_class()
-        self.model = ActorCritic(self.adapter.obs_dim, self.adapter.num_actions, tuple(self.config.hidden))
+        self.policy = resolve_policy(self.config.policy, env.n)
+        self.model = self.build_model().to(self.device)
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config.learning_rate, eps=1e-5)
         self.env_steps = 0
         self.episodes = 0
@@ -319,30 +333,40 @@ class PPOAgent:
         self._obs = None
 
     # ------------------------------------------------------------------
+    def build_model(self):
+        """Fresh actor-critic for ``self.policy`` over the adapter's observation
+        and the environment's action table (torch RNG state is consumed)."""
+        if self.policy == "mlp":
+            return mlp_actor_critic(self.adapter.obs_dim, self.adapter.num_actions, tuple(self.config.hidden))
+        rows = self.adapter.obs_dim // (2 * self.env.n)
+        return equivariant_actor_critic(
+            self.env.n, self.env.action_table.entries, hidden=int(self.config.equivariant_hidden), rows=rows
+        )
+
     def num_parameters(self) -> int:
         return self.model.num_parameters()
 
     def _policy(self, obs_np: np.ndarray, mask_np: np.ndarray | None):
         torch = self.torch
-        obs = torch.from_numpy(obs_np)
-        mask = torch.from_numpy(mask_np) if mask_np is not None else None
+        obs = torch.from_numpy(obs_np).to(self.device)
+        mask = torch.from_numpy(mask_np).to(self.device) if mask_np is not None else None
         with torch.no_grad():
             logits, value = self.model(obs, mask)
             dist = torch.distributions.Categorical(logits=logits)
             action = dist.sample()
             logp = dist.log_prob(action)
-        return action.numpy(), logp.numpy(), value.numpy()
+        return action.cpu().numpy(), logp.cpu().numpy(), value.cpu().numpy()
 
     def act(self, tab: np.ndarray, greedy: bool = False) -> np.ndarray:
         """Actions for an arbitrary batch of tableaux (no masking, used for
         inspection of a trained policy)."""
         torch = self.torch
-        obs = torch.from_numpy(self.adapter.encode(tab))
+        obs = torch.from_numpy(self.adapter.encode(tab)).to(self.device)
         with torch.no_grad():
             logits, _ = self.model(obs)
             if greedy:
-                return logits.argmax(-1).numpy()
-            return torch.distributions.Categorical(logits=logits).sample().numpy()
+                return logits.argmax(-1).cpu().numpy()
+            return torch.distributions.Categorical(logits=logits).sample().cpu().numpy()
 
     # ------------------------------------------------------------------
     def collect(self, steps: int, record_successes: bool = True, max_record: int = 4096):
@@ -443,19 +467,20 @@ class PPOAgent:
         adv, ret = self.gae(buf)
         T, B = buf["rewards"].shape
         N = T * B
-        obs = torch.from_numpy(buf["obs"].reshape(N, -1))
-        mask = torch.from_numpy(buf["mask"].reshape(N, -1)) if buf["mask"] is not None else None
-        actions = torch.from_numpy(buf["actions"].reshape(N))
-        old_logp = torch.from_numpy(buf["logp"].reshape(N))
-        adv_t = torch.from_numpy(adv.reshape(N))
-        ret_t = torch.from_numpy(ret.reshape(N))
+        dev = self.device
+        obs = torch.from_numpy(buf["obs"].reshape(N, -1)).to(dev)
+        mask = torch.from_numpy(buf["mask"].reshape(N, -1)).to(dev) if buf["mask"] is not None else None
+        actions = torch.from_numpy(buf["actions"].reshape(N)).to(dev)
+        old_logp = torch.from_numpy(buf["logp"].reshape(N)).to(dev)
+        adv_t = torch.from_numpy(adv.reshape(N)).to(dev)
+        ret_t = torch.from_numpy(ret.reshape(N)).to(dev)
         if cfg.normalize_advantages:
             adv_t = (adv_t - adv_t.mean()) / (adv_t.std() + 1e-8)
         stats = dict(policy_loss=0.0, value_loss=0.0, entropy=0.0, approx_kl=0.0, clip_frac=0.0)
         count = 0
         mb = min(cfg.minibatch_size, N)
         for _ in range(cfg.epochs):
-            perm = torch.from_numpy(self.rng.permutation(N))
+            perm = torch.from_numpy(self.rng.permutation(N)).to(dev)
             for start in range(0, N, mb):
                 idx = perm[start : start + mb]
                 logits, value = self.model(obs[idx], mask[idx] if mask is not None else None)
@@ -545,7 +570,7 @@ class PPOAgent:
             first_success=first,
             successes=len(self.successes),
             num_parameters=self.num_parameters(),
-            config=self.config.to_dict(),
+            config=dict(self.config.to_dict(), policy_resolved=self.policy),
             history=self.history,
         )
 

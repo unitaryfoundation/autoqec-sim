@@ -18,6 +18,7 @@ dist/
 results/*
 !results/regression.json
 !results/regression_ppo.json
+!results/regression_ppo_4x4_seed*.json
 
 # editors and OS
 .DS_Store

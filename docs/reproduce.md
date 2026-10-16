@@ -19,9 +19,8 @@ change a trajectory; expect the PPO counts to move, not the outcome.
 
 ```
 uv venv --python 3.12 .venv-repro && source .venv-repro/bin/activate
-uv pip install "noise-model @ git+https://github.com/ORG/noise-model@v0.2.0"       # or ../noise-model
 uv pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.14.0"   # CPU torch
-uv pip install "autoqec-sim[rl] @ git+https://github.com/ORG/autoqec-sim@v0.2.0"  # or ".[rl]" in a checkout
+uv pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim@v0.2.0"  # or ".[rl]" in a checkout
 export OMP_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 MKL_NUM_THREADS=6
 ```
 
@@ -82,7 +81,12 @@ Evolutionary: batch 512, 100,000 evaluations per attempt, up to 60 attempts
 (seeds 0, 1, ...), restart until the enumerators of `S` and `N(S)` match the
 reference; exclusion targets run 5 seeds to exhaustion. PPO: batch 256,
 3,000,000 state evaluations or 20 minutes per attempt, up to 3 attempts,
-stop at the first enumerator match.
+stop at the first enumerator match; the PPO-only 4x4 target
+`rotated_surface_16` has its own budget of 1,000,000 state evaluations in
+one attempt (`ppo_regress.TARGET_BUDGETS`) and is skipped by the reduced
+budget. Run it alone with `autoqec-ppo --budget full --targets
+rotated_surface_16 --seed 0 --threads 2 --out results/regression_ppo_4x4_seed0.json`
+(about 20 minutes at 2 threads).
 
 ```
 autoqec-regress --budget full --seed 0 --out results/regression.json
@@ -105,9 +109,16 @@ numpy 2.5.3, torch 2.14.0, 6 threads):
 | [[5,1,3]] | PPO | 1 | 61,440 state evaluations | 1.4 s | d = 3 | yes |
 | Steane | PPO | 1 | 225,280 state evaluations | 10.7 s | d = 3 | yes |
 | rotated surface | PPO | 1 | 106,496 state evaluations | 3.4 s | d = 3, 15 gates | yes |
+| rotated surface 4x4 `[[16,1,4]]`, seed 0 | PPO | 1 | 1,003,520 state evaluations | 1,203 s | d = 4, 46 gates, w* = 5 (first of 66 verified codes) | no |
+| rotated surface 4x4 `[[16,1,4]]`, seed 1 | PPO | 1 | 1,003,520 state evaluations | 1,237 s | d = 4, 48 gates, w* = 6 (first of 2 verified codes) | no |
 
 The whole evolutionary full run takes about 6 minutes and the PPO full run
-under 20 s on a laptop CPU with 6 threads. One evolutionary "circuit" costs
+under 20 s on a laptop CPU with 6 threads for the eight shared targets; the
+4x4 target adds about 20 minutes per seed at 2 threads
+(`results/regression_ppo_4x4_seed{0,1}.json`, run on a shared machine).
+The 4x4 rows end without an enumerator match: both seeds reach a verified
+`[[16, 1, 4]]` code, none of the 68 distinct codes is the rotated surface
+code (README, "PPO agent"). One evolutionary "circuit" costs
 up to `max gates` state evaluations, so the evolutionary counts are upper
 bounds on the same axis as PPO's (README.md, "PPO agent").
 

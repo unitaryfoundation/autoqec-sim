@@ -20,8 +20,8 @@ def test_graph_builders():
     assert graphs.from_spec("all_to_all:7").n == 7
 
 
-def test_graphs_round_trip_with_noise_model_topology():
-    import noise_model as nm
+def test_graphs_round_trip_with_autoqec_noise_topology():
+    from autoqec_sim import noise as nm
 
     for g, t in [
         (graphs.square(3, 3), nm.square(3, 3)),

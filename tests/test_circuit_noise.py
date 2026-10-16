@@ -5,10 +5,10 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
 import numpy as np
 import pytest
 import stim
-from conftest import gates_from_stim
+from _helpers import gates_from_stim
 
-import noise_model as nm
 from autoqec_sim import graphs, known_codes
+from autoqec_sim import noise as nm
 from autoqec_sim.circuit_noise import (
     ConnectivityError,
     circuit_depth,
@@ -22,9 +22,9 @@ from autoqec_sim.circuit_noise import (
     resolve_noise_model,
 )
 from autoqec_sim.env import CodeDiscoveryEnv
+from autoqec_sim.noise import presets
 from autoqec_sim.regress import replay
 from autoqec_sim.tableau import gates_to_stim_circuit
-from noise_model import presets
 
 
 def _steane_encoder():

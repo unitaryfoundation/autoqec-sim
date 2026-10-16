@@ -50,3 +50,35 @@ def test_five_qubit_code_is_unique(reduced_results):
 
 def test_reduced_budget_is_quick(reduced_results):
     assert reduced_results["_wall"] < 120
+
+
+def test_objective_mode_targets_at_n9():
+    # LdpcSpec(mode="objective") wires an LdpcObjective as reward and success
+    # criterion; at n = 9 every form finds a sparse [[9,1,3]] code quickly
+    import pytest
+
+    from autoqec_sim import ldpc
+    from autoqec_sim.regress import LdpcSpec, Target, env_kwargs, make_reward, run_target
+
+    with pytest.raises(ValueError):
+        LdpcSpec(4, mode="soft")
+    with pytest.raises(ValueError):
+        LdpcSpec(4, mode="objective", form="soft")
+    for form in ldpc.LDPC_FORMS:
+        t = Target(
+            f"surface_objective_{form}", 9, 1, 3, "square:3x3", "rotated_surface_9", 30, 1, ("H", "CNOT"),
+            ldpc=LdpcSpec(w_max=4, mode="objective", form=form), require_reference_match=False,
+        )
+        reward = make_reward(t)
+        assert isinstance(reward, ldpc.LdpcObjective) and reward.form == form
+        assert env_kwargs(t, reward) == {"success_fn": reward.success}
+        with pytest.raises(ValueError):
+            env_kwargs(t)
+        if form == "schedule":
+            # the switch is the trainer's job (experiments.ldpc_scaling); the
+            # evolutionary search has none, so only the wiring is checked here
+            continue
+        r = run_target(t, seed=0, batch_size=256, max_evaluations=30_000, max_attempts=2)
+        assert r["rediscovered"], (form, r["attempts"])
+        v = r["result"]["verification"]
+        assert v["distance_exact"] == 3 and v["nontrivial"] and v["ldpc_bound_met"] and v["min_max_generator_weight"] <= 4

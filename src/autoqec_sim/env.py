@@ -73,8 +73,8 @@ class CodeDiscoveryEnv:
     graph
         Connectivity for two-qubit gates (default all-to-all on ``n``);
         either :class:`autoqec_sim.graphs.Graph` or
-        ``noise_model.topology.Graph``. ``env.topology`` is the
-        ``noise_model`` view of the same graph for noise profiles.
+        ``autoqec_sim.noise.topology.Graph``. ``env.topology`` is the
+        ``autoqec_sim.noise`` view of the same graph for noise profiles.
     batch_size
         Number of parallel episodes.
     reward_fn
@@ -99,7 +99,9 @@ class CodeDiscoveryEnv:
         Optional ``f(tab, k, state_reward) -> (batch,) bool`` replacing the
         threshold test, for rewards whose success criterion is not a level
         of the reward itself (a reward that adds a negative noise term to
-        states that reached the target distance, for example).
+        states that reached the target distance, for example). When it is
+        ``None`` and ``reward_fn`` has a ``success_fn`` attribute, that
+        method is used (:class:`autoqec_sim.memory_objective.MemoryReward`).
     observation
         ``"tableau"`` (``(batch, 2n, 2n + 1)`` bits), ``"check_matrix"``
         (``(batch, n - k, 2n)`` code stabilizers, the observation of Olle
@@ -160,6 +162,11 @@ class CodeDiscoveryEnv:
         self.reward_mode = reward_mode
         self.step_penalty = float(step_penalty)
         self.success_threshold = float(success_threshold)
+        # a reward object may carry its own success criterion (the memory
+        # reward of :mod:`autoqec_sim.memory_objective` and rewards built
+        # like it); an explicit ``success_fn`` takes precedence
+        if success_fn is None:
+            success_fn = getattr(reward_fn, "success_fn", None)
         self.success_fn = success_fn
         if observation not in ("tableau", "check_matrix", "flat"):
             raise ValueError("unknown observation kind")

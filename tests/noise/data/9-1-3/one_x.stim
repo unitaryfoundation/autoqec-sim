@@ -1,0 +1,32 @@
+R 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+TICK
+H 9 10 11 12 0 1 2 3 4 5 6 7 8
+TICK
+CX 9 4 10 7 11 2
+TICK
+CX 9 3 10 5 11 1 12 6
+TICK
+CX 9 0 10 4 12 7
+TICK
+CX 9 1 10 8
+TICK
+CX 5 13 3 14 0 15
+TICK
+CX 2 13 6 14 3 15 5 16
+TICK
+CX 1 13 4 14
+TICK
+CX 4 13 7 14 8 16
+TICK
+H 9 10 11 12 0 1 2 3 4 5 6 7 8
+TICK
+M 9 10 11 12 13 14 15 16 0 1 2 3 4 5 6 7 8
+DETECTOR rec[-17]
+DETECTOR rec[-16]
+DETECTOR rec[-15]
+DETECTOR rec[-14]
+DETECTOR rec[-17] rec[-9] rec[-8] rec[-6] rec[-5]
+DETECTOR rec[-16] rec[-5] rec[-4] rec[-2] rec[-1]
+DETECTOR rec[-15] rec[-8] rec[-7]
+DETECTOR rec[-14] rec[-3] rec[-2]
+OBSERVABLE_INCLUDE(0) rec[-7] rec[-4] rec[-1]

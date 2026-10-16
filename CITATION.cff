@@ -5,7 +5,7 @@ title: "autoqec-sim: vectorized stabilizer-code reward engine and RL environment
 version: 0.2.0
 date-released: "TBD"
 license: Apache-2.0
-repository-code: "https://github.com/ORG/autoqec-sim"
+repository-code: "https://github.com/unitaryfoundation/autoqec-sim"
 authors:
   - family-names: Russo
     given-names: Vincent
@@ -18,10 +18,9 @@ keywords:
 abstract: >-
   Batched Aaronson-Gottesman tableau simulator, Knill-Laflamme reward,
   connectivity-restricted RL environment with an LDPC sparsity constraint,
-  circuit-level noise reward through the noise_model package, and the
+  circuit-level noise reward through the autoqec_sim.noise package, and the
   Steane, surface-code, and [[5,1,3]] rediscovery regressions with
-  evolutionary search and PPO. Part of the AutoQEC project (Task 1,
-  milestone M1).
+  evolutionary search and PPO.
 references:
   - type: article
     title: "Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent"

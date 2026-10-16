@@ -113,7 +113,7 @@ class ErrorSet:
     ) -> ErrorSet:
         """Paulis up to ``max_weight`` weighted by their probability under
         independent per-qubit Pauli channels (``lam = p_mu``); optionally
-        only the ``top`` most probable. This is the noise-model-dominant
+        only the ``top`` most probable. This is the noise-dominant
         error set of the noise-aware reward."""
         p, w = paulis_up_to_weight(n, max_weight, 1)
         lam = pauli_probabilities(p, px, py, pz)

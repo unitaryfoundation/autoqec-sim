@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "autoqec-sim"
 version = "0.2.0"
-description = "Vectorized stabilizer-tableau reward engine and RL environment for AutoQEC code discovery (Task 1, milestone M1)."
+description = "Vectorized stabilizer-tableau reward engine and RL environment for stabilizer-code discovery."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"
@@ -21,11 +21,6 @@ classifiers = [
 dependencies = [
     "numpy>=1.26,<3",
     "stim>=1.13",
-    # Published pin for users of the wheel. noise-model is not on PyPI;
-    # install it from its git tag first (README "Install"). Development
-    # checkouts resolve it from the sibling directory through
-    # [tool.uv.sources] below, which uv uses and the built wheel ignores.
-    "noise-model>=0.2.0,<0.3",
 ]
 
 [project.optional-dependencies]
@@ -37,22 +32,15 @@ rl = [
 [project.scripts]
 autoqec-ppo = "autoqec_sim.agents.ppo_regress:main"
 autoqec-regress = "autoqec_sim.regress:main"
+autoqec-schedule = "autoqec_sim.schedule_cli:main"
 
-# ORG is a placeholder for the GitHub organization; see RELEASE.md.
 [project.urls]
-Repository = "https://github.com/ORG/autoqec-sim"
-Changelog = "https://github.com/ORG/autoqec-sim/blob/main/CHANGELOG.md"
+Repository = "https://github.com/unitaryfoundation/autoqec-sim"
+Changelog = "https://github.com/unitaryfoundation/autoqec-sim/blob/main/CHANGELOG.md"
 
 [dependency-groups]
-dev = ["pytest>=7.0", "ruff>=0.14"]
+dev = ["pytest>=7.0", "ruff>=0.14", "matplotlib>=3.8"]
 
-# Development source for noise-model: the sibling checkout genesis/noise-model,
-# editable so the two evolve together. uv applies this to `uv sync`, `uv run`,
-# and `uv lock`; `uv build` writes only the version pin above into the wheel.
-# Users without the sibling checkout: `uv sync --no-sources` resolves the pin
-# from the configured index or a `--find-links` directory instead.
-[tool.uv.sources]
-noise-model = { path = "../noise-model", editable = true }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/autoqec_sim"]
@@ -79,6 +67,7 @@ testpaths = ["tests"]
 addopts = "-q"
 
 [tool.ruff]
+extend-exclude = ["tests/noise/reference"]
 line-length = 120
 target-version = "py312"
 
@@ -91,7 +80,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["autoqec_sim", "noise_model"]
+known-first-party = ["autoqec_sim"]
 
 # CPU-only torch on Linux for the `rl` extra (the agent is CPU-only; the
 # default PyPI wheel on Linux bundles CUDA). macOS wheels on PyPI are CPU.

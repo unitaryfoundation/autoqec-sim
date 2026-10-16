@@ -49,11 +49,52 @@ ROTATED_SURFACE_9 = [
 
 FOUR_TWO_TWO = ["XXXX", "ZZZZ"]
 
+
+def rotated_surface(d: int) -> list[str]:
+    """Rotated surface code ``[[d^2, 1, d]]`` on a ``d x d`` grid, row-major
+    indices. Plaquette ``(r, c)`` covers ``{(r, c), (r, c+1), (r+1, c),
+    (r+1, c+1)}`` and is X-type iff ``r + c`` is even; the weight-2
+    boundary checks have the type opposite to the adjacent plaquette.
+    ``d = 3`` reproduces ``ROTATED_SURFACE_9`` up to the order of the
+    generators."""
+    n = d * d
+    idx = lambda r, c: r * d + c  # noqa: E731
+
+    def pauli(kind, qubits):
+        s = ["I"] * n
+        for q in qubits:
+            s[q] = kind
+        return "".join(s)
+
+    out = []
+    for r in range(d - 1):
+        for c in range(d - 1):
+            kind = "X" if (r + c) % 2 == 0 else "Z"
+            out.append(pauli(kind, [idx(r, c), idx(r, c + 1), idx(r + 1, c), idx(r + 1, c + 1)]))
+    for c in range(d - 1):
+        if c % 2 == 1:  # plaquette (0, c) is Z: X boundary on top
+            out.append(pauli("X", [idx(0, c), idx(0, c + 1)]))
+        if (d - 2 + c) % 2 == 1:  # plaquette (d-2, c) is Z: X boundary at the bottom
+            out.append(pauli("X", [idx(d - 1, c), idx(d - 1, c + 1)]))
+    for r in range(d - 1):
+        if r % 2 == 0:  # plaquette (r, 0) is X: Z boundary on the left
+            out.append(pauli("Z", [idx(r, 0), idx(r + 1, 0)]))
+        if (r + d - 2) % 2 == 0:  # plaquette (r, d-2) is X: Z boundary on the right
+            out.append(pauli("Z", [idx(r, d - 1), idx(r + 1, d - 1)]))
+    return out
+
+
+# Rotated surface code, distance 4, on the 4x4 grid (the target of the
+# 4x4 PPO rediscovery target and of the RL scaling probe); w* = 4, qubit
+# degree 4.
+ROTATED_SURFACE_16 = rotated_surface(4)
+
 KNOWN = {
     "five_qubit": (FIVE_QUBIT, (5, 1, 3)),
     "steane": (STEANE, (7, 1, 3)),
     "shor": (SHOR, (9, 1, 3)),
     "rotated_surface_9": (ROTATED_SURFACE_9, (9, 1, 3)),
+    "rotated_surface_16": (ROTATED_SURFACE_16, (16, 1, 4)),
     "four_two_two": (FOUR_TWO_TWO, (4, 2, 2)),
 }
 
