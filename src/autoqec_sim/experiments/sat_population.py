@@ -330,19 +330,22 @@ def analyze(recs: list[dict], tiers) -> dict:
             n_better = {rid: sum(_p(r, case, tier) < t["references"][rid] for r in allc) for rid in refs}
             t["codes_better_than_reference"] = {rid: [n_better[rid], len(allc)] for rid in refs}
             if rnd and "proxy" in rnd[0]["cases"][case]:
-                feats = {
+                raw = {
                     "batches": [r["cases"][case]["proxy"]["batches"] for r in rnd],
                     "layers": [r["cases"][case]["proxy"]["layers"] for r in rnd],
+                    "d_circ": [r["cases"][case]["proxy"]["d_circ"] for r in rnd],
                     "d_circ_mass": [r["cases"][case]["proxy"]["d_circ_mass"] for r in rnd],
                     "num_y": [r["num_y"] for r in rnd],
                     "css": [1.0 if r["css"] else 0.0 for r in rnd],
                 }
+                t["constant_features"] = {f: v[0] for f, v in raw.items() if len(set(v)) == 1}
+                feats = {f: v for f, v in raw.items() if f not in t["constant_features"]}
                 t["feature_spearman"] = {f: spearman(v, ys) for f, v in feats.items()}
                 logy = [math.log10(y) for y in ys]
                 logx = [math.log10(x) for x in xs]
                 t["r2"] = {
                     "source_ler": r_squared(logy, [logx]),
-                    "structure": r_squared(logy, list(feats.values())),
+                    "structure": r_squared(logy, list(feats.values())) if feats else float("nan"),
                     "both": r_squared(logy, [logx, *feats.values()]),
                 }
                 css_p = [_p(r, case, tier) for r in rnd if r["css"]]
@@ -396,15 +399,21 @@ def report_tables(an: dict, pop: dict, tiers) -> str:
              "d_circ_mass: probability mass of the minimum-weight undetectable circuit faults; num_y: Y letters among the generators), "
              "and the R^2 of a least-squares fit of log10 p_round on log10 source rate alone, on the structural features alone, and on both.\n")
     tier = "sampled" if "sampled" in tiers else tiers[0]
-    L.append("| case | batches | layers | d_circ_mass | num_y | CSS | R^2 source | R^2 structure | R^2 both | median CSS / non-CSS |")
-    L.append("|---|---|---|---|---|---|---|---|---|---|")
-    for case, c in an["cases"].items():
-        t = c["tiers"][tier]
-        if "feature_spearman" not in t:
-            continue
-        fs, r2, cm = t["feature_spearman"], t["r2"], t["css_median"]
-        L.append(f"| {CASE_TITLES[case]} | {_f(fs['batches'], 2)} | {_f(fs['layers'], 2)} | {_f(fs['d_circ_mass'], 2)} | {_f(fs['num_y'], 2)} | {_f(fs['css'], 2)} | "
-                 f"{_f(r2['source_ler'], 2)} | {_f(r2['structure'], 2)} | {_f(r2['both'], 2)} | {_f(cm['css'])} ({cm['css_count']}) / {_f(cm['non_css'])} ({cm['non_css_count']}) |")
+    first = next((c["tiers"][tier] for c in an["cases"].values() if "feature_spearman" in c["tiers"][tier]), None)
+    if first is not None:
+        names = list(first["feature_spearman"])
+        if first["constant_features"]:
+            L.append("Constant across the random sample, so carrying no information here: "
+                     + ", ".join(f"{f} = {v:g}" if isinstance(v, (int, float)) else f"{f} = {v}" for f, v in first["constant_features"].items()) + ".\n")
+        L.append("| case | " + " | ".join(names) + " | R^2 source | R^2 structure | R^2 both |")
+        L.append("|---|" + "---|" * (len(names) + 3))
+        for case, c in an["cases"].items():
+            t = c["tiers"][tier]
+            if "feature_spearman" not in t:
+                continue
+            fs, r2 = t["feature_spearman"], t["r2"]
+            L.append(f"| {CASE_TITLES[case]} | " + " | ".join(_f(fs.get(f), 2) for f in names)
+                     + f" | {_f(r2['source_ler'], 2)} | {_f(r2['structure'], 2)} | {_f(r2['both'], 2)} |")
     L.append("\n## Best codes of the population\n")
     L.append("Sampled tier. The source rank is among the distinct stabilizer groups (1 = best at eta = 10). "
              "The last two columns count population codes with a lower p_round than each reference code.\n")
@@ -421,6 +430,56 @@ def report_tables(an: dict, pop: dict, tiers) -> str:
         L.append("|---|---|---|---|---|---|")
         for b in t["best"]:
             L.append(f"| {b['id']} | {b['p_round']:.5f} | {b['source_rank']} | {'yes' if b['css'] else 'no'} | {b['batches']} | {b['num_y']} |")
+    return "\n".join(L)
+
+
+def confirm(out_dir: Path, population: Path, top_k: int, rounds: int, min_failures: int, max_shots: int, seed: int, verbose: bool) -> Path:
+    """Re-score the best ``top_k`` codes of every case (sampled tier) and
+    the references with a large shot budget, so the ranking at the top is
+    not shot noise."""
+    pop = {e["id"]: e for e in json.loads(population.read_text())["codes"]}
+    an = json.loads((out_dir / "analysis.json").read_text())
+    ids: list[str] = [rid for rid, e in pop.items() if "reference" in e["groups"]]
+    for c in an["cases"].values():
+        for b in c["tiers"]["sampled"]["best"][:top_k]:
+            if b["id"] not in ids:
+                ids.append(b["id"])
+    cases = list(an["cases"])
+    out: dict = {"top_k": top_k, "rounds": rounds, "min_failures": min_failures, "max_shots": max_shots, "seed": seed, "cases": {c: {} for c in cases}}
+    for rid in ids:
+        code = StabilizerCode.from_stabilizers(pop[rid]["stabilizers"])
+        for case in cases:
+            prof, scale = make_case(case)
+            t0 = time.perf_counter()
+            res = evaluate_tiers(code, prof, rounds, ["sampled"], seed, min_failures * 100, min_failures, max_shots, scale=scale)["sampled"]
+            per = res["per_basis"]
+            out["cases"][case][rid] = {
+                "p_round": res["p_round"],
+                "shots": sum(per[b]["sampling"]["shots"] for b in per), "failures": sum(per[b]["sampling"]["failures"] for b in per),
+                "wall_s": round(time.perf_counter() - t0, 1),
+            }
+        if verbose:
+            print(rid, {c: round(out["cases"][c][rid]["p_round"], 5) for c in cases}, flush=True)
+    path = out_dir / "confirm.json"
+    path.write_text(json.dumps(out, indent=1))
+    return path
+
+
+def confirm_tables(conf: dict, recs: list[dict]) -> str:
+    L = ["\n## Confirmation of the best codes\n"]
+    L.append(f"The {conf['top_k']} best codes of each case at the sampled tier, and the references, re-scored with at least "
+             f"{conf['min_failures']} failures per basis (up to {conf['max_shots']:,} shots) on the same circuit as the first pass. "
+             f"The relative standard error of each rate is about 1 / sqrt(failures). Codes are sorted by the confirmed rate; "
+             f"the first-pass rate is the one the ranking used.\n")
+    ranks = {r["id"]: "reference" if r["source_rank"] is None else r["source_rank"] for r in recs}
+    for case, rows in conf["cases"].items():
+        first = {r["id"]: _p(r, case, "sampled") for r in recs if case in r["cases"] and "sampled" in r["cases"][case]}
+        L.append(f"\n### {CASE_TITLES[case]}\n")
+        L.append("| code | confirmed p_round | rel. std. err. | first pass | source rank |")
+        L.append("|---|---|---|---|---|")
+        for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["p_round"]):
+            se = 1 / math.sqrt(r["failures"]) if r["failures"] else float("nan")
+            L.append(f"| {rid} | {r['p_round']:.5f} | {se:.0%} | {_f(first.get(rid))} | {ranks.get(rid, 'n/a')} |")
     return "\n".join(L)
 
 
@@ -473,6 +532,9 @@ def write_report(out_dir: Path, population: Path, figure: Path | None = FIGURE) 
         if png is not None:
             rel = os.path.relpath(png, out_dir.parent)
             fig_line = f"\n![source rate against circuit-level rate]({rel})\n\nFigure: the random sample's source rate against its circuit-level rate under the biased idle case at eta = 10 (a) and under Forte (b), colored by the number of batches in the extraction circuit; the reference codes are the open markers.\n"
+    conf_text = ""
+    if (out_dir / "confirm.json").exists():
+        conf_text = confirm_tables(json.loads((out_dir / "confirm.json").read_text()), recs)
     text = f"""# A population of SAT-designed codes under the memory objective
 
 Status: {'complete' if an['counts']['scored'] >= len(pop['codes']) else f"partial, {an['counts']['scored']} of {len(pop['codes'])} codes"}.
@@ -499,10 +561,13 @@ sequential timing. Tiers: proxy (maximum-likelihood failure over fault
 sets of weight at most two, closed form) and sampled (Monte Carlo from the
 detector error model with a lookup decoder built from the same fault
 sets, {settings['shots']:,} shots and at least {settings['min_failures']} failures
-up to {settings['max_shots']:,} shots). Distances are recomputed exactly.
+up to {settings['max_shots']:,} shots). Every code, the references included, uses the hook-aware gate
+order, whose random tie-breaking left the proxy rate unchanged over five
+seeds on this footprint. Distances are recomputed exactly.
 Sampled-tier differences below about ten percent are within shot noise.
 {fig_line}
 {report_tables(an, pop, tiers)}
+{conf_text}
 """
     path = out_dir.parent / "REPORT.md"
     path.write_text(text)
@@ -532,6 +597,15 @@ def main(argv=None):
     r.add_argument("--limit", type=int, default=None)
     r.add_argument("--out", default=str(DEFAULT_OUT))
     r.add_argument("--quiet", action="store_true")
+    c = sub.add_parser("confirm")
+    c.add_argument("--population", default=str(POPULATION))
+    c.add_argument("--out", default=str(DEFAULT_OUT))
+    c.add_argument("--top", type=int, default=8)
+    c.add_argument("--rounds", type=int, default=3)
+    c.add_argument("--min-failures", type=int, default=500)
+    c.add_argument("--max-shots", type=int, default=4_000_000)
+    c.add_argument("--seed", type=int, default=0)
+    c.add_argument("--quiet", action="store_true")
     q = sub.add_parser("report")
     q.add_argument("--population", default=str(POPULATION))
     q.add_argument("--out", default=str(DEFAULT_OUT))
@@ -544,6 +618,8 @@ def main(argv=None):
     out = Path(a.out)
     if a.cmd == "run":
         run(out, Path(a.population), a.rounds, a.tiers, a.shots, a.min_failures, a.max_shots, a.seed, a.workers, a.cases, a.limit, not a.quiet)
+    elif a.cmd == "confirm":
+        confirm(out, Path(a.population), a.top, a.rounds, a.min_failures, a.max_shots, a.seed, not a.quiet)
     print("wrote", write_report(out, Path(a.population), None if getattr(a, "no_figure", False) else FIGURE))
 
 
