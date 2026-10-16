@@ -135,7 +135,15 @@ flat MLP with a 4x larger batch, which also works), and it is the recommended
 default for `n >= 12`. The LDPC penalty form of the regression does not carry
 over: in 18 runs at `n = 12` to `16` no PPO policy reached a distance-3 code
 with `w* <= 4`; all converge to sparse groups of distance 1, so the penalty is
-validated at `n = 9` only. One run reproduces with
+validated at `n = 9` only. The limits above are limits of gate-by-gate
+encoder search. Code design under hardware constraints is NP-complete in
+general, and a SAT formulation nonetheless designs physics-inspired codes
+with up to 100 physical qubits in minutes and hardware-aware codes for
+biased noise with lower logical error rates than surface codes
+[@dalfavero2026]; that search space, check matrices rather than encoding
+circuits, is where the rewards here (circuit-level noise, the memory
+objective) and the schedule synthesizer take a code as input. One run
+reproduces with
 
 ```
 uv run --extra rl python -m autoqec_sim.experiments.scaling variant --variant equivariant --seed 0
