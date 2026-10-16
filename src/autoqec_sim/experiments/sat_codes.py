@@ -119,6 +119,8 @@ def report_tables(out: dict) -> str:
 
 def write_report(out_dir: Path) -> Path:
     out = json.loads((out_dir / "sat_codes.json").read_text())
+    for rec in out["codes"].values():  # JSON turns the float keys of the source rates into strings
+        rec["source_ler"] = {float(k): v for k, v in rec["source_ler"].items()}
     text = f"""# SAT-designed codes under the memory objective
 
 Status: complete for the selection below. Every number comes from
@@ -138,6 +140,16 @@ depolarizing profile with a biased idle channel whose Z rate is eta times
 each of the X and Y rates (the codes are Hadamard-conjugated on every qubit
 so their X tailoring becomes Z tailoring), and under the IonQ Forte preset
 with sequential timing. Distances are recomputed exactly here.
+
+Two structural differences between the two scores. The source's channel is
+a single biased code-capacity channel with an exact maximum-likelihood
+decoder; here only the idle channel carries the bias, while gate, reset,
+and measurement errors stay unbiased, so the effective bias a code sees
+over a round is weaker, and the decoder is the tier's (a low-weight
+maximum-likelihood proxy, or sampling with the exact decoder where the
+detector count allows). The sampled tier stops at the shot and failure
+counts in the JSON, so differences below about ten percent are within its
+noise; the proxy tier is deterministic.
 {report_tables(out)}
 """
     path = out_dir.parents[0] / "REPORT.md"
