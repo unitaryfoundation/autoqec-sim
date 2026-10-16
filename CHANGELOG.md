@@ -2,6 +2,14 @@
 
 ## 0.2.0 (TBD)
 
+- `StabilizerCode.from_gates(n, k, gates)` reads the code off a gate
+  sequence such as `SearchResult.gates`, and `EvolutionarySearch` is
+  exported from the package root, so the README quick start is a search,
+  a code, and its stabilizers (`examples/quickstart.py`). The longer
+  rediscover, verify, and score walkthrough is
+  `examples/rediscover_and_score.py`. README after clifft's: logo, badges,
+  one-line install, short quick start; CODE_OF_CONDUCT.md (Contributor
+  Covenant 2.1).
 - `backends.cuda_kernels`: two opt-in fused CUDA kernels (CuPy, NVRTC) behind
   the torch backend, a per-element gate kernel and a bit-packed popcount
   parity kernel; agreement tests against the torch path; benchmark script

@@ -8,9 +8,8 @@ title: autoqec-sim
 
 <div class="hero" markdown>
 
-:material-dots-hexagon:{ .hero-mark }
-
-<p class="hero-title">autoqec-sim</p>
+![autoqec-sim](assets/logos/autoqec-sim-logo-light.svg#only-light){ width=420 }
+![autoqec-sim](assets/logos/autoqec-sim-logo-dark.svg#only-dark){ width=420 }
 
 <p class="hero-tagline">
 A batched stabilizer-code simulator and reinforcement-learning environment
@@ -55,37 +54,22 @@ records where it stops.
 
 ## Quick Example
 
-Install with
-`pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim@v0.2.0"`,
-then rediscover the [[5,1,3]] code, verify it, and score its encoding
-circuit under a device noise profile. About two seconds.
+Install with `pip install git+https://github.com/unitaryfoundation/autoqec-sim`,
+then search for a distance-3 code on five qubits:
 
 ```python
-import numpy as np
+from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
 
-from autoqec_sim import BatchTableau, StabilizerCode, known_codes
-from autoqec_sim.circuit_noise import circuit_level_reward
-from autoqec_sim.env import CodeDiscoveryEnv
-from autoqec_sim.noise import presets
-from autoqec_sim.regress import TARGETS, make_reward
-from autoqec_sim.search import EvolutionarySearch
+env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, seed=0)
+result = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
 
-target = TARGETS["five_qubit"]
-env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, gates=target.gates, max_steps=target.max_steps,
-                       reward_fn=make_reward(target), seed=0)
-res = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
-
-tab = BatchTableau(5, 1)
-for gate, a, b in res.gates:
-    tab.apply(gate, a, b if b >= 0 else None)
-code = StabilizerCode.from_tableau(tab.array, k=1)
-ref = known_codes.get("five_qubit")
-print(code.distance_exact(), code.is_css(),
-      all(np.array_equal(a, b) for a, b in zip(code.weight_enumerators(), ref.weight_enumerators(), strict=True)))
-
-r = circuit_level_reward(tab.array, 1, [res.gates], presets.forte(), scale=0.25)
-print(f"undetected single-fault mass under Forte noise at quarter scale: {-r[0]:.4f}")
+code = StabilizerCode.from_gates(5, 1, result.gates)
+print(code.parameters(), code.stabilizer_strings())
 ```
+
+The search returns a [[5,1,3]] code in under a second. The
+[Quick Start](getting-started/quickstart.md) verifies it against the
+reference code and scores its encoder under a device noise profile.
 
 ## Key Features
 

@@ -27,6 +27,7 @@ from .env import CodeDiscoveryEnv
 from .errors import ErrorSet
 from .ldpc import ldpc_feasible, ldpc_penalty, sparsest_basis_stats
 from .reward import kl_reward, low_weight_stabilizer_penalty, undetected_mask
+from .search import EvolutionarySearch
 from .tableau import BatchTableau, identity_tableau
 
 __version__ = "0.2.0"
@@ -35,6 +36,7 @@ __all__ = [
     "BatchTableau",
     "CodeDiscoveryEnv",
     "ErrorSet",
+    "EvolutionarySearch",
     "StabilizerCode",
     "__version__",
     "identity_tableau",

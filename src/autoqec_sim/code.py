@@ -22,6 +22,7 @@ import numpy as np
 from . import symplectic as sp
 from .errors import count_paulis, paulis_of_weight
 from .reward import undetected_mask
+from .tableau import BatchTableau
 
 EXACT_MAX_N = 20
 
@@ -75,6 +76,17 @@ class StabilizerCode:
             signs=t[n + k :, 2 * n],
             destabilizers=t[k:n, : 2 * n],
         )
+
+    @classmethod
+    def from_gates(cls, n: int, k: int, gates) -> StabilizerCode:
+        """Read the code off the encoding circuit ``gates`` applied to the
+        identity tableau on ``n`` qubits. ``gates`` are ``(name, a, b)``
+        triples as in ``SearchResult.gates``, with ``b < 0`` for a
+        single-qubit gate."""
+        tab = BatchTableau(n, 1)
+        for gate, a, b in gates:
+            tab.apply(gate, a, None if b is None or b < 0 else b)
+        return cls.from_tableau(tab.array, k=k)
 
     @classmethod
     def from_stabilizers(cls, stabilizers, signs=None) -> StabilizerCode:

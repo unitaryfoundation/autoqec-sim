@@ -42,7 +42,8 @@ results/                 regression.json (evolutionary) and regression_ppo.json 
 results/ldpc_scaling/    per-run JSON, logs, queue, and existence.json of the LDPC-form comparison (working cache, not tracked)
 experiments/ldpc_scaling/REPORT.md  the LDPC-form comparison write-up
 results/noise_aware/     REPORT.md, per-run JSON and CSV, baselines, figures of the noise-aware experiment
-examples/quickstart.py   the quick start above
+examples/quickstart.py   the README quick start: search, code, stabilizers
+examples/rediscover_and_score.py  rediscover [[5,1,3]], verify it, score its encoder under Forte noise
 scripts/reproduce.sh     fresh venv, tests, both reduced regressions
 docs/reproduce.md        commands and expected outputs for both regressions
 scripts/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment

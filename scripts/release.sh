@@ -12,7 +12,8 @@ test -z "$(git status --porcelain)" || { echo "working tree not clean"; exit 1; 
 TODAY="$(date +%Y-%m-%d)"
 sed -i.bak "s/^date-released: \"TBD\"/date-released: \"$TODAY\"/" CITATION.cff && rm -f CITATION.cff.bak
 sed -i.bak "s/^## $VER (TBD)/## $VER ($TODAY)/" CHANGELOG.md && rm -f CHANGELOG.md.bak
-git add CITATION.cff CHANGELOG.md
+sed -i.bak "s#github.io/autoqec-sim/dev/#github.io/autoqec-sim/stable/#g" README.md && rm -f README.md.bak
+git add CITATION.cff CHANGELOG.md README.md
 git -c user.name=vprusso -c user.email=vincent.russo@ionq.co commit -q -m "Release $VER" || true
 git push -q origin main
 gh repo edit "$REPO" --visibility public --accept-visibility-change-consequences

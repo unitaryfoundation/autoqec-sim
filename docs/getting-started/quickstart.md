@@ -1,11 +1,36 @@
 # Quick Start
 
-This page rediscovers the [[5,1,3]] code with the evolutionary search,
-verifies it independently of the reward, and scores its encoding circuit
-under a device noise profile. The whole script is `examples/quickstart.py`
-and runs in about two seconds.
+## Find a code
 
-## Search
+A `CodeDiscoveryEnv` holds `batch_size` encoding circuits on `n` qubits
+encoding `k` logical qubits. Its default reward is the Knill-Laflamme
+undetected mass over all Paulis below the target distance of 3, and its
+default gate set is H, S, and CNOT on all-to-all connectivity. The
+evolutionary search evolves gate sequences until one reaches the target
+reward, and `StabilizerCode.from_gates` reads the code off the winning
+circuit. This is `examples/quickstart.py`; it runs in under a second.
+
+```python
+from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
+
+env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, seed=0)
+result = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
+
+code = StabilizerCode.from_gates(5, 1, result.gates)
+print(code.parameters(), code.stabilizer_strings())
+```
+
+The output is `(5, 1, 3)` followed by four stabilizer generators: a
+[[5,1,3]] code, the only distance-3 code on five qubits.
+
+## Verify and score
+
+The rest of this page rediscovers the [[5,1,3]] code with the
+regression's target, verifies it independently of the reward, and scores
+its encoding circuit under a device noise profile. The whole script is
+`examples/rediscover_and_score.py` and runs in about two seconds.
+
+### Search
 
 A `CodeDiscoveryEnv` holds `batch_size` encoding circuits as one array of
 stabilizer tableaux on `n` qubits encoding `k` logical qubits. Each step
@@ -27,7 +52,7 @@ res = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
 print(f"search: success={res.success} evaluations={res.evaluations} gates={len(res.gates)} wall={res.wall_time_s:.1f} s")
 ```
 
-## Verify
+### Verify
 
 Replay the found gate sequence on a fresh tableau and read the code off it.
 `StabilizerCode` computes the exact distance and the weight enumerators of
@@ -52,7 +77,7 @@ print("enumerators match [[5,1,3]]:", match)
 The code has distance 3, is not CSS, and its enumerators match the
 reference.
 
-## Score under device noise
+### Score under device noise
 
 `circuit_level_reward` lays the gate list out as a TICK-layered circuit,
 applies a noise profile, propagates every single-fault mechanism to the

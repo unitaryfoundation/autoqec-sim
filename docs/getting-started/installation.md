@@ -1,11 +1,11 @@
 # Installation
 
-autoqec-sim is not published on PyPI. Install it from the repository at a
-release tag:
-
 ```bash
-pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim@v0.2.0"
+pip install git+https://github.com/unitaryfoundation/autoqec-sim
 ```
+
+This installs `main`. autoqec-sim is not published on PyPI; to install a
+release, append its tag, for example `...autoqec-sim@v0.2.0`.
 
 !!! note "Python 3.12 to 3.14"
     The package runs on Python 3.12, 3.13, and 3.14. Its only dependencies
@@ -16,6 +16,10 @@ pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-
 | Extra | Adds | Needed for |
 |---|---|---|
 | `rl` | `torch` | the PPO agent, `autoqec-ppo`, `autoqec-schedule`, and the torch backend |
+
+```bash
+pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"
+```
 
 Without the extra, the evolutionary search, `autoqec-regress`, and every
 reward run on numpy.

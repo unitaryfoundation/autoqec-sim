@@ -1,67 +1,87 @@
-# autoqec-sim
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logos/autoqec-sim-logo-dark.svg">
+    <img src="docs/assets/logos/autoqec-sim-logo-light.svg" alt="autoqec-sim" width="420">
+  </picture>
+</p>
 
-A batched stabilizer-code simulator with a reinforcement-learning
-environment for discovering and evaluating small quantum error-correcting
-codes. Thousands of encoding circuits are held as one array of stabilizer
-tableaux and advanced together, one gate per step, on a chosen connectivity
-graph. Rewards score the code each circuit encodes: the Knill-Laflamme
-undetected-error mass, exact distance for small codes, LDPC sparsity,
-circuit-level noise under a device profile, and a multi-round memory
-experiment with a decoder. Two agents are included, PPO with an optional
-lattice-equivariant policy and an evolutionary search. A schedule
-synthesizer assigns the CX layers of a syndrome-extraction circuit to raise
-its fault distance.
+[![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)
+[![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/installation/)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-What it has done so far, for calibration: it rediscovers [[5,1,3]], Steane,
-Shor, and the rotated surface code on every lattice tested; it has found
-noise-adapted non-CSS codes up to 16 qubits; and the schedule synthesizer
-raised the fault distance of the [[49,13,4]] circuit on the qldpc-challenge
-board from 2 to 3. The RL discovery agent has not produced a new code above
-16 qubits; `docs/experiments.md` records where it stops.
+**autoqec-sim** is a batched stabilizer-code simulator and
+reinforcement-learning environment for discovering small quantum
+error-correcting codes.
 
-## Install
+Developed with support from the U.S. Department of Energy Genesis Mission
+and hosted by the [Unitary Foundation](https://unitary.foundation).
 
+autoqec-sim holds thousands of encoding circuits as one array of stabilizer
+tableaux and advances them together, one Clifford gate per step, on a chosen
+connectivity graph. A reward scores the code each circuit encodes: the
+Knill-Laflamme undetected-error mass, exact distance for small codes, LDPC
+sparsity, circuit-level noise under a device profile, or a multi-round
+memory experiment with a decoder. Two agents search over gate sequences, PPO
+with an optional lattice-equivariant policy and an evolutionary search, and
+a rediscovery regression verifies every code a run produces independently
+of the reward.
+
+So far it rediscovers [[5,1,3]], Steane, Shor, and the rotated surface code
+on every lattice tested, has found noise-adapted non-CSS codes up to 16
+qubits, and its schedule synthesizer raised the fault distance of the
+[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. The discovery
+agent has not produced a new code above 16 qubits; the
+[experiments page](https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/) records where it stops.
+
+## Why autoqec-sim?
+
+- **Batched tableau simulator**: one `(batch, 2n, 2n+1)` array of
+  Aaronson-Gottesman tableaux, gates applied by gather and scatter indexing
+  with no Python loop over the batch, cross-checked against stim.
+- **Rewards for code quality**: Knill-Laflamme mass, exact distance, an LDPC
+  sparsity constraint, circuit-level noise under sourced device presets
+  (IonQ Forte, a long ion chain, IBM Heron, the qldpc-challenge recipe), and
+  a multi-round memory objective with a decoder.
+- **Two agents and a regression**: PPO with action masking and a
+  permutation-equivariant policy, an evolutionary search, and a rediscovery
+  regression that verifies each found code by exact distance and weight
+  enumerators.
+- **CPU reference, GPU backend**: the numpy engine is the reference; the
+  torch backend runs the same kernels on CUDA with bit-for-bit agreement
+  tests, and two fused CUDA kernels take the gate step and the parity masks
+  further.
+
+## Installation
+
+```bash
+pip install git+https://github.com/unitaryfoundation/autoqec-sim
 ```
-pip install "autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim@v0.2.0"
-```
 
-Python 3.12 to 3.14, `numpy`, and `stim`. The `rl` extra adds torch for
-the PPO agent; without it, the evolutionary search and every reward still
-run.
+Python 3.12 to 3.14; the dependencies are `numpy` and `stim`. The PPO agent
+needs torch: install `"autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"`.
+Releases are tagged on GitHub and archived on Zenodo; there is no PyPI
+package.
 
-## Quick start
-
-Rediscover the [[5,1,3]] code, verify it independently of the reward, and
-score its encoding circuit under a device noise profile. About two seconds.
+## Quick Start
 
 ```python
-import numpy as np
+from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
 
-from autoqec_sim import BatchTableau, StabilizerCode, known_codes
-from autoqec_sim.circuit_noise import circuit_level_reward
-from autoqec_sim.env import CodeDiscoveryEnv
-from autoqec_sim.noise import presets
-from autoqec_sim.regress import TARGETS, make_reward
-from autoqec_sim.search import EvolutionarySearch
+env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, seed=0)
+result = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
 
-target = TARGETS["five_qubit"]
-env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, gates=target.gates, max_steps=target.max_steps,
-                       reward_fn=make_reward(target), seed=0)
-res = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
-
-tab = BatchTableau(5, 1)
-for gate, a, b in res.gates:
-    tab.apply(gate, a, b if b >= 0 else None)
-code = StabilizerCode.from_tableau(tab.array, k=1)
-ref = known_codes.get("five_qubit")
-print(code.distance_exact(), code.is_css(),
-      all(np.array_equal(a, b) for a, b in zip(code.weight_enumerators(), ref.weight_enumerators(), strict=True)))
-
-r = circuit_level_reward(tab.array, 1, [res.gates], presets.forte(), scale=0.25)
-print(f"undetected single-fault mass under Forte noise at quarter scale: {-r[0]:.4f}")
+code = StabilizerCode.from_gates(5, 1, result.gates)
+print(code.parameters(), code.stabilizer_strings())
 ```
 
-The full script is `examples/quickstart.py`.
+The search returns a [[5,1,3]] code in under a second on a laptop. Continue
+with the [Quick Start](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/quickstart/), which verifies the
+code against the reference and scores its encoder under a device noise
+profile, or use [Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/choosing-a-workflow/)
+to pick a reward, agent, and entry point by the result you need.
 
 ## Commands
 
@@ -71,42 +91,33 @@ autoqec-ppo --budget reduced                               # the same targets wi
 autoqec-schedule 49-13-4 --board /path/to/qldpc-challenge  # CX-layer schedule for a board code's circuit
 ```
 
-`autoqec-schedule` scores the board builder's own schedules, trains a PPO
-policy on the exact circuit fault distance, and confirms the best schedule
-at `rounds = d` with the board's search tier. Expected outputs for the two
-regressions are in `docs/reproduce.md`.
-
-## Modules
-
-| Module | Contents |
-|---|---|
-| `tableau`, `symplectic` | batched Aaronson-Gottesman tableau; GF(2) and symplectic linear algebra |
-| `reward`, `errors`, `code`, `known_codes` | Knill-Laflamme and distance rewards; Pauli error sets; `StabilizerCode` with exact and randomized distance; reference codes |
-| `env`, `graphs`, `ldpc` | the discovery environment; connectivity graphs; LDPC sparsity constraint |
-| `circuit_noise`, `memory_objective`, `noise` | circuit-level fault propagation; multi-round memory experiment; noise channels, timing, topologies, and device presets |
-| `search`, `agents.ppo`, `regress` | evolutionary search; PPO; the rediscovery regression |
-| `schedule_env`, `schedule_cli` | CX-layer schedule synthesis for a fixed code |
-| `backends.torch_backend` | the gate kernels and rewards on CPU or CUDA tensors, bit-identical to numpy |
-
-`docs/modules.md` has the full table.
-
-## GPU
-
-The numpy engine is the reference. `backends.torch_backend` runs the same
-kernels and rewards on CUDA with agreement tests against numpy, and
-`backends.cuda_kernels` adds two opt-in fused CUDA kernels for the gate
-updates and the parity masks, five times and up to thirteen times the torch
-path on an A100. `docs/gpu.md` has the measurements.
+See [Commands](https://unitaryfoundation.github.io/autoqec-sim/dev/reference/commands/) for the options and
+[Reproduce](https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/) for the expected outputs of the two regressions.
 
 ## Documentation
 
-https://unitaryfoundation.github.io/autoqec-sim/ (MkDocs from `docs/`;
-`uv run --group docs mkdocs serve` renders it locally). `stable/` is the
-latest release and `dev/` tracks `main`.
+https://unitaryfoundation.github.io/autoqec-sim/ (`dev/` tracks `main`,
+`stable/` is the latest release). It builds with MkDocs from `docs/`;
+`uv run --group docs mkdocs serve` renders it locally.
+
+## Citation
+
+If you use autoqec-sim in your work, cite it with the metadata in
+[CITATION.cff](CITATION.cff) (GitHub's "Cite this repository" button formats
+it). The reward and training setup follow Olle et al.,
+[arXiv:2311.04750](https://arxiv.org/abs/2311.04750).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Participation is governed by the
+[code of conduct](CODE_OF_CONDUCT.md).
+
+## Funding
+
+This work was supported by the U.S. Department of Energy, Office of Science,
+Office of Advanced Scientific Computing Research, Genesis Mission, under
+award DE-SC0025336.
 
 ## License
 
-Apache-2.0. The reward and training setup follow Olle et al.,
-arXiv:2311.04750. Supported by the U.S. Department of Energy, Office of
-Science, Office of Advanced Scientific Computing Research, Genesis Mission,
-award DE-SC0025336.
+Apache-2.0

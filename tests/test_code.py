@@ -114,3 +114,14 @@ def test_random_upper_bound_on_larger_code():
         rep.distance_exact()
     ub, _ = rep.distance_upper_bound(trials=50, seed=0)
     assert ub == 1
+
+
+def test_from_gates_matches_tableau_replay():
+    gates = [("H", 0, -1), ("CNOT", 0, 1), ("S", 2, -1), ("CNOT", 2, 3), ("CNOT", 1, 4)]
+    tab = BatchTableau(5, 1)
+    for gate, a, b in gates:
+        tab.apply(gate, a, b if b >= 0 else None)
+    direct = StabilizerCode.from_tableau(tab.array, k=1)
+    code = StabilizerCode.from_gates(5, 1, gates)
+    assert code.stabilizer_strings() == direct.stabilizer_strings()
+    assert np.array_equal(code.logicals, direct.logicals)
