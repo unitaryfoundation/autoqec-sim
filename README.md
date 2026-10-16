@@ -102,9 +102,20 @@ https://unitaryfoundation.github.io/autoqec-sim/ (`dev/` tracks `main`,
 
 ## Citation
 
-If you use autoqec-sim in your work, cite it with the metadata in
-[CITATION.cff](CITATION.cff) (GitHub's "Cite this repository" button formats
-it). The reward and training setup follow Olle et al.,
+If you use autoqec-sim in your work, please cite the software below
+([CITATION.cff](CITATION.cff) holds the same metadata).
+```
+@software{russo2026autoqecsim,
+      title={autoqec-sim: Vectorized stabilizer-code reward engine and RL environment},
+      author={Vincent Russo},
+      year={2026},
+      version={0.2.0},
+      url={https://github.com/unitaryfoundation/autoqec-sim},
+      license={Apache-2.0},
+}
+```
+
+The reward and training setup follow Olle et al.,
 [arXiv:2311.04750](https://arxiv.org/abs/2311.04750).
 
 ## Contributing

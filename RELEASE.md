@@ -35,6 +35,7 @@ mechanical once the OWNER steps before them are settled.
 
 4. RUN: Zenodo DOI through the GitHub integration (enable the repository
    on zenodo.org before the tag is pushed), then paste the concept DOI into
-   CITATION.cff and commit. GitHub Pages is enabled (source: gh-pages);
+   CITATION.cff and as a `doi` field of the README's BibTeX entry, and
+   commit. GitHub Pages is enabled (source: gh-pages);
    the release workflow publishes the `0.2.0` docs and `stable` from the
    tag, and the docs workflow publishes `dev` from `main`.
