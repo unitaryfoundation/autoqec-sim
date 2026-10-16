@@ -4,10 +4,10 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from autoqec_sim.backends import cuda_kernels as ck  # noqa: E402
-from autoqec_sim.backends import torch_backend as tb  # noqa: E402
-from autoqec_sim.errors import paulis_up_to_weight  # noqa: E402
-from autoqec_sim.tableau import GATES  # noqa: E402
+from autoqec_sim.backends import cuda_kernels as ck
+from autoqec_sim.backends import torch_backend as tb
+from autoqec_sim.errors import paulis_up_to_weight
+from autoqec_sim.tableau import GATES
 
 pytestmark = pytest.mark.skipif(not (torch.cuda.is_available() and ck.cp is not None), reason="needs CUDA and CuPy")
 
