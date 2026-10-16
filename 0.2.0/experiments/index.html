@@ -1,0 +1,2164 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Batched stabilizer-code simulator and reinforcement-learning environment for discovering small quantum error-correcting codes.">
+      
+      
+      
+        <link rel="canonical" href="https://unitaryfoundation.github.io/autoqec-sim/0.2.0/experiments/">
+      
+      
+        <link rel="prev" href="../regression/">
+      
+      
+        <link rel="next" href="../ldpc/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Experiments - autoqec-sim</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#experiments" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="autoqec-sim" class="md-header__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            autoqec-sim
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Experiments
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../guide/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../modules/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/contributing/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="autoqec-sim" class="md-nav__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    autoqec-sim
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/choosing-a-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choose a Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rediscovery regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#noise-aware-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise-aware discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rl-scaling-probe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL scaling probe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-topology-run-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-topology run matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolutionary-search-against-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolutionary search against PPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rewards and constraints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rewards and constraints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDPC constraint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory_objective/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory objective
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Noise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise_presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device presets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Execution
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CPU profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproduce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoqec_sim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    autoqec_sim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment and rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codes and tableaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schedule synthesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backends, agents, search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/releasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#noise-aware-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise-aware discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rl-scaling-probe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL scaling probe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-topology-run-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-topology run matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolutionary-search-against-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolutionary search against PPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="experiments">Experiments<a class="headerlink" href="#experiments" title="Permanent link">&para;</a></h1>
+<h2 id="noise-aware-discovery">Noise-aware discovery<a class="headerlink" href="#noise-aware-discovery" title="Permanent link">&para;</a></h2>
+<p><code>experiments/noise_aware.py</code> asks whether the code PPO discovers depends
+on the noise profile it is trained against, and in the direction the
+profile's structure predicts (the experiment the proposal cites <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup> for). Three <code>autoqec_sim.noise</code> profiles scaled to the
+same total fault mass (board depolarizing; Forte <sup id="fnref:chen2024"><a class="footnote-ref" href="#fn:chen2024">2</a></sup> ion chain with sequential
+timing, so idle dephasing dominates; Heron r2 rates <sup id="fnref:harper2026"><a class="footnote-ref" href="#fn:harper2026">3</a></sup> on the setting's
+graph), three settings (7 qubits all-to-all with H, S, CNOT and target
+distance 3; 3x3 lattice with H, CNOT and distance 3; 4x4 lattice with H,
+CNOT and distance 4), five PPO seeds per cell. The reward is the shifted
+distance reward plus, on states at the target distance, the circuit-level
+undetected fault mass (<code>normalize=False</code>) and the LDPC penalty at
+<code>w_max = 4</code>; the exact combination, the calibration, the cross-evaluation
+matrices, the code lists, the known-code baselines, and the verdict are in
+<code>experiments/noise_aware/runs/REPORT.md</code>. One cell reproduces with</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware run --setting 3x3 --profile ion --seed 0
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware baselines --setting 3x3
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware report
+</code></pre></div>
+<p>(<code>--threads N</code> caps torch and BLAS; <code>experiments/noise_aware/runs/run_sweep.sh</code>
+with the job scripts under <code>experiments/noise_aware/runs/jobs/</code> is the 3-worker,
+6-thread queue the release numbers came from.)</p>
+<p>Result (45 runs, 15 per setting): the discovered code depends strongly on
+the training profile, but through the encoding circuit's fault propagation
+rather than through X/Z structure. Board-trained codes have 3.4x less
+undetected fault mass on the board profile than ion- or heron-trained
+codes (25 of 25 seed pairs, permutation p = 0.008, both settings) and
+ion-trained codes 1.3x to 1.6x less on the ion profile (p = 0.008 and
+0.048); ion- and heron-trained codes are interchangeable at n = 7. No
+profile produced codes with <code>d_Z &gt; d_X</code> more often than another (0/5 or
+1/5 seeds everywhere), none of the 30 codes is CSS or local-Clifford
+equivalent to a CSS code, and the mechanism breakdown shows the
+board-trained circuits detect every idle fault while ion-trained circuits
+leave idle X and Y faults undetected, faults the ion profile hardly emits.
+The discovered degenerate codes beat Steane <sup id="fnref:steane1996"><a class="footnote-ref" href="#fn:steane1996">4</a></sup> (n = 7) and the rotated
+surface code and its XZZX <sup id="fnref:bonillaataides2021"><a class="footnote-ref" href="#fn:bonillaataides2021">5</a></sup> and Hadamard-deformed variants (3x3) with
+polished encoders under every profile; a Hadamard deformation of the code
+is invisible to this single-fault circuit objective, which is one reason
+no such structure emerges. The 4x4 setting (target d = 4) did not fit the
+budget: none of its 15 runs (16M steps each) produced a distance-4 state,
+with either the level or the fractional distance term. Without the padding
+penalty the agent embeds a smaller code and leaves qubits idle.</p>
+<h2 id="memory-objective">Memory objective<a class="headerlink" href="#memory-objective" title="Permanent link">&para;</a></h2>
+<p><code>memory_objective.py</code> scores a code by the logical error rate per round of
+an <code>R</code>-round syndrome-extraction memory experiment instead of by its
+encoder's single-fault mass, which cannot see a local-Clifford deformation
+of the code (a Hadamard at the end of the encoder relabels weight-1
+faults, all detected; <code>experiments/noise_aware/runs/REPORT.md</code>). The circuit is
+built for arbitrary (non-CSS) generators, one ancilla per generator with
+controlled-X/Y/Z gates in a hook-aware order (<code>hook_orders</code>: without it
+the sorted order gives the Shor code a circuit-level distance of 1 in the
+Z basis), generators that share a qubit with different Pauli letters in
+separate batches so every interleaving commutes (X block then Z block for
+a CSS code), optional one-flag ancillas, noiseless <code>MPP</code> preparation and
+readout, and an all-to-all or <code>square:RxC</code> layout (ancilla sites at the
+plaquette centers, non-local generators routed with CNOT ladders and run
+in their own batch). The noise is a <code>autoqec_sim.noise.Profile</code> with its timing
+model; stim's detector error model feeds three tiers:</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>what</th>
+<th>cost per code, both bases, <code>R = d</code>, one thread</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>proxy</code></td>
+<td>leading-order failure of the maximum-likelihood decoder over fault sets of weight at most two, plus exact <code>d_circ</code> up to weight 4 (<code>exact_dcirc</code>, from <code>ion-search/lib.py</code>)</td>
+<td>0.08 to 0.22 s at <code>n &lt;= 9</code> (the DEM derivation dominates), 1.7 to 2.3 s for the [[16,4,4]] code (about 2000 mechanisms, 60 detectors)</td>
+</tr>
+<tr>
+<td><code>sampled</code></td>
+<td>exact ML decoder by dynamic program when detectors plus observables <code>&lt;= 20</code> (no shots), else a weight-2 lookup decoder with a one-mechanism completion, sampled</td>
+<td>0.16 to 0.31 s at <code>n &lt;= 9</code> (5000 shots grown to 200 failures), 5 s at <code>n = 16</code></td>
+</tr>
+<tr>
+<td><code>bposd</code></td>
+<td>the board's pinned BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">6</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">7</a></sup> (<code>ldpc</code>, <code>uv run --with ldpc</code>), sampled; validation only</td>
+<td>0.2 to 1.5 s at <code>n &lt;= 9</code>, 37 to 42 s at <code>n = 16</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>MemoryReward(objective, d*)</code> is the environment reward: the distance and
+padding terms of the noise-aware experiment plus
+<code>0.1 * log10(p_ref / p_round)</code> on target-distance states (cached per
+code); <code>CodeDiscoveryEnv</code> adopts its <code>success_fn</code>. Design note:
+<code>docs/memory_objective.md</code>; runs: <code>experiments/memory_objective/REPORT.md</code>
+(<code>python -m autoqec_sim.experiments.memory_objective {benchmark,random,random-check,bias,lattice,ppo,report}</code>).</p>
+<p>Results (chain preset at scale 0.25, board at 1, Heron at 0.1; the tiers
+are leading-order or sampled estimates and need the expected number of
+faults per shot below about one, which the presets at scale 1 exceed):</p>
+<ul>
+<li>Rank agreement. On 32 random <code>[[9,1,3]]</code> codes (<code>R = 3</code>) the Spearman
+  correlation of the proxy against bposd is 0.79 (ion), 0.90 (board),
+  0.78 (heron); on the five benchmark codes 0.9, 0.8, 0.3, where the
+  outlier is Steane, for which bposd is 1.7 to 3.2 times worse than both
+  the proxy and the near-ML lookup decoder (proxy against lookup 0.9 on
+  every profile). The proxy is within 25 percent of the exact-ML or
+  lookup sampled tier on every benchmark code below one expected fault
+  per shot; bposd deviates where it decodes badly (Steane, the [[16,4,4]]
+  code under the ion preset at 2x).</li>
+<li>Bias sensitivity. Rotated surface against XZZX at <code>n = 9</code>, <code>R = 3</code>,
+  every rate 2.5e-4 with a slot idle channel of bias <code>eta</code>: the ratio
+  <code>p_round(plain) / p_round(xzzx)</code> is 1.00 at <code>eta = 0.5</code> (exact tie, the
+  deformation is a relabeling), 1.21 at 2, 1.80 at 10, 2.27 at pure Z
+  under sequential timing (bposd 1.08, 1.23, 1.89, 2.19), and 1.00 to
+  2.10 under parallel timing. Under the Forte set (duration idle,
+  <code>eta = 10</code>) the proxy prefers XZZX by 1.22 and the lookup decoder by
+  1.21; bposd does not (0.78). Under the chain set the two tie (0.99):
+  its idle is small and its readout flips dominate.</li>
+<li>Flags. One flag per generator lifts <code>d_circ</code> from 2 to 3 for [[5,1,3]],
+  Steane, the [[16,4,4]] code, and the non-CSS 3x3 code, and lowers the
+  ion <code>p_round</code> by 2.6 to 4.4 times (0.23 to 0.38 of the bare value); on
+  the board recipe the extra gates cost more than the flags gain (1.0 to
+  1.5 times the bare value).</li>
+<li>Lattice. On <code>square:3x3</code> the surface and XZZX codes route nothing; the
+  non-CSS 3x3 code needs 63 extra two-qubit gates per round (270 against
+  81 in 3 rounds) and 7 sequential batches, and its board <code>p_round</code> goes
+  from 0.018 to 0.26.</li>
+<li>PPO smoke run (3x3 lattice, H and CNOT, chain profile at 0.25, <code>R = 3</code>,
+  batch 256, 400k env steps, 62 s at one thread): distance 3 reached at
+  83k env steps, 92 distinct target-distance codes evaluated at 0.47 s
+  each (44 s of memory evaluation in total, all-to-all layout); the best
+  has <code>p_round</code> 0.0016 against 0.00077 for the rotated surface code. The
+  test-suite version (<code>R = 2</code>, 300k steps) is the regression.</li>
+</ul>
+<h2 id="rl-scaling-probe">RL scaling probe<a class="headerlink" href="#rl-scaling-probe" title="Permanent link">&para;</a></h2>
+<p><code>experiments/scaling.py</code> asks how far the PPO agent scales in <code>n</code> and what the
+cheapest change is that gets it to a distance-4 code on the 4x4 lattice (the
+setting the noise-aware experiment could not solve), plus how the
+LDPC-constrained target behaves at <code>n = 12</code> to <code>16</code>. Findings, from
+<code>experiments/scaling/REPORT.md</code>: the 4x4 failure is exploration (d = 4 states
+within 50 gates exist but are too rare for the default policy to ever see
+one); a per-qubit permutation-equivariant policy
+(now <code>agents.policies.equivariant_actor_critic</code>, <code>PPOConfig(policy="equivariant")</code>) reaches a clean <code>[[16, 1, 4]]</code> at the
+50-gate cap in 0.2M to 0.26M env steps on every seed (about 20x fewer than the
+flat MLP with a 4x larger batch, which also works), and it is the recommended
+default for <code>n &gt;= 12</code>. The LDPC penalty form of the regression does not carry
+over: in 18 runs at <code>n = 12</code> to <code>16</code> no PPO policy reached a distance-3 code
+with <code>w* &lt;= 4</code>; all converge to sparse groups of distance 1, so the penalty is
+validated at <code>n = 9</code> only. One run reproduces with</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling variant --variant equivariant --seed 0
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling ldpc --n 12 --k 2 --graph all_to_all:12 --seed 0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling report
+</code></pre></div>
+<h2 id="three-topology-run-matrix">Three-topology run matrix<a class="headerlink" href="#three-topology-run-matrix" title="Permanent link">&para;</a></h2>
+<p><code>experiments/topologies.py</code> runs the PPO agent by itself (not the LLM
+meta-agent) on square, triangular, and heavy-hex
+lattices with one objective and one metric set: a <code>[[n, 1, d &gt;= 3]]</code> code with
+no idle qubit, H and CNOT on the lattice edges, 50-gate episodes, the level
+distance reward of the scaling probe, <code>PPOConfig</code> defaults with <code>policy="auto"</code>,
+three seeds per cell. Two tiers: <code>3x3</code> and <code>4x4</code> for square and triangular
+(<code>n = 9</code>, <code>16</code>); heavy-hex takes the nearest sizes the honeycomb construction
+allows, <code>1x1</code> (<code>n = 12</code>, a 12-cycle) and <code>2x1</code> (<code>n = 18</code>). Every cell reports
+success, env steps and wall time to first success, the best code (exact <code>d</code>,
+<code>w*</code>, maximum qubit degree, CSS test, weight enumerators), the undetected fault
+mass of its encoder under the Heron preset on the cell's graph and under the
+board preset, and the same mass for the rotated surface encoder routed onto the
+graph where one exists. Results and the write-up are in
+<code>experiments/topologies/runs/REPORT.md</code>: all 18 runs reached distance 3, at 6k to 12k
+env steps on the 9-qubit lattices (within the first three updates, before any
+learning), 49k to 113k at 12 and 16 qubits, and 307k to 345k on the 18-qubit
+heavy-hex graph.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies matrix
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies run --topology heavy_hex --target-n 16 --seed 0
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies report
+</code></pre></div>
+<h2 id="evolutionary-search-against-ppo">Evolutionary search against PPO<a class="headerlink" href="#evolutionary-search-against-ppo" title="Permanent link">&para;</a></h2>
+<p><code>autoqec_sim.experiments.topologies_ea</code> runs the three-topology matrix with the package's evolutionary search in place of the PPO agent: same cells, objective ([[n, 1, 3]] with no idle qubit), gate set, 50-gate episodes, and environment-step budget per tier (evolutionary evaluations count as whole episodes). Run 16 October 2026 on one laptop; results in <code>experiments/topologies_ea/runs/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>lattice</th>
+<th>n</th>
+<th>PPO successes</th>
+<th>PPO median steps to success</th>
+<th>EA successes</th>
+<th>EA median steps to success</th>
+<th>EA median wall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>square</td>
+<td>9</td>
+<td>3/3</td>
+<td>9,472</td>
+<td>0/3</td>
+<td>none</td>
+<td>22 s</td>
+</tr>
+<tr>
+<td>triangular</td>
+<td>9</td>
+<td>3/3</td>
+<td>7,424</td>
+<td>0/3</td>
+<td>none</td>
+<td>24 s</td>
+</tr>
+<tr>
+<td>heavy_hex</td>
+<td>12</td>
+<td>3/3</td>
+<td>63,488</td>
+<td>0/3</td>
+<td>none</td>
+<td>21 s</td>
+</tr>
+<tr>
+<td>square</td>
+<td>16</td>
+<td>3/3</td>
+<td>112,128</td>
+<td>0/3</td>
+<td>none</td>
+<td>54 s</td>
+</tr>
+<tr>
+<td>triangular</td>
+<td>16</td>
+<td>3/3</td>
+<td>75,776</td>
+<td>0/3</td>
+<td>none</td>
+<td>46 s</td>
+</tr>
+<tr>
+<td>heavy_hex</td>
+<td>18</td>
+<td>3/3</td>
+<td>340,480</td>
+<td>0/3</td>
+<td>none</td>
+<td>38 s</td>
+</tr>
+</tbody>
+</table>
+<p>Totals: PPO 18 of 18 runs succeed, evolutionary search 0 of 18. The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:olle2024">
+<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chen2024">
+<p>Jwo-Sy Chen, Erik Nielsen, Matthew Ebert, Volkan Inlek, Kenneth Wright, Vandiver Chaplin, Andrii Maksymov, Eduardo Páez, Amrit Poudel, Peter Maunz, and John Gamble. Benchmarking a trapped-ion quantum computer with 30 qubits. <em>Quantum</em>, 8:1516, 2024. <a href="https://arxiv.org/abs/2308.05071">arXiv:2308.05071</a>, <a href="https://doi.org/10.22331/q-2024-11-07-1516">doi:10.22331/q-2024-11-07-1516</a>.&#160;<a class="footnote-backref" href="#fnref:chen2024" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harper2026">
+<p>Robin Harper, Constance Lainé, Evan Hockings, Campbell McLauchlan, Georgia M. Nixon, Benjamin J. Brown, and Stephen D. Bartlett. Characterising the failure mechanisms of error-corrected quantum logic gates. <em>Nature Communications</em>, 17:5039, 2026. <a href="https://arxiv.org/abs/2504.07258">arXiv:2504.07258</a>, <a href="https://doi.org/10.1038/s41467-026-71773-6">doi:10.1038/s41467-026-71773-6</a>.&#160;<a class="footnote-backref" href="#fnref:harper2026" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:steane1996">
+<p>A. M. Steane. Error correcting codes in quantum theory. <em>Physical Review Letters</em>, 77:793–797, 1996. <a href="https://doi.org/10.1103/PhysRevLett.77.793">doi:10.1103/PhysRevLett.77.793</a>.&#160;<a class="footnote-backref" href="#fnref:steane1996" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bonillaataides2021">
+<p>J. Pablo Bonilla Ataides, David K. Tuckett, Stephen D. Bartlett, Steven T. Flammia, and Benjamin J. Brown. The XZZX surface code. <em>Nature Communications</em>, 12:2172, 2021. <a href="https://arxiv.org/abs/2009.07851">arXiv:2009.07851</a>, <a href="https://doi.org/10.1038/s41467-021-22274-1">doi:10.1038/s41467-021-22274-1</a>.&#160;<a class="footnote-backref" href="#fnref:bonillaataides2021" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:roffe2020">
+<p>Joschka Roffe, David R. White, Simon Burton, and Earl T. Campbell. Decoding across the quantum LDPC code landscape. <em>Physical Review Research</em>, 2:043423, 2020. <a href="https://arxiv.org/abs/2005.07016">arXiv:2005.07016</a>, <a href="https://doi.org/10.1103/PhysRevResearch.2.043423">doi:10.1103/PhysRevResearch.2.043423</a>.&#160;<a class="footnote-backref" href="#fnref:roffe2020" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:panteleev2021">
+<p>Pavel Panteleev and Gleb Kalachev. Degenerate quantum LDPC codes with good finite length performance. <em>Quantum</em>, 5:585, 2021. <a href="https://arxiv.org/abs/1904.02703">arXiv:1904.02703</a>, <a href="https://doi.org/10.22331/q-2021-11-22-585">doi:10.22331/q-2021-11-22-585</a>.&#160;<a class="footnote-backref" href="#fnref:panteleev2021" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Vincent Russo. Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

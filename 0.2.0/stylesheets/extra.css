@@ -1,0 +1,68 @@
+/* Theme overrides for the autoqec-sim documentation.
+ *
+ * The header is neutral (white in the light scheme, black in the dark one)
+ * and the accent carries the color: links, buttons, the active tab, and
+ * the hero mark on the home page.
+ */
+
+:root {
+  --autoqec-accent: #c2552c;
+  --autoqec-accent-dark: #e08a4e;
+}
+
+/* Light scheme. Material sets the link color per primary color with a
+ * two-attribute selector, so the override repeats that specificity. */
+[data-md-color-scheme="default"],
+[data-md-color-scheme="default"][data-md-color-primary="white"] {
+  --md-accent-fg-color: var(--autoqec-accent);
+  --md-accent-fg-color--transparent: rgba(194, 85, 44, 0.1);
+  --md-typeset-a-color: var(--autoqec-accent);
+}
+
+/* Dark scheme: a lighter tint of the accent for legibility on dark backgrounds. */
+[data-md-color-scheme="slate"],
+[data-md-color-scheme="slate"][data-md-color-primary="black"] {
+  --md-accent-fg-color: var(--autoqec-accent-dark);
+  --md-accent-fg-color--transparent: rgba(224, 138, 78, 0.15);
+  --md-typeset-a-color: var(--autoqec-accent-dark);
+}
+
+/* Visually hidden but readable by screen readers. The home page keeps its
+ * h1 for the document outline while the hero block shows the name.
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Home page hero. */
+.md-typeset .hero {
+  text-align: center;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.md-typeset .hero-mark {
+  --md-icon-size: 5.5rem;
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset .hero-title {
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0.25rem 0 0;
+}
+
+.md-typeset .hero-tagline {
+  font-size: 1.2em;
+  margin: 0.6rem auto 0;
+  max-width: 36rem;
+}
