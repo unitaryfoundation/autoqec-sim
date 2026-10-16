@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logos/autoqec-sim-logo.svg" alt="autoqec-sim" width="420">
+  <img src="docs/assets/logos/autoqec-sim.svg" alt="autoqec-sim" width="420">
 </p>
 
 [![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)

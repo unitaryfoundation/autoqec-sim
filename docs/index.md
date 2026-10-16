@@ -8,7 +8,7 @@ title: autoqec-sim
 
 <div class="hero" markdown>
 
-![autoqec-sim](assets/logos/autoqec-sim-logo.svg){ width=420 }
+![autoqec-sim](assets/logos/autoqec-sim.svg){ width=420 }
 
 <p class="hero-tagline">
 Evaluation of stabilizer codes under device noise, and search for codes,
