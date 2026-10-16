@@ -1336,6 +1336,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="related-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
     
@@ -1350,10 +1378,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
             
   
   
@@ -1371,8 +1399,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1817,8 +1845,8 @@
 <div class="hero">
 <p><img alt="autoqec-sim" src="assets/logos/autoqec-sim-logo.svg" width="420" /></p>
 <p class="hero-tagline">
-A batched stabilizer-code simulator and reinforcement-learning environment
-for discovering small quantum error-correcting codes.
+Evaluation of stabilizer codes under device noise, and search for codes,
+encoders, and syndrome-extraction schedules that score well under it.
 </p>
 </div>
 <p><a href="https://unitary.foundation"><img alt="Unitary Foundation" src="https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg" /></a>
@@ -1827,41 +1855,53 @@ for discovering small quantum error-correcting codes.
 <a href="getting-started/installation/"><img alt="Python" src="https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg" /></a></p>
 <hr />
 <h2 id="what-is-autoqec-sim">What is autoqec-sim?<a class="headerlink" href="#what-is-autoqec-sim" title="Permanent link">&para;</a></h2>
-<p>autoqec-sim holds thousands of encoding circuits as one array of stabilizer
-tableaux and advances them together, one Clifford gate per step, on a chosen
-connectivity graph. A reward scores the code each circuit encodes. The
-rewards are the Knill-Laflamme undetected-error mass, exact distance for
-small codes, LDPC sparsity, circuit-level noise under a device profile, and
-a multi-round memory experiment with a decoder.</p>
-<p>Two agents search over gate sequences: PPO, with an optional
-lattice-equivariant policy, and an evolutionary search. A rediscovery
-regression verifies every code a run produces independently of the reward,
-by exact distance and weight enumerators. A schedule synthesizer assigns the
-CX layers of a syndrome-extraction circuit for a fixed code to raise its
-fault distance.</p>
+<p>autoqec-sim evaluates stabilizer codes and their circuits under device noise,
+and searches for codes, encoders, and syndrome-extraction schedules that
+score well under it.</p>
+<p>The evaluation layer scores a code three ways: the undetected single-fault
+mass of its encoding circuit under a device noise profile with every
+parameter sourced, a multi-round memory experiment with a decoder, and the
+exact distance and weight enumerators that verify any claim independently of
+the objective. The search layer runs on a batched Aaronson-Gottesman tableau
+that holds thousands of encoding circuits as one array and advances them one
+Clifford gate per step on a chosen connectivity graph. PPO, with an optional
+lattice-equivariant policy, and an evolutionary search build encoders gate
+by gate; a schedule synthesizer assigns the CX layers of a fixed code's
+syndrome-extraction circuit against the exact circuit-level fault distance.</p>
+<p>The gate-by-gate discovery mode follows <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup>, whose code, QDX,
+introduced it and has reached larger codes than this package has.
+autoqec-sim rediscovers [[5,1,3]], Steane, Shor, and the rotated surface
+code on every lattice tested and has found noise-adapted non-CSS codes up to
+16 qubits, but no new code above that; <a href="experiments/">Experiments</a> records
+where it stops. Its schedule synthesizer raised the fault distance of the
+[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For code
+design at larger sizes, the SAT formulation of <sup id="fnref:dalfavero2026"><a class="footnote-ref" href="#fn:dalfavero2026">2</a></sup> designs codes
+with up to 100 qubits; the evaluation and schedule tools here take such codes
+as input.</p>
 <p>The numpy engine on the CPU is the reference. The same kernels and rewards
 run on CUDA through the torch backend, with two opt-in fused CUDA kernels
 for the gate updates and the parity masks.</p>
-<p>For calibration: the package rediscovers [[5,1,3]], Steane, Shor, and the
-rotated surface code on every lattice tested, has found noise-adapted
-non-CSS codes up to 16 qubits, and raised the fault distance of the
-[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. The discovery
-agent has not produced a new code above 16 qubits; <a href="experiments/">Experiments</a>
-records where it stops.</p>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
 <p>Install with <code>pip install git+https://github.com/unitaryfoundation/autoqec-sim</code>,
-then search for a distance-3 code on five qubits:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autoqec_sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodeDiscoveryEnv</span><span class="p">,</span> <span class="n">EvolutionarySearch</span><span class="p">,</span> <span class="n">StabilizerCode</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">env</span> <span class="o">=</span> <span class="n">CodeDiscoveryEnv</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">EvolutionarySearch</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">max_evaluations</span><span class="o">=</span><span class="mi">30_000</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">code</span> <span class="o">=</span> <span class="n">StabilizerCode</span><span class="o">.</span><span class="n">from_gates</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">gates</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">code</span><span class="o">.</span><span class="n">stabilizer_strings</span><span class="p">())</span>
+then score three known codes under the IonQ Forte preset:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autoqec_sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">known_codes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autoqec_sim.memory_objective</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryObjective</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autoqec_sim.noise</span><span class="w"> </span><span class="kn">import</span> <span class="n">presets</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># A three-round memory experiment under the IonQ Forte preset at a quarter of</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># its measured rates, scored by the low-weight maximum-likelihood proxy.</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">objective</span> <span class="o">=</span> <span class="n">MemoryObjective</span><span class="p">(</span><span class="n">presets</span><span class="o">.</span><span class="n">forte</span><span class="p">(</span><span class="s2">"sequential"</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">rounds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"five_qubit"</span><span class="p">,</span> <span class="s2">"steane"</span><span class="p">,</span> <span class="s2">"rotated_surface_9"</span><span class="p">):</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">code</span> <span class="o">=</span> <span class="n">known_codes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">code</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">"error per round </span><span class="si">{</span><span class="n">objective</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">p_round</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<p>The search returns a [[5,1,3]] code in under a second. The
-<a href="getting-started/quickstart/">Quick Start</a> verifies it against the
-reference code and scores its encoder under a device noise profile.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>five_qubit (5, 1, 3) error per round 4.26e-03
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>steane (7, 1, 3) error per round 2.09e-03
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+</code></pre></div>
+<p>The <a href="getting-started/quickstart/">Quick Start</a> adds the search for a
+code, its verification against the reference, and the encoder score under
+a device profile.</p>
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -1917,6 +1957,17 @@ scores a multi-round syndrome-extraction circuit with three fidelity tiers.
 The <a href="gpu/">torch backend</a> and two fused CUDA kernels run the reward
 engine on a GPU.</p>
 <p><a class="md-button" href="development/changelog/">Full Changelog</a></p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:olle2024">
+<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dalfavero2026">
+<p>Ben DalFavero, William M. Watkins, Margarite L. LaBorde, Vincent Russo, Ethan Egger, Gregory Quiroz, and Ryan LaRose. Satisfying quantum codes: Physics-informed and hardware-aware code design with SAT solvers. 2026. <a href="https://arxiv.org/abs/2608.23460">arXiv:2608.23460</a>.&#160;<a class="footnote-backref" href="#fnref:dalfavero2026" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 

@@ -1,0 +1,2345 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Batched stabilizer-code simulator and reinforcement-learning environment for discovering small quantum error-correcting codes.">
+      
+      
+      
+        <link rel="canonical" href="https://unitaryfoundation.github.io/autoqec-sim/0.2.0/related-work/">
+      
+      
+        <link rel="prev" href="../reference/commands/">
+      
+      
+        <link rel="next" href="../api/autoqec_sim/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Related work - autoqec-sim</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#related-work" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="autoqec-sim" class="md-header__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            autoqec-sim
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Related work
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../guide/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../modules/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/contributing/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="autoqec-sim" class="md-nav__button md-logo" aria-label="autoqec-sim" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+
+    </a>
+    autoqec-sim
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unitaryfoundation/autoqec-sim" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unitaryfoundation/autoqec-sim
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/choosing-a-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choose a Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discovery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rediscovery regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rewards and constraints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rewards and constraints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDPC constraint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory_objective/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory objective
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Noise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise_presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device presets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Execution
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gpu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CPU profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproduce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related work
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automated-code-and-encoder-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated code and encoder discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise-and-hardware-tailored-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise- and hardware-tailored codes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoder-synthesis-and-fault-tolerant-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoder synthesis and fault-tolerant preparation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syndrome-extraction-schedules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syndrome-extraction schedules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-verification-and-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance, verification, and simulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reviews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reviews
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoqec_sim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    autoqec_sim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment and rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codes and tableaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schedule synthesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backends, agents, search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/releasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automated-code-and-encoder-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated code and encoder discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise-and-hardware-tailored-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise- and hardware-tailored codes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoder-synthesis-and-fault-tolerant-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoder synthesis and fault-tolerant preparation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syndrome-extraction-schedules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syndrome-extraction schedules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-verification-and-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance, verification, and simulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reviews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reviews
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="related-work">Related work<a class="headerlink" href="#related-work" title="Permanent link">&para;</a></h1>
+<p>What exists around each part of this package, as of October 2026, from a
+survey that walked the reference lists of the closest papers, the papers
+citing them, and the surrounding topics. Every entry below was checked
+against its arXiv or publisher record. Items with public code are marked.</p>
+<h2 id="automated-code-and-encoder-discovery">Automated code and encoder discovery<a class="headerlink" href="#automated-code-and-encoder-discovery" title="Permanent link">&para;</a></h2>
+<p>The gate-by-gate formulation this package's search layer uses, an agent
+appending Clifford gates to a stabilizer tableau under a Knill-Laflamme
+reward with the connectivity graph as the action space, is that of
+<sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup>, whose code, QDX, is public and reached distance-5 codes at 11
+to 17 qubits and a [[20,13,3]] code; composite "gadget" actions extend it to
+distance 7 <sup id="fnref:olle2025"><a class="footnote-ref" href="#fn:olle2025">2</a></sup><sup id="fnref:yevtushenko2025"><a class="footnote-ref" href="#fn:yevtushenko2025">3</a></sup>. The same simulator and agent were
+turned to fault-tolerant state preparation for a fixed code in <sup id="fnref:zen2024"><a class="footnote-ref" href="#fn:zen2024">4</a></sup>
+(code public). Earlier reinforcement learning for codes deformed a surface
+code toward a target logical error rate <sup id="fnref:nautrup2018"><a class="footnote-ref" href="#fn:nautrup2018">5</a></sup> and discovered
+few-qubit feedback strategies <sup id="fnref:fosel2018"><a class="footnote-ref" href="#fn:fosel2018">6</a></sup>; later work searched tensor
+network code geometries <sup id="fnref:mauron2023"><a class="footnote-ref" href="#fn:mauron2023">7</a></sup><sup id="fnref:su2023"><a class="footnote-ref" href="#fn:su2023">8</a></sup> and reduced stabilizer
+weights toward LDPC codes <sup id="fnref:he2025"><a class="footnote-ref" href="#fn:he2025">9</a></sup>. Variational discovery of codes and
+encoders predates the tableau formulation: a Knill-Laflamme loss on
+connectivity-constrained circuits <sup id="fnref:cao2022"><a class="footnote-ref" href="#fn:cao2022">10</a></sup><sup id="fnref:xu2019"><a class="footnote-ref" href="#fn:xu2019">11</a></sup>, neural-network code
+states <sup id="fnref:bausch2018"><a class="footnote-ref" href="#fn:bausch2018">12</a></sup>, autoencoders <sup id="fnref:locher2022"><a class="footnote-ref" href="#fn:locher2022">13</a></sup>, state-distinguishability
+losses with device runs <sup id="fnref:meyer2025"><a class="footnote-ref" href="#fn:meyer2025">14</a></sup> and their extensions to concatenation
+and logical operations <sup id="fnref:meyer2026a"><a class="footnote-ref" href="#fn:meyer2026a">15</a></sup><sup id="fnref:meyer2026b"><a class="footnote-ref" href="#fn:meyer2026b">16</a></sup> (code public), Riemannian
+optimization over code subspaces <sup id="fnref:casanova2024"><a class="footnote-ref" href="#fn:casanova2024">17</a></sup>, and variational graphical
+codes <sup id="fnref:shao2024"><a class="footnote-ref" href="#fn:shao2024">18</a></sup>. Equivariant policies over tableaux appear in Clifford
+synthesis <sup id="fnref:yeung2026"><a class="footnote-ref" href="#fn:yeung2026">19</a></sup>; the non-cumulative-objective RL of <sup id="fnref:nagele2024"><a class="footnote-ref" href="#fn:nagele2024">20</a></sup>
+is benchmarked on the same encoder task.</p>
+<p>Evolutionary search for codes exists at the gate-sequence level
+<sup id="fnref:tandeitnik2022"><a class="footnote-ref" href="#fn:tandeitnik2022">21</a></sup> and over binary stabilizer strings to 20 qubits
+<sup id="fnref:webster2024"><a class="footnote-ref" href="#fn:webster2024">22</a></sup>, and annealing reaches 50 qubits <sup id="fnref:perlin2026"><a class="footnote-ref" href="#fn:perlin2026">23</a></sup>. Exact and
+exhaustive methods frame the problem differently: additive codes over GF(4)
+<sup id="fnref:calderbank1998"><a class="footnote-ref" href="#fn:calderbank1998">24</a></sup>, the classification of self-dual additive codes
+<sup id="fnref:danielsen2006"><a class="footnote-ref" href="#fn:danielsen2006">25</a></sup>, every stabilizer code to 9 qubits <sup id="fnref:cross2025"><a class="footnote-ref" href="#fn:cross2025">26</a></sup>, all
+distance-3 codes <sup id="fnref:yu2009"><a class="footnote-ref" href="#fn:yu2009">27</a></sup>, codeword-stabilized search as clique finding
+<sup id="fnref:chuang2008"><a class="footnote-ref" href="#fn:chuang2008">28</a></sup>, and, in 2026, SAT: code design with hardware and
+physics constraints, proved NP-complete and solved to 100 qubits
+<sup id="fnref:dalfavero2026"><a class="footnote-ref" href="#fn:dalfavero2026">29</a></sup> (code public), phantom codes <sup id="fnref:koh2026"><a class="footnote-ref" href="#fn:koh2026">30</a></sup>, and
+machine-checked distance certificates <sup id="fnref:ehatamm2026"><a class="footnote-ref" href="#fn:ehatamm2026">31</a></sup>. Above 20 qubits the
+field designs codes by program evolution with large language models
+<sup id="fnref:cruzbenito2026"><a class="footnote-ref" href="#fn:cruzbenito2026">32</a></sup><sup id="fnref:liu2026a"><a class="footnote-ref" href="#fn:liu2026a">33</a></sup><sup id="fnref:qian2026"><a class="footnote-ref" href="#fn:qian2026">34</a></sup> (the IBM code is public), by
+multi-agent orchestration with circuit-level evaluation <sup id="fnref:yan2026"><a class="footnote-ref" href="#fn:yan2026">35</a></sup>, by
+Bayesian optimization with a learned logical-error predictor <sup id="fnref:chengyu2026"><a class="footnote-ref" href="#fn:chengyu2026">36</a></sup>
+(code public), by game-theoretic search <sup id="fnref:guerrero2025"><a class="footnote-ref" href="#fn:guerrero2025">37</a></sup>, with decoders in the
+loop <sup id="fnref:freire2025"><a class="footnote-ref" href="#fn:freire2025">38</a></sup><sup id="fnref:sella2026"><a class="footnote-ref" href="#fn:sella2026">39</a></sup>, with hardware calls in the reward
+<sup id="fnref:yanay2026"><a class="footnote-ref" href="#fn:yanay2026">40</a></sup>, and by multi-agent RL that includes a syndrome-extraction agent
+<sup id="fnref:guatto2025"><a class="footnote-ref" href="#fn:guatto2025">41</a></sup>. Sparse codes can also be grown from seeds <sup id="fnref:cao2025"><a class="footnote-ref" href="#fn:cao2025">42</a></sup>.</p>
+<p>Where this package stands: its search layer is a reimplementation of
+<sup id="fnref2:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup> in numpy with a torch path, at parity on the distance-3 targets
+of QDX's published set and behind it on larger ones
+(<code>experiments/qdx_targets/REPORT.md</code>). Its evolutionary agent is simpler
+than <sup id="fnref2:webster2024"><a class="footnote-ref" href="#fn:webster2024">22</a></sup>. Nothing in its discovery mode is new.</p>
+<h2 id="noise-and-hardware-tailored-codes">Noise- and hardware-tailored codes<a class="headerlink" href="#noise-and-hardware-tailored-codes" title="Permanent link">&para;</a></h2>
+<p>Codes tailored to biased noise are a mature line: the XY and XZZX surface
+codes <sup id="fnref:tuckett2018"><a class="footnote-ref" href="#fn:tuckett2018">43</a></sup><sup id="fnref:bonillaataides2021"><a class="footnote-ref" href="#fn:bonillaataides2021">44</a></sup>, Clifford deformations, uniform
+and per-qubit <sup id="fnref:dua2022"><a class="footnote-ref" href="#fn:dua2022">45</a></sup><sup id="fnref:tiurev2022"><a class="footnote-ref" href="#fn:tiurev2022">46</a></sup>, bias-tailored LDPC codes
+<sup id="fnref:roffe2022"><a class="footnote-ref" href="#fn:roffe2022">47</a></sup>, and in 2026 per-qubit deformation optimized from calibration
+data <sup id="fnref:yun2026"><a class="footnote-ref" href="#fn:yun2026">48</a></sup> (code public). Picking a small code from device error data
+goes back to <sup id="fnref:robertson2017"><a class="footnote-ref" href="#fn:robertson2017">49</a></sup> and was benchmarked against hardware in
+<sup id="fnref:finsterhoelzl2022"><a class="footnote-ref" href="#fn:finsterhoelzl2022">50</a></sup>; distance choice from drifting calibration appears in
+<sup id="fnref:das2025"><a class="footnote-ref" href="#fn:das2025">51</a></sup>, an ion-chain noise model with tailored extraction circuits in
+<sup id="fnref:ye2025"><a class="footnote-ref" href="#fn:ye2025">52</a></sup>, and a full-stack empirical comparison in <sup id="fnref:swierkowska2025"><a class="footnote-ref" href="#fn:swierkowska2025">53</a></sup>. The
+device presets here (Forte <sup id="fnref:chen2024"><a class="footnote-ref" href="#fn:chen2024">54</a></sup>, a long ion chain <sup id="fnref:tham2026"><a class="footnote-ref" href="#fn:tham2026">55</a></sup>, Heron
+<sup id="fnref:harper2026"><a class="footnote-ref" href="#fn:harper2026">56</a></sup><sup id="fnref:vezvaee2026"><a class="footnote-ref" href="#fn:vezvaee2026">57</a></sup>) and the heavy-hex lattice <sup id="fnref:chamberland2020"><a class="footnote-ref" href="#fn:chamberland2020">58</a></sup>
+are the inputs this package evaluates codes against.</p>
+<p>Where this package stands: its reward is the undetected single-fault mass of
+the encoding circuit under such a profile, and its memory objective is a
+multi-round experiment with a decoder. The nearest prior objectives are
+code-capacity <sup id="fnref3:olle2024"><a class="footnote-ref" href="#fn:olle2024">1</a></sup><sup id="fnref2:robertson2017"><a class="footnote-ref" href="#fn:robertson2017">49</a></sup><sup id="fnref2:yun2026"><a class="footnote-ref" href="#fn:yun2026">48</a></sup> or circuit-level for a
+fixed code <sup id="fnref2:zen2024"><a class="footnote-ref" href="#fn:zen2024">4</a></sup>; <sup id="fnref2:yan2026"><a class="footnote-ref" href="#fn:yan2026">35</a></sup> evaluates at circuit level inside a closed
+LLM loop. The comparison in <code>experiments/sat_codes/REPORT.md</code> shows the two
+levels ranking the same codes differently.</p>
+<h2 id="encoder-synthesis-and-fault-tolerant-preparation">Encoder synthesis and fault-tolerant preparation<a class="headerlink" href="#encoder-synthesis-and-fault-tolerant-preparation" title="Permanent link">&para;</a></h2>
+<p>For a fixed code, SAT-optimal fault-tolerant state preparation <sup id="fnref:peham2024"><a class="footnote-ref" href="#fn:peham2024">59</a></sup>,
+tableau-search encoders for arbitrary stabilizer codes <sup id="fnref:peham2026"><a class="footnote-ref" href="#fn:peham2026">60</a></sup>,
+noise-aware LDPC encoder resynthesis <sup id="fnref:sodhani2026"><a class="footnote-ref" href="#fn:sodhani2026">61</a></sup>, SMT search for
+fault-tolerant Clifford circuits <sup id="fnref:shutty2022"><a class="footnote-ref" href="#fn:shutty2022">62</a></sup>, architecture-aware
+stabilizer synthesis <sup id="fnref:winderl2023"><a class="footnote-ref" href="#fn:winderl2023">63</a></sup>, and heuristic and optimal CNOT and
+Clifford synthesis <sup id="fnref:webster2025"><a class="footnote-ref" href="#fn:webster2025">64</a></sup> (code public) all compete with
+RL-found encoders on gate count, and <sup id="fnref2:webster2025"><a class="footnote-ref" href="#fn:webster2025">64</a></sup> claims to win. A
+benchmark for AI-assisted synthesis <sup id="fnref:paz2026"><a class="footnote-ref" href="#fn:paz2026">65</a></sup> and a FAIR circuit library
+<sup id="fnref:schmid2026"><a class="footnote-ref" href="#fn:schmid2026">66</a></sup> appeared in 2026.</p>
+<h2 id="syndrome-extraction-schedules">Syndrome-extraction schedules<a class="headerlink" href="#syndrome-extraction-schedules" title="Permanent link">&para;</a></h2>
+<p>Hook errors and CNOT ordering are as old as the surface code
+<sup id="fnref:dennis2001"><a class="footnote-ref" href="#fn:dennis2001">67</a></sup><sup id="fnref:tomita2014"><a class="footnote-ref" href="#fn:tomita2014">68</a></sup>. Automated scheduling is a 2026 topic: Monte
+Carlo tree search with decoder feedback <sup id="fnref:liu2026b"><a class="footnote-ref" href="#fn:liu2026b">69</a></sup> (code public),
+MaxSAT-guided rewrites <sup id="fnref:viszlai2026"><a class="footnote-ref" href="#fn:viszlai2026">70</a></sup> (code public), SMT depth-optimal
+compilation <sup id="fnref:zhang2026"><a class="footnote-ref" href="#fn:zhang2026">71</a></sup>, RL rewarded by sampled logical error rate
+<sup id="fnref:ye2026"><a class="footnote-ref" href="#fn:ye2026">72</a></sup>, left-right circuits with effective-distance proxies
+<sup id="fnref:strikis2026"><a class="footnote-ref" href="#fn:strikis2026">73</a></sup>, hook-free surface-code schedules <sup id="fnref:hirai2026"><a class="footnote-ref" href="#fn:hirai2026">74</a></sup>, short
+Shor-style sequences <sup id="fnref:delfosse2020"><a class="footnote-ref" href="#fn:delfosse2020">75</a></sup>, flag-style extraction for small codes
+<sup id="fnref:bhatnagar2023"><a class="footnote-ref" href="#fn:bhatnagar2023">76</a></sup>, detector-error-model-driven design <sup id="fnref:derks2024"><a class="footnote-ref" href="#fn:derks2024">77</a></sup>, and the
+result that hypergraph-product codes keep their distance under any schedule
+<sup id="fnref:manes2023"><a class="footnote-ref" href="#fn:manes2023">78</a></sup>. The schedule synthesizer here is RL over the CX-layer
+assignment with the exact circuit-level fault distance as the reward, which
+none of these use; its one result, on the [[49,13,4]] entry of
+<sup id="fnref:qldpcchallenge"><a class="footnote-ref" href="#fn:qldpcchallenge">79</a></sup>, is a demonstration rather than a benchmark against them.</p>
+<h2 id="distance-verification-and-simulation">Distance, verification, and simulation<a class="headerlink" href="#distance-verification-and-simulation" title="Permanent link">&para;</a></h2>
+<p>Exact distance here is enumeration to 20 qubits. Public tools go further:
+randomized information-set distance <sup id="fnref:pryadko2023"><a class="footnote-ref" href="#fn:pryadko2023">80</a></sup>, parallel
+Brouwer-Zimmermann <sup id="fnref:hernando2024"><a class="footnote-ref" href="#fn:hernando2024">81</a></sup>, and SAT, MILP, and heuristic code and
+circuit distance in one package <sup id="fnref:webster2026"><a class="footnote-ref" href="#fn:webster2026">82</a></sup>; the problem is NP-hard
+<sup id="fnref:kapshikar2022"><a class="footnote-ref" href="#fn:kapshikar2022">83</a></sup>, has been cast as quantum annealing <sup id="fnref:ismail2024"><a class="footnote-ref" href="#fn:ismail2024">84</a></sup>, and
+for large LDPC codes is bounded from above by heuristic witness search
+<sup id="fnref:kasai2026"><a class="footnote-ref" href="#fn:kasai2026">85</a></sup>. Weight enumerators are not a complete invariant, and
+local-Clifford equivalence has its own test <sup id="fnref2:danielsen2006"><a class="footnote-ref" href="#fn:danielsen2006">25</a></sup><sup id="fnref:vandennest2004"><a class="footnote-ref" href="#fn:vandennest2004">86</a></sup>;
+the generator weight this package calls <code>w*</code> is the optimal generator
+weight of <sup id="fnref:wei2026"><a class="footnote-ref" href="#fn:wei2026">87</a></sup>. Fault-counting sensitivities <sup id="fnref:fu2026"><a class="footnote-ref" href="#fn:fu2026">88</a></sup>, Pauli
+diagnostics <sup id="fnref:iyer2021"><a class="footnote-ref" href="#fn:iyer2021">89</a></sup>, and tensor-network enumerators <sup id="fnref:pato2025"><a class="footnote-ref" href="#fn:pato2025">90</a></sup> are
+further evaluation tools. Stim <sup id="fnref:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">91</a></sup> underlies the noise and
+detector-error-model work; Clifft <sup id="fnref:chase2026"><a class="footnote-ref" href="#fn:chase2026">92</a></sup> is the Unitary Foundation's
+near-Clifford sampler; <sup id="fnref:fur2026"><a class="footnote-ref" href="#fn:fur2026">93</a></sup> reports hardware error-detection
+experiments from the same group.</p>
+<h2 id="reviews">Reviews<a class="headerlink" href="#reviews" title="Permanent link">&para;</a></h2>
+<p>AI for quantum error correction <sup id="fnref:wang2024"><a class="footnote-ref" href="#fn:wang2024">94</a></sup>, reinforcement learning for
+quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:bukov2026">95</a></sup>, and noise-adapted error correction
+<sup id="fnref:jayashankar2022"><a class="footnote-ref" href="#fn:jayashankar2022">96</a></sup>. No dedicated review of automated code design exists.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:olle2024">
+<p>Jan Olle, Remmy Zen, Matteo Puviani, and Florian Marquardt. Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent. <em>npj Quantum Information</em>, 10:126, 2024. <a href="https://arxiv.org/abs/2311.04750">arXiv:2311.04750</a>, <a href="https://doi.org/10.1038/s41534-024-00920-y">doi:10.1038/s41534-024-00920-y</a>.&#160;<a class="footnote-backref" href="#fnref:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:olle2024" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:olle2025">
+<p>Jan Olle, Oleg M. Yevtushenko, and Florian Marquardt. Scaling the automated discovery of quantum circuits via reinforcement learning with gadgets. 2025. <a href="https://arxiv.org/abs/2503.11638">arXiv:2503.11638</a>.&#160;<a class="footnote-backref" href="#fnref:olle2025" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yevtushenko2025">
+<p>Oleg M. Yevtushenko and Florian Marquardt. Automated discovery of gadgets in quantum circuits for efficient reinforcement learning. 2025. <a href="https://arxiv.org/abs/2509.24666">arXiv:2509.24666</a>.&#160;<a class="footnote-backref" href="#fnref:yevtushenko2025" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:zen2024">
+<p>Remmy Zen, Jan Olle, Luis Colmenarez, Matteo Puviani, Markus Müller, and Florian Marquardt. Quantum circuit discovery for fault-tolerant logical state preparation with reinforcement learning. 2024. <a href="https://arxiv.org/abs/2402.17761">arXiv:2402.17761</a>, <a href="https://doi.org/10.1103/gqpr-dgz7">doi:10.1103/gqpr-dgz7</a>.&#160;<a class="footnote-backref" href="#fnref:zen2024" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:zen2024" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nautrup2018">
+<p>Hendrik Poulsen Nautrup, Nicolas Delfosse, Vedran Dunjko, Hans J. Briegel, and Nicolai Friis. Optimizing quantum error correction codes with reinforcement learning. <em>Quantum</em>, 3:215, 2019. <a href="https://arxiv.org/abs/1812.08451">arXiv:1812.08451</a>, <a href="https://doi.org/10.22331/q-2019-12-16-215">doi:10.22331/q-2019-12-16-215</a>.&#160;<a class="footnote-backref" href="#fnref:nautrup2018" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fosel2018">
+<p>Thomas Fösel, Petru Tighineanu, Talitha Weiss, and Florian Marquardt. Reinforcement learning with neural networks for quantum feedback. <em>Physical Review X</em>, 8:031084, 2018. <a href="https://arxiv.org/abs/1802.05267">arXiv:1802.05267</a>, <a href="https://doi.org/10.1103/PhysRevX.8.031084">doi:10.1103/PhysRevX.8.031084</a>.&#160;<a class="footnote-backref" href="#fnref:fosel2018" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mauron2023">
+<p>Caroline Mauron, Terry Farrelly, and Thomas M. Stace. Optimization of tensor network codes with reinforcement learning. 2023. <a href="https://arxiv.org/abs/2305.11470">arXiv:2305.11470</a>.&#160;<a class="footnote-backref" href="#fnref:mauron2023" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:su2023">
+<p>Vincent Paul Su, ChunJun Cao, Hong-Ye Hu, Yariv Yanay, Charles Tahan, and Brian Swingle. Discovery of optimal quantum error correcting codes via reinforcement learning. <em>Physical Review Applied</em>, 23:034048, 2025. <a href="https://arxiv.org/abs/2305.06378">arXiv:2305.06378</a>, <a href="https://doi.org/10.1103/PhysRevApplied.23.034048">doi:10.1103/PhysRevApplied.23.034048</a>.&#160;<a class="footnote-backref" href="#fnref:su2023" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:he2025">
+<p>Austin Yubo He and Zi-Wen Liu. Discovering highly efficient low-weight quantum error-correcting codes with reinforcement learning. 2025. <a href="https://arxiv.org/abs/2502.14372">arXiv:2502.14372</a>.&#160;<a class="footnote-backref" href="#fnref:he2025" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cao2022">
+<p>Chenfeng Cao, Chao Zhang, Zipeng Wu, Markus Grassl, and Bei Zeng. Quantum variational learning for quantum error-correcting codes. <em>Quantum</em>, 6:828, 2022. <a href="https://arxiv.org/abs/2204.03560">arXiv:2204.03560</a>, <a href="https://doi.org/10.22331/q-2022-10-06-828">doi:10.22331/q-2022-10-06-828</a>.&#160;<a class="footnote-backref" href="#fnref:cao2022" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:xu2019">
+<p>Xiaosi Xu, Simon C. Benjamin, and Xiao Yuan. Variational circuit compiler for quantum error correction. <em>Physical Review Applied</em>, 15:034068, 2021. <a href="https://arxiv.org/abs/1911.05759">arXiv:1911.05759</a>, <a href="https://doi.org/10.1103/PhysRevApplied.15.034068">doi:10.1103/PhysRevApplied.15.034068</a>.&#160;<a class="footnote-backref" href="#fnref:xu2019" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bausch2018">
+<p>Johannes Bausch and Felix Leditzky. Quantum codes from neural networks. <em>New Journal of Physics</em>, 22:023005, 2020. <a href="https://arxiv.org/abs/1806.08781">arXiv:1806.08781</a>, <a href="https://doi.org/10.1088/1367-2630/ab6cdd">doi:10.1088/1367-2630/ab6cdd</a>.&#160;<a class="footnote-backref" href="#fnref:bausch2018" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:locher2022">
+<p>David F. Locher, Lorenzo Cardarelli, and Markus Müller. Quantum error correction with quantum autoencoders. <em>Quantum</em>, 7:942, 2023. <a href="https://arxiv.org/abs/2202.00555">arXiv:2202.00555</a>, <a href="https://doi.org/10.22331/q-2023-03-09-942">doi:10.22331/q-2023-03-09-942</a>.&#160;<a class="footnote-backref" href="#fnref:locher2022" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meyer2025">
+<p>Nico Meyer, Christopher Mutschler, Andreas Maier, and Daniel D. Scherer. Learning encodings by maximizing state distinguishability: Variational quantum error correction. <em>Quantum Science and Technology</em>, 11:045036, 2026. <a href="https://arxiv.org/abs/2506.11552">arXiv:2506.11552</a>, <a href="https://doi.org/10.1088/2058-9565/ae98b1">doi:10.1088/2058-9565/ae98b1</a>.&#160;<a class="footnote-backref" href="#fnref:meyer2025" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meyer2026a">
+<p>Nico Meyer, Christopher Mutschler, Dominik Seuß, Andreas Maier, and Daniel D. Scherer. Learning to concatenate quantum codes. 2026. <a href="https://arxiv.org/abs/2604.14931">arXiv:2604.14931</a>.&#160;<a class="footnote-backref" href="#fnref:meyer2026a" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:meyer2026b">
+<p>Nico Meyer, Christopher Mutschler, Dominik Seuß, Andreas Maier, and Daniel D. Scherer. Learning logical operations for arbitrary quantum error correction codes. <em>Physical Review A</em>, 114:032424, 2026. <a href="https://arxiv.org/abs/2605.28162">arXiv:2605.28162</a>, <a href="https://doi.org/10.1103/qj2x-3l6n">doi:10.1103/qj2x-3l6n</a>.&#160;<a class="footnote-backref" href="#fnref:meyer2026b" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:casanova2024">
+<p>Miguel Casanova, Kentaro Ohki, and Francesco Ticozzi. Finding quantum codes via Riemannian optimization. 2024. <a href="https://arxiv.org/abs/2407.08423">arXiv:2407.08423</a>.&#160;<a class="footnote-backref" href="#fnref:casanova2024" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:shao2024">
+<p>Yuguo Shao, Yong-Chang Li, Fuchuan Wei, Hao Zhan, Ben Wang, Zhaohui Wei, Lijian Zhang, and Zhengwei Liu. Variational graphical quantum error correction codes. 2024. <a href="https://arxiv.org/abs/2410.02608">arXiv:2410.02608</a>, <a href="https://doi.org/10.1038/s42005-026-02681-w">doi:10.1038/s42005-026-02681-w</a>.&#160;<a class="footnote-backref" href="#fnref:shao2024" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yeung2026">
+<p>Richie Yeung, Aleks Kissinger, and Rob Cornish. Equivariant reinforcement learning for Clifford quantum circuit synthesis. 2026. <a href="https://arxiv.org/abs/2605.10910">arXiv:2605.10910</a>.&#160;<a class="footnote-backref" href="#fnref:yeung2026" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nagele2024">
+<p>Maximilian Nägele, Jan Olle, Thomas Fösel, Remmy Zen, and Florian Marquardt. Tackling decision processes with non-cumulative objectives using reinforcement learning. <em>Transactions on Machine Learning Research</em>, 2026. <a href="https://arxiv.org/abs/2405.13609">arXiv:2405.13609</a>.&#160;<a class="footnote-backref" href="#fnref:nagele2024" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tandeitnik2022">
+<p>Daniel Tandeitnik and Thiago Guerreiro. Evolving quantum circuits. 2022. <a href="https://arxiv.org/abs/2210.05058">arXiv:2210.05058</a>, <a href="https://doi.org/10.1007/s11128-024-04317-w">doi:10.1007/s11128-024-04317-w</a>.&#160;<a class="footnote-backref" href="#fnref:tandeitnik2022" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:webster2024">
+<p>Mark Webster and Dan Browne. Engineering quantum error correction codes using evolutionary algorithms. 2024. <a href="https://arxiv.org/abs/2409.13017">arXiv:2409.13017</a>.&#160;<a class="footnote-backref" href="#fnref:webster2024" title="Jump back to footnote 22 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:webster2024" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:perlin2026">
+<p>Michael A. Perlin, Matthew Steinberg, and Ben Criger. Quantum codes from classical annealing. 2026. <a href="https://arxiv.org/abs/2607.19574">arXiv:2607.19574</a>.&#160;<a class="footnote-backref" href="#fnref:perlin2026" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+<li id="fn:calderbank1998">
+<p>A. R. Calderbank, E. M. Rains, P. W. Shor, and N. J. A. Sloane. Quantum error correction via codes over GF(4). <em>IEEE Transactions on Information Theory</em>, 44:1369–1387, 1998. <a href="https://arxiv.org/abs/quant-ph/9608006">arXiv:quant-ph/9608006</a>, <a href="https://doi.org/10.1109/18.681315">doi:10.1109/18.681315</a>.&#160;<a class="footnote-backref" href="#fnref:calderbank1998" title="Jump back to footnote 24 in the text">&#8617;</a></p>
+</li>
+<li id="fn:danielsen2006">
+<p>Lars Eirik Danielsen and Matthew G. Parker. On the classification of all self-dual additive codes over GF(4) of length up to 12. <em>Journal of Combinatorial Theory, Series A</em>, 113:1351–1367, 2006. <a href="https://arxiv.org/abs/math/0504522">arXiv:math/0504522</a>, <a href="https://doi.org/10.1016/j.jcta.2005.12.004">doi:10.1016/j.jcta.2005.12.004</a>.&#160;<a class="footnote-backref" href="#fnref:danielsen2006" title="Jump back to footnote 25 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:danielsen2006" title="Jump back to footnote 25 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cross2025">
+<p>Andrew Cross and Drew Vandeth. Small binary stabilizer subsystem codes. 2025. <a href="https://arxiv.org/abs/2501.17447">arXiv:2501.17447</a>.&#160;<a class="footnote-backref" href="#fnref:cross2025" title="Jump back to footnote 26 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yu2009">
+<p>Sixia Yu, Juergen Bierbrauer, Ying Dong, Qing Chen, and C. H. Oh. All the stabilizer codes of distance 3. <em>IEEE Transactions on Information Theory</em>, 59:5179–5185, 2013. <a href="https://arxiv.org/abs/0901.1968">arXiv:0901.1968</a>.&#160;<a class="footnote-backref" href="#fnref:yu2009" title="Jump back to footnote 27 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chuang2008">
+<p>Isaac L. Chuang, Andrew W. Cross, Graeme Smith, John A. Smolin, and Bei Zeng. Codeword stabilized quantum codes: Algorithm and structure. <em>Journal of Mathematical Physics</em>, 50:042109, 2009. <a href="https://arxiv.org/abs/0803.3232">arXiv:0803.3232</a>, <a href="https://doi.org/10.1063/1.3086833">doi:10.1063/1.3086833</a>.&#160;<a class="footnote-backref" href="#fnref:chuang2008" title="Jump back to footnote 28 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dalfavero2026">
+<p>Ben DalFavero, William M. Watkins, Margarite L. LaBorde, Vincent Russo, Ethan Egger, Gregory Quiroz, and Ryan LaRose. Satisfying quantum codes: Physics-informed and hardware-aware code design with SAT solvers. 2026. <a href="https://arxiv.org/abs/2608.23460">arXiv:2608.23460</a>.&#160;<a class="footnote-backref" href="#fnref:dalfavero2026" title="Jump back to footnote 29 in the text">&#8617;</a></p>
+</li>
+<li id="fn:koh2026">
+<p>Jin Ming Koh, Anqi Gong, Andrei C. Diaconu, Daniel Bochen Tan, Alexandra A. Geim, Michael J. Gullans, Norman Y. Yao, Mikhail D. Lukin, and Shayan Majidy. Entangling logical qubits without physical operations. 2026. <a href="https://arxiv.org/abs/2601.20927">arXiv:2601.20927</a>.&#160;<a class="footnote-backref" href="#fnref:koh2026" title="Jump back to footnote 30 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ehatamm2026">
+<p>Mattias Ehatamm, Yi Lee, Xiaodi Wu, and Runzhou Tao. End-to-end formalization of quantum error correction. 2026. <a href="https://arxiv.org/abs/2605.16523">arXiv:2605.16523</a>.&#160;<a class="footnote-backref" href="#fnref:ehatamm2026" title="Jump back to footnote 31 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cruzbenito2026">
+<p>Juan Cruz-Benito, Andrew W. Cross, David Kremer, and Ismael Faro. Evolutionary discovery of bivariate bicycle codes with LLM-guided search. 2026. <a href="https://arxiv.org/abs/2606.02418">arXiv:2606.02418</a>.&#160;<a class="footnote-backref" href="#fnref:cruzbenito2026" title="Jump back to footnote 32 in the text">&#8617;</a></p>
+</li>
+<li id="fn:liu2026a">
+<p>Zidu Liu and Florian Marquardt. Large-language-model discovery of quantum LDPC codes through structured concept evolution. 2026. <a href="https://arxiv.org/abs/2606.24808">arXiv:2606.24808</a>.&#160;<a class="footnote-backref" href="#fnref:liu2026a" title="Jump back to footnote 33 in the text">&#8617;</a></p>
+</li>
+<li id="fn:qian2026">
+<p>Dongheng Qian and Tianyi Li. Multi-agent discovery of practical quantum LDPC codes. 2026. <a href="https://arxiv.org/abs/2608.08996">arXiv:2608.08996</a>.&#160;<a class="footnote-backref" href="#fnref:qian2026" title="Jump back to footnote 34 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yan2026">
+<p>Ge Yan, Shanchuan Li, Pengyue Ma, Qixin Zhang, Pingchuan Ma, Jianping Wang, Min-Hsiu Hsieh, and Yuxuan Du. OmniQEC: Discovering practical quantum error-correcting codes by an AI scientist. 2026. <a href="https://arxiv.org/abs/2607.25865">arXiv:2607.25865</a>.&#160;<a class="footnote-backref" href="#fnref:yan2026" title="Jump back to footnote 35 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:yan2026" title="Jump back to footnote 35 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chengyu2026">
+<p>Yihua Chengyu, Richard Meister, Conor Carty, Sheng-Ku Lin, and Roberto Bondesan. Bayesian optimization for quantum error-correcting code discovery. 2026. <a href="https://arxiv.org/abs/2601.18562">arXiv:2601.18562</a>.&#160;<a class="footnote-backref" href="#fnref:chengyu2026" title="Jump back to footnote 36 in the text">&#8617;</a></p>
+</li>
+<li id="fn:guerrero2025">
+<p>Rubén Darío Guerrero. Game-theoretic discovery of quantum error-correcting codes through Nash equilibria. 2025. <a href="https://arxiv.org/abs/2510.15223">arXiv:2510.15223</a>.&#160;<a class="footnote-backref" href="#fnref:guerrero2025" title="Jump back to footnote 37 in the text">&#8617;</a></p>
+</li>
+<li id="fn:freire2025">
+<p>Bruno C. A. Freire, Nicolas Delfosse, and Anthony Leverrier. Optimizing hypergraph product codes with random walks, simulated annealing and reinforcement learning. 2025. <a href="https://arxiv.org/abs/2501.09622">arXiv:2501.09622</a>.&#160;<a class="footnote-backref" href="#fnref:freire2025" title="Jump back to footnote 38 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sella2026">
+<p>Omer S. Sella, Robert Pinsler, and Thomas Heinis. Designing quantum error correcting codes to fit decoders via reinforcement learning. 2026. <a href="https://arxiv.org/abs/2608.15754">arXiv:2608.15754</a>.&#160;<a class="footnote-backref" href="#fnref:sella2026" title="Jump back to footnote 39 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yanay2026">
+<p>Yariv Yanay. Learning better error correction codes with hybrid quantum-assisted machine learning. 2026. <a href="https://arxiv.org/abs/2601.08014">arXiv:2601.08014</a>.&#160;<a class="footnote-backref" href="#fnref:yanay2026" title="Jump back to footnote 40 in the text">&#8617;</a></p>
+</li>
+<li id="fn:guatto2025">
+<p>Manuel Guatto, Francesco Preti, Michael Schilling, Tommaso Calarco, Francisco Andrés Cárdenas-López, and Felix Motzoi. Real-time adaptive quantum error correction by model-free multi-agent learning. 2025. <a href="https://arxiv.org/abs/2509.03974">arXiv:2509.03974</a>.&#160;<a class="footnote-backref" href="#fnref:guatto2025" title="Jump back to footnote 41 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cao2025">
+<p>ChunJun Cao and Brad Lackey. Growing sparse quantum codes from a seed. 2025. <a href="https://arxiv.org/abs/2507.13496">arXiv:2507.13496</a>.&#160;<a class="footnote-backref" href="#fnref:cao2025" title="Jump back to footnote 42 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tuckett2018">
+<p>David K. Tuckett, Andrew S. Darmawan, Christopher T. Chubb, Sergey Bravyi, Stephen D. Bartlett, and Steven T. Flammia. Tailoring surface codes for highly biased noise. <em>Physical Review X</em>, 9:041031, 2019. <a href="https://arxiv.org/abs/1812.08186">arXiv:1812.08186</a>, <a href="https://doi.org/10.1103/PhysRevX.9.041031">doi:10.1103/PhysRevX.9.041031</a>.&#160;<a class="footnote-backref" href="#fnref:tuckett2018" title="Jump back to footnote 43 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bonillaataides2021">
+<p>J. Pablo Bonilla Ataides, David K. Tuckett, Stephen D. Bartlett, Steven T. Flammia, and Benjamin J. Brown. The XZZX surface code. <em>Nature Communications</em>, 12:2172, 2021. <a href="https://arxiv.org/abs/2009.07851">arXiv:2009.07851</a>, <a href="https://doi.org/10.1038/s41467-021-22274-1">doi:10.1038/s41467-021-22274-1</a>.&#160;<a class="footnote-backref" href="#fnref:bonillaataides2021" title="Jump back to footnote 44 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dua2022">
+<p>Arpit Dua, Aleksander Kubica, Liang Jiang, Steven T. Flammia, and Michael J. Gullans. Clifford-deformed surface codes. <em>PRX Quantum</em>, 5:010347, 2024. <a href="https://arxiv.org/abs/2201.07802">arXiv:2201.07802</a>, <a href="https://doi.org/10.1103/PRXQuantum.5.010347">doi:10.1103/PRXQuantum.5.010347</a>.&#160;<a class="footnote-backref" href="#fnref:dua2022" title="Jump back to footnote 45 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tiurev2022">
+<p>Konstantin Tiurev, Peter-Jan H. S. Derks, Joschka Roffe, Jens Eisert, and Jan-Michael Reiner. Correcting non-independent and non-identically distributed errors with surface codes. <em>Quantum</em>, 7:1123, 2023. <a href="https://arxiv.org/abs/2208.02191">arXiv:2208.02191</a>, <a href="https://doi.org/10.22331/q-2023-09-26-1123">doi:10.22331/q-2023-09-26-1123</a>.&#160;<a class="footnote-backref" href="#fnref:tiurev2022" title="Jump back to footnote 46 in the text">&#8617;</a></p>
+</li>
+<li id="fn:roffe2022">
+<p>Joschka Roffe, Lawrence Z. Cohen, Armanda O. Quintavalle, Daryus Chandra, and Earl T. Campbell. Bias-tailored quantum LDPC codes. <em>Quantum</em>, 7:1005, 2023. <a href="https://arxiv.org/abs/2202.01702">arXiv:2202.01702</a>, <a href="https://doi.org/10.22331/q-2023-05-15-1005">doi:10.22331/q-2023-05-15-1005</a>.&#160;<a class="footnote-backref" href="#fnref:roffe2022" title="Jump back to footnote 47 in the text">&#8617;</a></p>
+</li>
+<li id="fn:yun2026">
+<p>Won Joon Yun, Andrew Nemec, and Jonathan M. Baker. Computationally efficient optimization of per-qubit Clifford deformation for non-uniform biased noise. 2026. <a href="https://arxiv.org/abs/2608.17870">arXiv:2608.17870</a>.&#160;<a class="footnote-backref" href="#fnref:yun2026" title="Jump back to footnote 48 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:yun2026" title="Jump back to footnote 48 in the text">&#8617;</a></p>
+</li>
+<li id="fn:robertson2017">
+<p>Alan Robertson, Christopher Granade, Stephen D. Bartlett, and Steven T. Flammia. Tailored codes for small quantum memories. <em>Physical Review Applied</em>, 8:064004, 2017. <a href="https://arxiv.org/abs/1703.08179">arXiv:1703.08179</a>, <a href="https://doi.org/10.1103/PhysRevApplied.8.064004">doi:10.1103/PhysRevApplied.8.064004</a>.&#160;<a class="footnote-backref" href="#fnref:robertson2017" title="Jump back to footnote 49 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:robertson2017" title="Jump back to footnote 49 in the text">&#8617;</a></p>
+</li>
+<li id="fn:finsterhoelzl2022">
+<p>Regina Finsterhoelzl and Guido Burkard. Benchmarking quantum error-correcting codes on quasi-linear and central-spin processors. 2022. <a href="https://arxiv.org/abs/2207.05568">arXiv:2207.05568</a>.&#160;<a class="footnote-backref" href="#fnref:finsterhoelzl2022" title="Jump back to footnote 50 in the text">&#8617;</a></p>
+</li>
+<li id="fn:das2025">
+<p>Subrata Das and Swaroop Ghosh. Optimization of quantum error correcting code under temporal variation of qubit quality. 2025. <a href="https://arxiv.org/abs/2505.06165">arXiv:2505.06165</a>.&#160;<a class="footnote-backref" href="#fnref:das2025" title="Jump back to footnote 51 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ye2025">
+<p>Min Ye and Nicolas Delfosse. Quantum error correction for long chains of trapped ions. <em>Quantum</em>, 9:1920, 2025. <a href="https://arxiv.org/abs/2503.22071">arXiv:2503.22071</a>, <a href="https://doi.org/10.22331/q-2025-11-27-1920">doi:10.22331/q-2025-11-27-1920</a>.&#160;<a class="footnote-backref" href="#fnref:ye2025" title="Jump back to footnote 52 in the text">&#8617;</a></p>
+</li>
+<li id="fn:swierkowska2025">
+<p>Aleksandra Świerkowska, Jannik Pflieger, Emmanouil Giortamis, and Pramod Bhatotia. ECCentric: An empirical analysis of quantum error correction codes. <em>Proceedings of the ACM on Measurement and Analysis of Computing Systems, Vol. 10, Issue 2, Article</em>, 3:7, 2026. <a href="https://arxiv.org/abs/2511.01062">arXiv:2511.01062</a>, <a href="https://doi.org/10.1145/3805635">doi:10.1145/3805635</a>.&#160;<a class="footnote-backref" href="#fnref:swierkowska2025" title="Jump back to footnote 53 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chen2024">
+<p>Jwo-Sy Chen, Erik Nielsen, Matthew Ebert, Volkan Inlek, Kenneth Wright, Vandiver Chaplin, Andrii Maksymov, Eduardo Páez, Amrit Poudel, Peter Maunz, and John Gamble. Benchmarking a trapped-ion quantum computer with 30 qubits. <em>Quantum</em>, 8:1516, 2024. <a href="https://arxiv.org/abs/2308.05071">arXiv:2308.05071</a>, <a href="https://doi.org/10.22331/q-2024-11-07-1516">doi:10.22331/q-2024-11-07-1516</a>.&#160;<a class="footnote-backref" href="#fnref:chen2024" title="Jump back to footnote 54 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tham2026">
+<p>Edwin Tham, Michael L. Goldman, Shantanu Debnath, Ashay N. Patel, Jyothi Saraladevi, Jason Nguyen, Erik Nielsen, Neal Pisenti, Kenneth Wright, John Gamble, and Nicolas Delfosse. Breakeven demonstration of quantum low-density parity-check codes. 2026. <a href="https://arxiv.org/abs/2606.06455">arXiv:2606.06455</a>.&#160;<a class="footnote-backref" href="#fnref:tham2026" title="Jump back to footnote 55 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harper2026">
+<p>Robin Harper, Constance Lainé, Evan Hockings, Campbell McLauchlan, Georgia M. Nixon, Benjamin J. Brown, and Stephen D. Bartlett. Characterising the failure mechanisms of error-corrected quantum logic gates. <em>Nature Communications</em>, 17:5039, 2026. <a href="https://arxiv.org/abs/2504.07258">arXiv:2504.07258</a>, <a href="https://doi.org/10.1038/s41467-026-71773-6">doi:10.1038/s41467-026-71773-6</a>.&#160;<a class="footnote-backref" href="#fnref:harper2026" title="Jump back to footnote 56 in the text">&#8617;</a></p>
+</li>
+<li id="fn:vezvaee2026">
+<p>Arian Vezvaee, Cesar Benito, Mario Morford-Oberst, Alejandro Bermudez, and Daniel A. Lidar. Surface code scaling on heavy-hex superconducting quantum processors. <em>Nature Communications</em>, 17:9201, 2026. <a href="https://arxiv.org/abs/2510.18847">arXiv:2510.18847</a>, <a href="https://doi.org/10.1038/s41467-026-76090-6">doi:10.1038/s41467-026-76090-6</a>.&#160;<a class="footnote-backref" href="#fnref:vezvaee2026" title="Jump back to footnote 57 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chamberland2020">
+<p>Christopher Chamberland, Guanyu Zhu, Theodore J. Yoder, Jared B. Hertzberg, and Andrew W. Cross. Topological and subsystem codes on low-degree graphs with flag qubits. <em>Physical Review X</em>, 10:011022, 2020. <a href="https://arxiv.org/abs/1907.09528">arXiv:1907.09528</a>, <a href="https://doi.org/10.1103/PhysRevX.10.011022">doi:10.1103/PhysRevX.10.011022</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2020" title="Jump back to footnote 58 in the text">&#8617;</a></p>
+</li>
+<li id="fn:peham2024">
+<p>Tom Peham, Ludwig Schmid, Lucas Berent, Markus Müller, and Robert Wille. Automated synthesis of fault-tolerant state preparation circuits for quantum error correction codes. <em>PRX Quantum</em>, 6:020330, 2025. <a href="https://arxiv.org/abs/2408.11894">arXiv:2408.11894</a>, <a href="https://doi.org/10.1103/PRXQuantum.6.020330">doi:10.1103/PRXQuantum.6.020330</a>.&#160;<a class="footnote-backref" href="#fnref:peham2024" title="Jump back to footnote 59 in the text">&#8617;</a></p>
+</li>
+<li id="fn:peham2026">
+<p>Tom Peham, Matthew Steinberg, Robert Wille, and Sascha Heußen. Synthesis and optimization of encoding circuits for fault-tolerant quantum computation. 2026. <a href="https://arxiv.org/abs/2605.15266">arXiv:2605.15266</a>.&#160;<a class="footnote-backref" href="#fnref:peham2026" title="Jump back to footnote 60 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sodhani2026">
+<p>Aditya Sodhani and Keshab K. Parhi. Noise-aware synthesis of quantum LDPC encoder circuits via two-sided hamming descent. 2026. <a href="https://arxiv.org/abs/2607.04462">arXiv:2607.04462</a>.&#160;<a class="footnote-backref" href="#fnref:sodhani2026" title="Jump back to footnote 61 in the text">&#8617;</a></p>
+</li>
+<li id="fn:shutty2022">
+<p>Noah Shutty and Christopher Chamberland. Decoding merged color-surface codes and finding fault-tolerant Clifford circuits using solvers for satisfiability modulo theories. <em>Physical Review Applied</em>, 18:014072, 2022. <a href="https://arxiv.org/abs/2201.12450">arXiv:2201.12450</a>, <a href="https://doi.org/10.1103/PhysRevApplied.18.014072">doi:10.1103/PhysRevApplied.18.014072</a>.&#160;<a class="footnote-backref" href="#fnref:shutty2022" title="Jump back to footnote 62 in the text">&#8617;</a></p>
+</li>
+<li id="fn:winderl2023">
+<p>David Winderl, Qunsheng Huang, Arianne Meijer-van de Griend, and Richie Yeung. Architecture-aware synthesis of stabilizer circuits from Clifford tableaus. 2023. <a href="https://arxiv.org/abs/2309.08972">arXiv:2309.08972</a>.&#160;<a class="footnote-backref" href="#fnref:winderl2023" title="Jump back to footnote 63 in the text">&#8617;</a></p>
+</li>
+<li id="fn:webster2025">
+<p>Mark Webster, Stergios Koutsioumpas, and Dan E Browne. Heuristic and optimal synthesis of CNOT and Clifford circuits. <em>Quantum</em>, 10:2212, 2026. <a href="https://arxiv.org/abs/2503.14660">arXiv:2503.14660</a>, <a href="https://doi.org/10.22331/q-2026-09-21-2212">doi:10.22331/q-2026-09-21-2212</a>.&#160;<a class="footnote-backref" href="#fnref:webster2025" title="Jump back to footnote 64 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:webster2025" title="Jump back to footnote 64 in the text">&#8617;</a></p>
+</li>
+<li id="fn:paz2026">
+<p>Andres Paz, Christian Tarta, Cordelia Yuqiao Li, Mayee Sun, Sarju Patel, and Sylvie Lausier. StabilizerBench: A benchmark for AI-assisted quantum error correction circuit synthesis. 2026. <a href="https://arxiv.org/abs/2604.21287">arXiv:2604.21287</a>.&#160;<a class="footnote-backref" href="#fnref:paz2026" title="Jump back to footnote 65 in the text">&#8617;</a></p>
+</li>
+<li id="fn:schmid2026">
+<p>Ludwig Schmid, Tom Peham, and Robert Wille. QECirc: A community-driven, FAIR library of quantum error correction circuits. 2026. <a href="https://arxiv.org/abs/2609.20182">arXiv:2609.20182</a>.&#160;<a class="footnote-backref" href="#fnref:schmid2026" title="Jump back to footnote 66 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dennis2001">
+<p>Eric Dennis, Alexei Kitaev, Andrew Landahl, and John Preskill. Topological quantum memory. <em>Journal of Mathematical Physics</em>, 43:4452–4505, 2002. <a href="https://arxiv.org/abs/quant-ph/0110143">arXiv:quant-ph/0110143</a>, <a href="https://doi.org/10.1063/1.1499754">doi:10.1063/1.1499754</a>.&#160;<a class="footnote-backref" href="#fnref:dennis2001" title="Jump back to footnote 67 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tomita2014">
+<p>Yu Tomita and Krysta M. Svore. Low-distance surface codes under realistic quantum noise. <em>Physical Review A</em>, 90:062320, 2014. <a href="https://arxiv.org/abs/1404.3747">arXiv:1404.3747</a>, <a href="https://doi.org/10.1103/PhysRevA.90.062320">doi:10.1103/PhysRevA.90.062320</a>.&#160;<a class="footnote-backref" href="#fnref:tomita2014" title="Jump back to footnote 68 in the text">&#8617;</a></p>
+</li>
+<li id="fn:liu2026b">
+<p>Yuhao Liu, Shuohao Ping, Junyu Zhou, Ethan Decker, Justin Kalloor, Mathias Weiden, Kean Chen, Yunong Shi, Ali Javadi-Abhari, Costin Iancu, and Gushu Li. AlphaSyndrome: Tackling the syndrome measurement circuit scheduling problem for QEC codes. 2026. <a href="https://arxiv.org/abs/2601.12509">arXiv:2601.12509</a>.&#160;<a class="footnote-backref" href="#fnref:liu2026b" title="Jump back to footnote 69 in the text">&#8617;</a></p>
+</li>
+<li id="fn:viszlai2026">
+<p>Joshua Viszlai, Satvik Maurya, Swamit Tannu, Margaret Martonosi, and Frederic T. Chong. PropHunt: Automated optimization of quantum syndrome measurement circuits. 2026. <a href="https://arxiv.org/abs/2601.17580">arXiv:2601.17580</a>.&#160;<a class="footnote-backref" href="#fnref:viszlai2026" title="Jump back to footnote 70 in the text">&#8617;</a></p>
+</li>
+<li id="fn:zhang2026">
+<p>Kai Zhang, Dingchao Gao, Zhaohui Yang, Runshi Zhou, Fangming Liu, Zhengfeng Ji, and Jianxin Chen. Optimal compilation of syndrome extraction circuits for general quantum LDPC codes. 2026. <a href="https://arxiv.org/abs/2603.21499">arXiv:2603.21499</a>.&#160;<a class="footnote-backref" href="#fnref:zhang2026" title="Jump back to footnote 71 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ye2026">
+<p>John Zhuoyang Ye, Aarav Pabla, and Jens Palsberg. Reinforcement learning for syndrome extraction. 2026. <a href="https://arxiv.org/abs/2609.12020">arXiv:2609.12020</a>.&#160;<a class="footnote-backref" href="#fnref:ye2026" title="Jump back to footnote 72 in the text">&#8617;</a></p>
+</li>
+<li id="fn:strikis2026">
+<p>Armands Strikis, Dan E. Browne, and Michael E. Beverland. High-performance syndrome extraction circuits for quantum codes. 2026. <a href="https://arxiv.org/abs/2603.05481">arXiv:2603.05481</a>.&#160;<a class="footnote-backref" href="#fnref:strikis2026" title="Jump back to footnote 73 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hirai2026">
+<p>Yuga Hirai, Shota Ikari, Yosuke Ueno, and Yasunari Suzuki. No more hooks in the surface code: Distance-preserving syndrome extraction for arbitrary layouts at minimum depth. 2026. <a href="https://arxiv.org/abs/2603.01628">arXiv:2603.01628</a>.&#160;<a class="footnote-backref" href="#fnref:hirai2026" title="Jump back to footnote 74 in the text">&#8617;</a></p>
+</li>
+<li id="fn:delfosse2020">
+<p>Nicolas Delfosse and Ben W. Reichardt. Short shor-style syndrome sequences. 2020. <a href="https://arxiv.org/abs/2008.05051">arXiv:2008.05051</a>.&#160;<a class="footnote-backref" href="#fnref:delfosse2020" title="Jump back to footnote 75 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bhatnagar2023">
+<p>Dhruv Bhatnagar, Matthew Steinberg, David Elkouss, Carmen G. Almudever, and Sebastian Feld. Low-depth flag-style syndrome extraction for small quantum error-correction codes. In <em>IEEE International Conference on Quantum Computing and Engineering (QCE)</em>. 2023. <a href="https://arxiv.org/abs/2305.00784">arXiv:2305.00784</a>, <a href="https://doi.org/10.1109/QCE57702.2023.00016">doi:10.1109/QCE57702.2023.00016</a>.&#160;<a class="footnote-backref" href="#fnref:bhatnagar2023" title="Jump back to footnote 76 in the text">&#8617;</a></p>
+</li>
+<li id="fn:derks2024">
+<p>Peter-Jan H. S. Derks, Alex Townsend-Teague, Ansgar G. Burchards, and Jens Eisert. Designing fault-tolerant circuits using detector error models. <em>Quantum</em>, 9:1905, 2025. <a href="https://arxiv.org/abs/2407.13826">arXiv:2407.13826</a>, <a href="https://doi.org/10.22331/q-2025-11-06-1905">doi:10.22331/q-2025-11-06-1905</a>.&#160;<a class="footnote-backref" href="#fnref:derks2024" title="Jump back to footnote 77 in the text">&#8617;</a></p>
+</li>
+<li id="fn:manes2023">
+<p>Argyris Giannisis Manes and Jahan Claes. Distance-preserving stabilizer measurements in hypergraph product codes. <em>Quantum</em>, 9:1618, 2025. <a href="https://arxiv.org/abs/2308.15520">arXiv:2308.15520</a>, <a href="https://doi.org/10.22331/q-2025-01-30-1618">doi:10.22331/q-2025-01-30-1618</a>.&#160;<a class="footnote-backref" href="#fnref:manes2023" title="Jump back to footnote 78 in the text">&#8617;</a></p>
+</li>
+<li id="fn:qldpcchallenge">
+<p>Unitary Foundation. qldpc-challenge. GitHub repository, 2026. Accessed 2026-10-16. URL: <a href="https://github.com/unitaryfoundation/qldpc-challenge">https://github.com/unitaryfoundation/qldpc-challenge</a>.&#160;<a class="footnote-backref" href="#fnref:qldpcchallenge" title="Jump back to footnote 79 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pryadko2023">
+<p>Leonid P. Pryadko, Vadim A. Shabashov, and Valerii K. Kozin. QDistRnd: A GAP package for computing the distance of quantum error-correcting codes. <em>Journal of Open Source Software, 7(71)</em>, 7(71):4120, 2022. <a href="https://arxiv.org/abs/2308.15140">arXiv:2308.15140</a>, <a href="https://doi.org/10.21105/joss.04120">doi:10.21105/joss.04120</a>.&#160;<a class="footnote-backref" href="#fnref:pryadko2023" title="Jump back to footnote 80 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hernando2024">
+<p>Fernando Hernando, Gregorio Quintana-Ortí, and Markus Grassl. Fast algorithms and implementations for computing the minimum distance of quantum codes. <em>ACM Transactions on Quantum Computing</em>, 2026. <a href="https://arxiv.org/abs/2408.10743">arXiv:2408.10743</a>, <a href="https://doi.org/10.1145/3795877">doi:10.1145/3795877</a>.&#160;<a class="footnote-backref" href="#fnref:hernando2024" title="Jump back to footnote 81 in the text">&#8617;</a></p>
+</li>
+<li id="fn:webster2026">
+<p>Mark Webster, Abraham Jacob, and Oscar Higgott. Distance-finding algorithms for quantum codes and circuits. 2026. <a href="https://arxiv.org/abs/2603.22532">arXiv:2603.22532</a>.&#160;<a class="footnote-backref" href="#fnref:webster2026" title="Jump back to footnote 82 in the text">&#8617;</a></p>
+</li>
+<li id="fn:kapshikar2022">
+<p>Upendra Kapshikar and Srijita Kundu. On the hardness of the minimum distance problem of quantum codes. <em>IEEE Transactions on Information Theory</em>, 2023. <a href="https://arxiv.org/abs/2203.04262">arXiv:2203.04262</a>, <a href="https://doi.org/10.1109/TIT.2023.3286870">doi:10.1109/TIT.2023.3286870</a>.&#160;<a class="footnote-backref" href="#fnref:kapshikar2022" title="Jump back to footnote 83 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ismail2024">
+<p>Refaat Ismail, Ashish Kakkar, and Anatoly Dymarsky. A quantum annealing approach to the minimum distance problem of quantum codes. <em>Physical Review A</em>, 114:042610, 2026. <a href="https://arxiv.org/abs/2404.17703">arXiv:2404.17703</a>, <a href="https://doi.org/10.1103/573l-6cc2">doi:10.1103/573l-6cc2</a>.&#160;<a class="footnote-backref" href="#fnref:ismail2024" title="Jump back to footnote 84 in the text">&#8617;</a></p>
+</li>
+<li id="fn:kasai2026">
+<p>Kenta Kasai. Heuristic search for minimum-distance upper-bound witnesses in quantum APM-LDPC codes. 2026. <a href="https://arxiv.org/abs/2604.15307">arXiv:2604.15307</a>.&#160;<a class="footnote-backref" href="#fnref:kasai2026" title="Jump back to footnote 85 in the text">&#8617;</a></p>
+</li>
+<li id="fn:vandennest2004">
+<p>Maarten Van den Nest, Jeroen Dehaene, and Bart De Moor. An efficient algorithm to recognize local Clifford equivalence of graph states. <em>Physical Review A</em>, 70:034302, 2004. <a href="https://arxiv.org/abs/quant-ph/0405023">arXiv:quant-ph/0405023</a>, <a href="https://doi.org/10.1103/PhysRevA.70.034302">doi:10.1103/PhysRevA.70.034302</a>.&#160;<a class="footnote-backref" href="#fnref:vandennest2004" title="Jump back to footnote 86 in the text">&#8617;</a></p>
+</li>
+<li id="fn:wei2026">
+<p>Fuchuan Wei, Zhengyi Han, Austin Yubo He, Zimu Li, and Zi-Wen Liu. Theory of low-weight quantum codes. 2026. <a href="https://arxiv.org/abs/2601.19848">arXiv:2601.19848</a>.&#160;<a class="footnote-backref" href="#fnref:wei2026" title="Jump back to footnote 87 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fu2026">
+<p>Winston Fu, J. Wilson Staples, and Jeff D. Thompson. Efficient estimation of logical sensitivities through fault-counting. 2026. <a href="https://arxiv.org/abs/2610.10531">arXiv:2610.10531</a>.&#160;<a class="footnote-backref" href="#fnref:fu2026" title="Jump back to footnote 88 in the text">&#8617;</a></p>
+</li>
+<li id="fn:iyer2021">
+<p>Pavithran Iyer, Aditya Jain, Stephen D. Bartlett, and Joseph Emerson. Efficient diagnostics for quantum error correction. <em>Physical Review Research</em>, 4:043218, 2022. <a href="https://arxiv.org/abs/2108.10830">arXiv:2108.10830</a>, <a href="https://doi.org/10.1103/PhysRevResearch.4.043218">doi:10.1103/PhysRevResearch.4.043218</a>.&#160;<a class="footnote-backref" href="#fnref:iyer2021" title="Jump back to footnote 89 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pato2025">
+<p>Balint Pato, June Vanlerberghe, and Kenneth R. Brown. Hyper-optimized quantum Lego contraction schedules. <em>Quantum</em>, 10:2092, 2026. <a href="https://arxiv.org/abs/2510.08210">arXiv:2510.08210</a>, <a href="https://doi.org/10.22331/q-2026-05-05-2092">doi:10.22331/q-2026-05-05-2092</a>.&#160;<a class="footnote-backref" href="#fnref:pato2025" title="Jump back to footnote 90 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gidney2021">
+<p>Craig Gidney. Stim: A fast stabilizer circuit simulator. <em>Quantum</em>, 5:497, 2021. <a href="https://arxiv.org/abs/2103.02202">arXiv:2103.02202</a>, <a href="https://doi.org/10.22331/q-2021-07-06-497">doi:10.22331/q-2021-07-06-497</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021" title="Jump back to footnote 91 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chase2026">
+<p>Bradley A. Chase and Farrokh Labib. Clifft: Fast exact simulation of near-Clifford quantum circuits. 2026. <a href="https://arxiv.org/abs/2604.27058">arXiv:2604.27058</a>.&#160;<a class="footnote-backref" href="#fnref:chase2026" title="Jump back to footnote 92 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fur2026">
+<p>Yanis Le Fur, Ethan Egger, Hong-Ye Hu, Vincent Russo, William J. Zeng, and Ryan LaRose. Opportunities and challenges in scaling quantum error detection on hardware. 2026. <a href="https://arxiv.org/abs/2605.02861">arXiv:2605.02861</a>.&#160;<a class="footnote-backref" href="#fnref:fur2026" title="Jump back to footnote 93 in the text">&#8617;</a></p>
+</li>
+<li id="fn:wang2024">
+<p>Zihao Wang and Hao Tang. Artificial intelligence for quantum error correction: A comprehensive review. 2024. <a href="https://arxiv.org/abs/2412.20380">arXiv:2412.20380</a>.&#160;<a class="footnote-backref" href="#fnref:wang2024" title="Jump back to footnote 94 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bukov2026">
+<p>Marin Bukov and Florian Marquardt. Reinforcement learning for quantum technology. 2026. <a href="https://arxiv.org/abs/2601.18953">arXiv:2601.18953</a>.&#160;<a class="footnote-backref" href="#fnref:bukov2026" title="Jump back to footnote 95 in the text">&#8617;</a></p>
+</li>
+<li id="fn:jayashankar2022">
+<p>Akshaya Jayashankar and Prabha Mandayam. Quantum error correction: Noise-adapted techniques and applications. 2022. <a href="https://arxiv.org/abs/2208.00365">arXiv:2208.00365</a>.&#160;<a class="footnote-backref" href="#fnref:jayashankar2022" title="Jump back to footnote 96 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Vincent Russo. Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
