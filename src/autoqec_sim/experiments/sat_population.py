@@ -49,7 +49,7 @@ from pathlib import Path
 
 from ..code import StabilizerCode
 from ..known_codes import get as known
-from ..memory_objective import code_key
+from ..memory_objective import code_key, rref
 from .memory_objective import (
     DEPOLARIZING_SCALE,
     PROFILE_SCALES,
@@ -294,7 +294,42 @@ def r_squared(y, columns) -> float:
     return float(1 - (resid**2).sum() / tot) if tot > 0 else float("nan")
 
 
-def analyze(recs: list[dict], tiers) -> dict:
+def weight3_logical_mask(code: StabilizerCode):
+    """Boolean mask over all weight-3 Paulis: commutes with every stabilizer
+    and is not a stabilizer, so a minimum-weight logical of a distance-3 code."""
+    import numpy as np
+
+    from ..errors import paulis_of_weight
+
+    n = code.n
+    e3 = paulis_of_weight(n, 3)
+    s = code.stabilizers.astype(np.int64)
+    ex, ez = e3[:, :n].astype(np.int64), e3[:, n:].astype(np.int64)
+    commutes = ~(((ex @ s[:, n:].T + ez @ s[:, :n].T) % 2).any(axis=1))
+    red, _ = rref(code.stabilizers)
+    red = red[red.any(axis=1)]
+    mask = commutes.copy()
+    for i in np.flatnonzero(commutes):  # in the group iff adding the row keeps the rank
+        aug, _ = rref(np.vstack([red, e3[i]]))
+        if aug.any(axis=1).sum() == red.shape[0]:
+            mask[i] = False
+    return e3, mask
+
+
+def cc_mass(code: StabilizerCode, eta: float) -> float:
+    """Low-rate code-capacity mass of the weight-3 logicals: the sum over
+    them of the product of letter weights 1 (X, Y) and ``eta`` (Z), the
+    bias of the source's channel after the Hadamard conjugation."""
+    import numpy as np
+
+    e3, mask = weight3_logical_mask(code)
+    n = code.n
+    x, z = e3[:, :n].astype(bool), e3[:, n:].astype(bool)
+    w = np.where(z & ~x, eta, 1.0)
+    return float(np.prod(w, axis=1)[mask].sum())
+
+
+def analyze(recs: list[dict], tiers, stabilizers: dict[str, list[str]] | None = None) -> dict:
     by_id = {r["id"]: r for r in recs}
     rnd = [r for r in recs if "random" in r["groups"]]
     top = [r for r in recs if "top" in r["groups"]]
@@ -331,6 +366,7 @@ def analyze(recs: list[dict], tiers) -> dict:
             t["codes_better_than_reference"] = {rid: [n_better[rid], len(allc)] for rid in refs}
             if rnd and "proxy" in rnd[0]["cases"][case]:
                 raw = {
+                    "cc_mass": [cc_mass(StabilizerCode.from_stabilizers(stabilizers[r["id"]]), eta) for r in rnd] if stabilizers else [],
                     "batches": [r["cases"][case]["proxy"]["batches"] for r in rnd],
                     "layers": [r["cases"][case]["proxy"]["layers"] for r in rnd],
                     "d_circ": [r["cases"][case]["proxy"]["d_circ"] for r in rnd],
@@ -338,6 +374,7 @@ def analyze(recs: list[dict], tiers) -> dict:
                     "num_y": [r["num_y"] for r in rnd],
                     "css": [1.0 if r["css"] else 0.0 for r in rnd],
                 }
+                raw = {f: v for f, v in raw.items() if v}
                 t["constant_features"] = {f: v[0] for f, v in raw.items() if len(set(v)) == 1}
                 feats = {f: v for f, v in raw.items() if f not in t["constant_features"]}
                 t["feature_spearman"] = {f: spearman(v, ys) for f, v in feats.items()}
@@ -394,10 +431,12 @@ def report_tables(an: dict, pop: dict, tiers) -> str:
                      f"{g['top']['below_random_median']:.0%} | {g['bottom']['below_random_median']:.0%} |" if "top" in g and "bottom" in g else
                      f"| {CASE_TITLES[case]} | {tier} | {cell('random')} | {cell('top')} | {cell('bottom')} | n/a | n/a |")
     L.append("\n## What predicts the circuit-level rate\n")
-    L.append("Over the random sample at the sampled tier. Spearman of p_round with each feature of the code's extraction circuit "
-             "(batches: groups of generators whose controlled gates cannot interleave; layers: circuit depth of one round; "
-             "d_circ_mass: probability mass of the minimum-weight undetectable circuit faults; num_y: Y letters among the generators), "
-             "and the R^2 of a least-squares fit of log10 p_round on log10 source rate alone, on the structural features alone, and on both.\n")
+    L.append("Over the random sample at the sampled tier. Spearman of p_round with each feature: cc_mass, the code-capacity mass of "
+             "the weight-3 logical operators under the case's bias (letter weight 1 for X and Y, eta for Z), computed from the "
+             "stabilizers alone; batches, groups of generators whose controlled gates cannot interleave; layers, the circuit depth of "
+             "one round; d_circ, the exact circuit distance; d_circ_mass, the probability mass of the minimum-weight undetectable "
+             "circuit fault sets in the Z-basis memory; num_y, Y letters among the generators; css. Then the R^2 of a least-squares "
+             "fit of log10 p_round on log10 source rate alone, on the non-constant features alone, and on both.\n")
     tier = "sampled" if "sampled" in tiers else tiers[0]
     first = next((c["tiers"][tier] for c in an["cases"].values() if "feature_spearman" in c["tiers"][tier]), None)
     if first is not None:
@@ -524,7 +563,7 @@ def write_report(out_dir: Path, population: Path, figure: Path | None = FIGURE) 
     settings = json.loads((out_dir / "settings.json").read_text())
     recs = load_records(out_dir)
     tiers = [t for t in settings["tiers"] if all(t in r["cases"][c] for r in recs for c in r["cases"])]
-    an = analyze(recs, tiers)
+    an = analyze(recs, tiers, {e["id"]: e["stabilizers"] for e in pop["codes"]})
     (out_dir / "analysis.json").write_text(json.dumps(an, indent=1))
     fig_line = ""
     if figure is not None:
