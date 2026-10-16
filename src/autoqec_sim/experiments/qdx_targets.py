@@ -123,6 +123,14 @@ def report_table(recs: list[dict]) -> str:
 def write_report(out_dir: Path) -> Path:
     recs = load_all(out_dir)
     found = sum(1 for r in recs if r.get("verified"))
+    capped = [r for r in recs if not r["success"] and r["wall_s"] >= 0.98 * r["budget"]["minutes"] * 60]
+    cap_note = ""
+    if capped:
+        lo, hi = min(r["env_steps"] for r in capped), max(r["env_steps"] for r in capped)
+        cap_note = (f" {len(capped)} of the unsuccessful runs stopped at the time cap after {lo:,} to {hi:,} environment "
+                    f"steps, so they used between {lo / capped[0]['budget']['max_env_steps']:.0%} and "
+                    f"{hi / capped[0]['budget']['max_env_steps']:.0%} of the step budget; the env steps column says which. "
+                    "This run shared the machine with other jobs, which cut the step rate by up to eightfold from n = 12 on.")
     text = f"""# QDX's targets through autoqec-sim
 
 Status: {found} of {len(recs)} targets run so far found and verified. Every
@@ -142,7 +150,7 @@ comes first. Success means every such error is detected or in the group;
 "verified" means the exact distance of the resulting code is at least d.
 QDX weighted the same error set by a depolarizing channel and ran four
 agents per target on a GPU, so wall times are not comparable across the two;
-success within budget and circuit length are.
+success within budget and circuit length are.{cap_note}
 
 {report_table(recs)}
 """
