@@ -17,6 +17,8 @@ graphs         connectivity graphs (shared with autoqec_sim.noise.topology)
 ldpc           LDPC sparsity: sparsest generator basis, constraint, penalty
 env            gymnasium-style batched environment (optional LDPC constraint)
 circuit_noise  circuit-level noise reward (autoqec_sim.noise profiles, stim)
+memory_objective  multi-round memory experiment, decoder tiers, exact d_circ
+evaluate       evaluate_code: one call for p_round, d_circ, and dominant faults
 search         random and evolutionary search agents
 regress        rediscovery regression
 agents.ppo     PPO agent (optional torch dependency, imported lazily)
@@ -25,6 +27,7 @@ agents.ppo     PPO agent (optional torch dependency, imported lazily)
 from .code import StabilizerCode
 from .env import CodeDiscoveryEnv
 from .errors import ErrorSet
+from .evaluate import CodeEvaluation, DominantFault, FaultLocation, evaluate_code
 from .ldpc import ldpc_feasible, ldpc_penalty, sparsest_basis_stats
 from .reward import kl_reward, low_weight_stabilizer_penalty, undetected_mask
 from .search import EvolutionarySearch
@@ -35,10 +38,14 @@ __version__ = "0.2.0"
 __all__ = [
     "BatchTableau",
     "CodeDiscoveryEnv",
+    "CodeEvaluation",
+    "DominantFault",
     "ErrorSet",
     "EvolutionarySearch",
+    "FaultLocation",
     "StabilizerCode",
     "__version__",
+    "evaluate_code",
     "identity_tableau",
     "kl_reward",
     "ldpc_feasible",
