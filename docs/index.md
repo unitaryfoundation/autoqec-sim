@@ -8,8 +8,7 @@ title: autoqec-sim
 
 <div class="hero" markdown>
 
-![autoqec-sim](assets/logos/autoqec-sim-logo-light.svg#only-light){ width=420 }
-![autoqec-sim](assets/logos/autoqec-sim-logo-dark.svg#only-dark){ width=420 }
+![autoqec-sim](assets/logos/autoqec-sim-logo.svg){ width=420 }
 
 <p class="hero-tagline">
 A batched stabilizer-code simulator and reinforcement-learning environment

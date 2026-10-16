@@ -1,8 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logos/autoqec-sim-logo-dark.svg">
-    <img src="docs/assets/logos/autoqec-sim-logo-light.svg" alt="autoqec-sim" width="420">
-  </picture>
+  <img src="docs/assets/logos/autoqec-sim-logo.svg" alt="autoqec-sim" width="420">
 </p>
 
 [![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)

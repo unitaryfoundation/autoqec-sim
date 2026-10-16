@@ -165,3 +165,18 @@ uv run --extra rl python -m autoqec_sim.experiments.topologies matrix
 uv run --extra rl python -m autoqec_sim.experiments.topologies run --topology heavy_hex --target-n 16 --seed 0
 uv run --extra rl python -m autoqec_sim.experiments.topologies report
 ```
+
+## Evolutionary search against PPO
+
+`autoqec_sim.experiments.topologies_ea` runs the three-topology matrix with the package's evolutionary search in place of the PPO agent: same cells, objective ([[n, 1, 3]] with no idle qubit), gate set, 50-gate episodes, and environment-step budget per tier (evolutionary evaluations count as whole episodes). Run 16 October 2026 on one laptop; results in `results/topologies_ea/`.
+
+| lattice | n | PPO successes | PPO median steps to success | EA successes | EA median steps to success | EA median wall |
+|---|---|---|---|---|---|---|
+| square | 9 | 3/3 | 9,472 | 0/3 | none | 22 s |
+| triangular | 9 | 3/3 | 7,424 | 0/3 | none | 24 s |
+| heavy_hex | 12 | 3/3 | 63,488 | 0/3 | none | 21 s |
+| square | 16 | 3/3 | 112,128 | 0/3 | none | 54 s |
+| triangular | 16 | 3/3 | 75,776 | 0/3 | none | 46 s |
+| heavy_hex | 18 | 3/3 | 340,480 | 0/3 | none | 38 s |
+
+Totals: PPO 18 of 18 runs succeed, evolutionary search 0 of 18. The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else.

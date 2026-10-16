@@ -6,8 +6,8 @@
  */
 
 :root {
-  --autoqec-accent: #00897b;
-  --autoqec-accent-dark: #4db6ac;
+  --autoqec-accent: #c2552c;
+  --autoqec-accent-dark: #e08a4e;
 }
 
 /* Light scheme. Material sets the link color per primary color with a
@@ -15,15 +15,15 @@
 [data-md-color-scheme="default"],
 [data-md-color-scheme="default"][data-md-color-primary="white"] {
   --md-accent-fg-color: var(--autoqec-accent);
-  --md-accent-fg-color--transparent: rgba(0, 137, 123, 0.1);
+  --md-accent-fg-color--transparent: rgba(194, 85, 44, 0.1);
   --md-typeset-a-color: var(--autoqec-accent);
 }
 
-/* Dark scheme: a lighter accent for legibility on dark backgrounds. */
+/* Dark scheme: a lighter tint of the accent for legibility on dark backgrounds. */
 [data-md-color-scheme="slate"],
 [data-md-color-scheme="slate"][data-md-color-primary="black"] {
   --md-accent-fg-color: var(--autoqec-accent-dark);
-  --md-accent-fg-color--transparent: rgba(77, 182, 172, 0.15);
+  --md-accent-fg-color--transparent: rgba(224, 138, 78, 0.15);
   --md-typeset-a-color: var(--autoqec-accent-dark);
 }
 

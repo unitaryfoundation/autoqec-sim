@@ -92,12 +92,19 @@ def report(out_dir: Path, ppo_dir: Path) -> Path:
         e = [r for r in ea if cell(r) == (top, n)]
         ps = [r for r in p if r.get("success")]
         es = [r for r in e if r.get("success")]
-        pmed = statistics.median(r["first_success"]["env_steps"] for r in ps) if ps else None
-        emed = statistics.median(r["first_success"]["env_steps_equivalent"] for r in es) if es else None
-        ewall = statistics.median(r["wall_time_s"] for r in e) if e else None
-        lines.append(f"| {top} | {n} | {len(ps)}/{len(p)} | {pmed:,.0f} | {len(es)}/{len(e)} | {emed if emed is None else f'{emed:,.0f}'} | {ewall if ewall is None else f'{ewall:.0f} s'} |"
-                     .replace("| None |", "| no run |") if pmed is not None else
-                     f"| {top} | {n} | {len(ps)}/{len(p)} | none | {len(es)}/{len(e)} | {emed if emed is None else f'{emed:,.0f}'} | {ewall if ewall is None else f'{ewall:.0f} s'} |")
+
+        def med(rows, key):
+            vals = [key(r) for r in rows]
+            return f"{statistics.median(vals):,.0f}" if vals else "none"
+
+        pmed = med(ps, lambda r: r["first_success"]["env_steps"]) if p else "no run"
+        emed = med(es, lambda r: r["first_success"]["env_steps_equivalent"]) if e else "no run"
+        ewall = f"{statistics.median(r['wall_time_s'] for r in e):.0f} s" if e else "no run"
+        lines.append(f"| {top} | {n} | {len(ps)}/{len(p)} | {pmed} | {len(es)}/{len(e)} | {emed} | {ewall} |")
+    tot_p = sum(1 for r in ppo if r.get("success")); tot_e = sum(1 for r in ea if r.get("success"))
+    lines += ["", f"Totals: PPO {tot_p} of {len(ppo)} runs succeed, evolutionary search {tot_e} of {len(ea)}. "
+              "The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), "
+              "not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else."]
     out = out_dir / "REPORT.md"
     out.write_text("\n".join(lines) + "\n")
     return out
