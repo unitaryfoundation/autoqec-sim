@@ -119,7 +119,7 @@ https://unitaryfoundation.github.io/autoqec-sim/ (`dev/` tracks `main`,
 See [CONTRIBUTING.md](CONTRIBUTING.md). Participation is governed by the
 [code of conduct](CODE_OF_CONDUCT.md).
 
-## AI Acknowledgement
+## AI acknowledgment
 
 Generative AI tools were used in parts of the software development and
 writing for this project: code generation and review, implementation
@@ -131,13 +131,10 @@ decisions were made by the human author.
 This material is based upon work supported by the U.S. Department of
 Energy, Office of Science, Office of Advanced Scientific Computing
 Research, as part of the Genesis Mission National Science and Technology
-Challenges under Award Number DE-SC0025336. This material is also based
-upon work supported by the U.S. Department of Energy, Office of Science,
-National Quantum Information Science Research Centers, Quantum Science
-Center. This research used resources of the National Energy Research
-Scientific Computing Center, a DOE Office of Science User Facility
-supported by the Office of Science of the U.S. Department of Energy under
-Contract No. DE-AC02-05CH11231 using NERSC award ALCC-ERCAP0040673.
+Challenges under Award Number DE-SC0025336. This research used resources of
+the National Energy Research Scientific Computing Center, a DOE Office of
+Science User Facility supported by the Office of Science of the U.S.
+Department of Energy under Contract No. DE-AC02-05CH11231.
 
 ## License
 

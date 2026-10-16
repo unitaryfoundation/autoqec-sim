@@ -136,7 +136,7 @@ per idle data qubit per readout layer), the board recipe 0.5 to 2.1. In the
 saturated regime the proxy is meaningless (the non-CSS 3x3 code under Heron
 at scale 1 on the lattice: proxy 1.8e-4, bposd 0.49) and bposd fails on a
 third to a half of the shots. The experiment therefore evaluates the chain
-preset at scale 0.25 (the labelled point of the large-code ion study), the
+preset at scale 0.25 (the labeled point of the large-code ion study), the
 board recipe at 1 (its canonical `p = 1e-3`), Heron at 0.1, and the
 biased-idle sweep at every rate 2.5e-4. `MemoryResult` reports the expected
 fault count per shot so a caller can see when a code is outside the regime.
