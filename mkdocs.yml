@@ -113,6 +113,7 @@ nav:
   - Reference:
       - Modules: modules.md
       - Commands: reference/commands.md
+      - Related work: related-work.md
       - Python API:
           - autoqec_sim: api/autoqec_sim.md
           - Environment and rewards: api/env.md
