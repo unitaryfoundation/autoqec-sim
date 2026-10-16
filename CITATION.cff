@@ -6,9 +6,6 @@ version: 0.2.0
 date-released: "TBD"
 license: Apache-2.0
 repository-code: "https://github.com/unitaryfoundation/autoqec-sim"
-authors:
-  - family-names: Russo
-    given-names: Vincent
 keywords:
   - quantum error correction
   - stabilizer codes
