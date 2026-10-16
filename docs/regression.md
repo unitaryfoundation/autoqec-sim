@@ -16,9 +16,9 @@ Targets (all `k = 1`, `d = 3`):
 
 | Target | Graph | Gates | Max gates | Forbidden stabilizer weights |
 |---|---|---|---|---|
-| [[5,1,3]] | all-to-all on 5 | H, S, CNOT | 14 | 1 |
-| Steane [[7,1,3]] | all-to-all on 7 | H, S, CNOT | 20 | 1 to 3 |
-| rotated surface [[9,1,3]] | 3x3 square lattice | H, CNOT | 30 | 1 |
+| [[5,1,3]] [@laflamme1996; @bennett1996] | all-to-all on 5 | H, S, CNOT | 14 | 1 |
+| Steane [[7,1,3]] [@steane1996] | all-to-all on 7 | H, S, CNOT | 20 | 1 to 3 |
+| rotated surface [[9,1,3]] [@tomita2014] | 3x3 square lattice | H, CNOT | 30 | 1 |
 | rotated surface, LDPC `w_max = 4`, `deg_max = 4`, env mask | 3x3 square lattice | H, CNOT | 30 | 1 |
 | rotated surface, LDPC `w_max = 4`, `deg_max = 4`, penalty 0.25 | 3x3 square lattice | H, CNOT | 30 | 1 |
 | Steane, LDPC `w_max = 4`, penalty 0.25 | all-to-all on 7 | H, S, CNOT | 20 | 1 to 3 |
@@ -35,13 +35,13 @@ weight-3 elements was found in the recorded budget; the contrast target
 `steane_ldpc_w4` finds Steane in the same budget. `w_max = 4` does not
 exclude the [[5,1,3]] code or Steane (both have `w* = 4`), which is why
 the bound for the exclusion targets is 3; on 9 qubits `w_max = 4` does
-exclude Shor's code (`w* = 6`). Exclusion targets forbid only weight-1
+exclude Shor's code [@shor1995] (`w* = 6`). Exclusion targets forbid only weight-1
 stabilizers so weight-2 and weight-3 generators stay admissible, and use
 the penalty form so that the search path is unconstrained and only the
 final code is judged. Every verification reports
 `min_max_generator_weight` (`w*`) and `max_qubit_degree`.
 
-Reward during search: normalized Knill-Laflamme reward over all Paulis of
+Reward during search: normalized Knill-Laflamme [@knill1997] reward over all Paulis of
 weight 1 and 2, plus the penalty on stabilizer elements of the forbidden
 weights (without it the agent pads a [[5,1,3]] code with idle qubits and
 still satisfies the [[7,1,3]] and [[9,1,3]] parameters). A success is
@@ -110,8 +110,8 @@ target uses H, CNOT and the full budget allows up to 60 attempts.
 
 ## PPO agent
 
-`agents/ppo.py` is a PPO implementation (Schulman et al., arXiv:1707.06347)
-over `CodeDiscoveryEnv`, in the spirit of Olle et al. (arXiv:2311.04750): a
+`agents/ppo.py` is a PPO implementation [@schulman2017] over
+`CodeDiscoveryEnv`, in the spirit of [@olle2024]: a
 policy over gate choices conditioned on the current tableau, trained on the
 Knill-Laflamme reward. The batch dimension of the environment is the
 vectorized environment (256 parallel episodes by default), `auto_reset` is
@@ -123,11 +123,11 @@ Network and hyperparameters (`PPOConfig` defaults):
 
 | Item | Value |
 |---|---|
-| Observation | the `2n x 2n` X and Z bits of the whole tableau (destabilizers and stabilizers, sign column dropped), mapped to `{-1, +1}`; `check_matrix` (only the `(n - k) x 2n` stabilizer block, as in Olle et al.) is an option |
+| Observation | the `2n x 2n` X and Z bits of the whole tableau (destabilizers and stabilizers, sign column dropped), mapped to `{-1, +1}`; `check_matrix` (only the `(n - k) x 2n` stabilizer block, as in [@olle2024]) is an option |
 | Network | MLP trunk, two tanh layers of 256 units, orthogonal init; linear policy head over the action table and linear value head sharing the trunk. 99,615 parameters for [[5,1,3]] (100 inputs, 30 actions), 130,873 for Steane (196 inputs, 56 actions), 157,730 for the 3x3 surface target (324 inputs, 33 actions). `policy="auto"` (the default) switches to the permutation-equivariant per-qubit network from 12 qubits on; see "Policy choice" below |
 | Rollout | 16 steps of 256 environments, so 4,096 transitions per update |
 | Optimization | Adam, learning rate 3e-4, 4 epochs, minibatch 512, gradient norm clipped at 0.5 |
-| PPO | clip 0.2, gamma 0.98, GAE lambda 0.95, value coefficient 0.5, entropy coefficient 0.01, advantages normalized per update |
+| PPO | clip 0.2, gamma 0.98, GAE [@schulman2015gae] lambda 0.95, value coefficient 0.5, entropy coefficient 0.01, advantages normalized per update |
 | Masking | the action table already contains only the gates the graph allows, so no graph masking is needed there; `graph_action_mask` builds a static mask when a table has actions outside a graph; a dynamic mask forbids undoing the previous gate when it is an involution (H, CNOT, CZ, SWAP, Paulis); an `action_mask()` method on the environment, if present, is intersected with these. Masked actions get logit `-1e9` |
 | Threads | CPU only, torch and BLAS capped at 6 threads |
 
@@ -237,7 +237,7 @@ stop-at-match search at this budget does not land on the CSS code. What
 the target does certify is a verified `[[16, 1, 4]]` code on the lattice
 in under 300k env steps on both seeds.
 
-Missing for parity with Olle et al.:
+Missing for parity with [@olle2024]:
 
 - Noise-aware training at larger scale. The noise-aware experiment below
   trains on the circuit-level fault reward under three profiles at

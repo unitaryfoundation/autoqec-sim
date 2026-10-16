@@ -40,7 +40,13 @@ Changelog = "https://github.com/unitaryfoundation/autoqec-sim/blob/main/CHANGELO
 
 [dependency-groups]
 dev = ["pytest>=7.0", "ruff>=0.14", "matplotlib>=3.8"]
-docs = ["mkdocs>=1.6", "mkdocs-material>=9.5", "mkdocstrings[python]>=0.27", "mike>=2.1"]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.27",
+    "mike>=2.1",
+    "mkdocs-bibtex>=4",
+]
 
 
 [tool.hatch.build.targets.wheel]

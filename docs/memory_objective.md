@@ -9,10 +9,10 @@ there, which regenerates from `experiments/memory_objective/runs/*.json`).
 
 The circuit-level reward of `circuit_noise` scores the encoding circuit:
 every single fault of the noisy encoder is propagated to the output and
-tested with the Knill-Laflamme kernel. A Hadamard on a data qubit at the
+tested with the Knill-Laflamme [@knill1997] kernel. A Hadamard on a data qubit at the
 end of the encoder relabels the weight-1 faults of the last layer, all of
 which the code detects, so the objective cannot distinguish a code from its
-local-Clifford deformations (the rotated surface code, XZZX, and the
+local-Clifford deformations (the rotated surface code, XZZX [@bonillaataides2021], and the
 outer-column deformation tie exactly in `experiments/noise_aware/runs/REPORT.md`,
 verdict items 3, 4, and 6). Bias tailoring is a statement about how the
 code's stabilizers align with the dominant fault type during repeated
@@ -75,7 +75,7 @@ rounds `R` (default the target distance), a layout, and a tier.
 5. Noise and DEM. The body (the `R` rounds) goes through
    `autoqec_sim.noise.apply` with the profile's timing (`sequential` for the ion
    presets: every two-qubit gate its own slot, idle noise on every other
-   qubit), `n_data = n` for the board recipe; stim's detector error model
+   qubit), `n_data = n` for the board recipe; stim's [@gidney2021] detector error model
    (`autoqec_sim.noise.dem`, loops flattened, no decomposition) gives `M`
    mechanisms with detector and observable signatures.
 6. Tiers.
@@ -100,7 +100,7 @@ rounds `R` (default the target distance), a layout, and a tier.
      built from the same weight-`<= 2` fault sets with a one-mechanism
      completion for unseen syndromes, sampled from the DEM with distinct
      syndromes decoded once.
-   - `bposd`: the board's pinned BP+OSD decoder (`ldpc`, minimum-sum,
+   - `bposd`: the board's pinned BP+OSD decoder [@roffe2020; @panteleev2021] (`ldpc`, minimum-sum,
      30 iterations, scaling 0.625, OSD-CS order 10 clamped to the
      redundancy), sampled; validation only, optional dependency
      (`uv run --with ldpc`).

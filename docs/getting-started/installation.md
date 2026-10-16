@@ -9,7 +9,7 @@ release, append its tag, for example `...autoqec-sim@v0.2.0`.
 
 !!! note "Python 3.12 to 3.14"
     The package runs on Python 3.12, 3.13, and 3.14. Its only dependencies
-    are `numpy` and `stim`.
+    are `numpy` and `stim` [@gidney2021].
 
 ## Extras
 

@@ -41,6 +41,7 @@ theme:
 markdown_extensions:
   - admonition
   - attr_list
+  - footnotes
   - md_in_html
   - tables
   - toc:
@@ -69,6 +70,9 @@ extra:
 
 plugins:
   - search
+  - bibtex:
+      bib_file: docs/refs.bib
+      enable_inline_citations: false
   - mkdocstrings:
       handlers:
         python:

@@ -10,7 +10,7 @@ holds `batch_size` encoding circuits on `n` qubits as one array of
 stabilizer tableaux of shape `(batch, 2n, 2n+1)`. Actions are single-qubit
 gates on every qubit and two-qubit gates on the edges of a connectivity
 graph from `autoqec_sim.graphs` (all-to-all, chain, square, triangular,
-heavy-hex, or a `kind:size` spec). Every builder delegates to
+heavy-hex [@chamberland2020], or a `kind:size` spec). Every builder delegates to
 `autoqec_sim.noise.topology`, so the action space and a noise profile's
 placement check share one edge set. Observations are the tableau bits, the
 `(n-k) x 2n` check matrix, or a flat vector. With `auto_reset=True`,
@@ -21,7 +21,7 @@ on.
 
 | Reward | Page |
 |---|---|
-| Knill-Laflamme undetected mass and exact distance, the default of the regression targets | [Rediscovery regression](regression.md) |
+| Knill-Laflamme undetected mass [@knill1997] and exact distance, the default of the regression targets | [Rediscovery regression](regression.md) |
 | LDPC sparsity, as a hard constraint (`terminate`, `mask`, `final`) or a penalty | [LDPC constraint](ldpc.md) |
 | Circuit-level noise of the encoding circuit under a device profile | [Noise interface](noise.md), [Device presets](noise_presets.md) |
 | Multi-round memory experiment with a decoder, three fidelity tiers | [Memory objective](memory_objective.md) |
@@ -34,7 +34,7 @@ Any callable from the batched tableau to a reward vector works as
 ## 3. Choose the agent
 
 `search.EvolutionarySearch` runs one batched rollout per generation on
-numpy alone. `agents.ppo` is a clipped PPO with GAE, a shared value head,
+numpy alone. `agents.ppo` is a clipped PPO [@schulman2017] with GAE [@schulman2015gae], a shared value head,
 an entropy bonus, and action masking, on torch; `agents.policies` holds the
 flat MLP and the permutation-equivariant actor-critic. `regress` and
 `agents.ppo_regress` wrap both agents in the rediscovery regression, which

@@ -85,7 +85,7 @@ in another gate of the layer are included.
 
 Leakage: `mode="pauli"` is the erasure-to-Pauli proxy, `DEPOLARIZE1(3/4
 rate)` (the qubit replaced by the maximally mixed state with probability
-`rate`, the simulation proxy of arXiv:2606.06455 Appendix E).
+`rate`, the simulation proxy of [@tham2026], Appendix E).
 `mode="heralded"` is `HERALDED_ERASE(rate)`, stim's erasure with a flag bit
 in the measurement record, plus a `DETECTOR` per flag when
 `herald_detectors` (default), so the DEM carries the herald; the

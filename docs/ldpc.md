@@ -12,11 +12,11 @@ action reverts to a no-op; `feasible_action_mask()` gives agents the mask
 to apply to logits), and `final` (only success is gated). `ldpc_penalty`
 is the soft form for the reward. `w_max = 3` provably excludes every
 5-qubit distance-3 code and empirically every 7-qubit one the search
-reaches; `w_max = 4` admits [[5,1,3]] and Steane and excludes Shor's code
+reaches; `w_max = 4` admits [[5,1,3]] [@laflamme1996] and Steane [@steane1996] and excludes Shor's code [@shor1995]
 (`w* = 6`).
 
 Above `n = 9` the penalty form fails (`experiments/scaling/REPORT.md`):
-the normalized Knill-Laflamme term pays `1/630` to `1/1128` per detected
+the normalized Knill-Laflamme [@knill1997] term pays `1/630` to `1/1128` per detected
 error against 0.25 per unit of `w*` excess, and PPO converges to sparse
 groups of distance 1. `ldpc.LdpcObjective(n, k, d, w_max, form=...)` is
 the reward and success criterion of an LDPC-constrained target in one of

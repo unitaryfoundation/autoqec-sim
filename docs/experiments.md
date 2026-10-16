@@ -4,10 +4,9 @@
 
 `experiments/noise_aware.py` asks whether the code PPO discovers depends
 on the noise profile it is trained against, and in the direction the
-profile's structure predicts (the experiment the proposal cites Olle et
-al., arXiv:2311.04750, for). Three `autoqec_sim.noise` profiles scaled to the
-same total fault mass (board depolarizing; Forte ion chain with sequential
-timing, so idle dephasing dominates; Heron r2 rates on the setting's
+profile's structure predicts (the experiment the proposal cites [@olle2024] for). Three `autoqec_sim.noise` profiles scaled to the
+same total fault mass (board depolarizing; Forte [@chen2024] ion chain with sequential
+timing, so idle dephasing dominates; Heron r2 rates [@harper2026] on the setting's
 graph), three settings (7 qubits all-to-all with H, S, CNOT and target
 distance 3; 3x3 lattice with H, CNOT and distance 3; 4x4 lattice with H,
 CNOT and distance 4), five PPO seeds per cell. The reward is the shifted
@@ -39,8 +38,8 @@ profile produced codes with `d_Z > d_X` more often than another (0/5 or
 equivalent to a CSS code, and the mechanism breakdown shows the
 board-trained circuits detect every idle fault while ion-trained circuits
 leave idle X and Y faults undetected, faults the ion profile hardly emits.
-The discovered degenerate codes beat Steane (n = 7) and the rotated
-surface code and its XZZX and Hadamard-deformed variants (3x3) with
+The discovered degenerate codes beat Steane [@steane1996] (n = 7) and the rotated
+surface code and its XZZX [@bonillaataides2021] and Hadamard-deformed variants (3x3) with
 polished encoders under every profile; a Hadamard deformation of the code
 is invisible to this single-fault circuit objective, which is one reason
 no such structure emerges. The 4x4 setting (target d = 4) did not fit the
@@ -70,7 +69,7 @@ model; stim's detector error model feeds three tiers:
 |---|---|---|
 | `proxy` | leading-order failure of the maximum-likelihood decoder over fault sets of weight at most two, plus exact `d_circ` up to weight 4 (`exact_dcirc`, from `ion-search/lib.py`) | 0.08 to 0.22 s at `n <= 9` (the DEM derivation dominates), 1.7 to 2.3 s for the [[16,4,4]] code (about 2000 mechanisms, 60 detectors) |
 | `sampled` | exact ML decoder by dynamic program when detectors plus observables `<= 20` (no shots), else a weight-2 lookup decoder with a one-mechanism completion, sampled | 0.16 to 0.31 s at `n <= 9` (5000 shots grown to 200 failures), 5 s at `n = 16` |
-| `bposd` | the board's pinned BP+OSD (`ldpc`, `uv run --with ldpc`), sampled; validation only | 0.2 to 1.5 s at `n <= 9`, 37 to 42 s at `n = 16` |
+| `bposd` | the board's pinned BP+OSD [@roffe2020; @panteleev2021] (`ldpc`, `uv run --with ldpc`), sampled; validation only | 0.2 to 1.5 s at `n <= 9`, 37 to 42 s at `n = 16` |
 
 `MemoryReward(objective, d*)` is the environment reward: the distance and
 padding terms of the noise-aware experiment plus

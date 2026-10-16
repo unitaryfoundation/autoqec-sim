@@ -8,6 +8,9 @@
   (not tracked) and the regression JSONs under `experiments/regression/`,
   and the quick-start scripts under `docs/examples/`, snippeted into the
   documentation and checked against the README by `tests/test_examples.py`.
+- Documentation bibliography: `docs/refs.bib` (every entry checked against
+  arXiv or Crossref) rendered by mkdocs-bibtex; pages cite sources by key
+  and end with their references instead of inline arXiv numbers.
 - `experiments/regression/figure.py`: states evaluated up to a verified
   rediscovery for both agents, from the regression records, as
   `docs/assets/figures/rediscovery.png` in the README and the regression page.
