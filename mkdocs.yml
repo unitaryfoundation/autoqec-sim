@@ -11,8 +11,7 @@ strict: true
 
 theme:
   name: material
-  icon:
-    logo: material/dots-hexagon
+  logo: assets/favicon.svg
   favicon: assets/favicon.svg
   palette:
     - media: "(prefers-color-scheme: light)"
