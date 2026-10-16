@@ -243,7 +243,9 @@ holds the tables and the figure. The `prepare` step reads the source
 repository's `experiments/surface/` directory and writes
 `experiments/sat_population/population.json`, which is committed.
 
-Findings, from the report. The 100,000 sampled codes contain 62,876
+Findings, from the report. Where a case is named Forte, it is the
+package's Forte preset, a noise model assembled from public
+specifications, not a measurement on a device. The 100,000 sampled codes contain 62,876
 distinct generator lists but 43,563 distinct stabilizer groups. The
 source's code-capacity rate at bias 10 has Spearman 0.09 to 0.21 with the
 circuit-level rate under the biased cases and 0.00 under Forte, and none

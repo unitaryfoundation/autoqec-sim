@@ -19,8 +19,12 @@ becomes Z tailoring, and scored by the circuit-level memory objective,
 3 rounds, under four cases: a depolarizing profile with a
 biased idle channel at source eta 4 and 10 (bias parameter eta / 2, so the
 Z rate is eta times each of the X and Y rates), the same profile with
-every channel biased at source eta 10, and the IonQ Forte preset with
-sequential timing. Tiers: proxy (maximum-likelihood failure over fault
+every channel biased at source eta 10, and the package's Forte preset
+with sequential timing at a quarter of its rates. That preset is a noise
+model assembled from public specifications (arXiv:2308.05071 and the
+product page, with the assumptions listed in the noise-presets page); its
+numbers describe the model, not measurements on any device. Tiers: proxy
+(maximum-likelihood failure over fault
 sets of weight at most two, closed form) and sampled (Monte Carlo from the
 detector error model with a lookup decoder built from the same fault
 sets, 20,000 shots and at least 50 failures
@@ -47,8 +51,8 @@ Over the random sample. Spearman is between the source's code-capacity rate at t
 | biased idle, source eta = 10 | sampled | 0.18 | 0 / 20 |
 | every channel biased, source eta = 10 | proxy | 0.21 | 0 / 20 |
 | every channel biased, source eta = 10 | sampled | 0.18 | 0 / 20 |
-| IonQ Forte, sequential | proxy | -0.01 | 0 / 20 |
-| IonQ Forte, sequential | sampled | 0.00 | 0 / 20 |
+| Forte preset (public-spec model), sequential | proxy | -0.01 | 0 / 20 |
+| Forte preset (public-spec model), sequential | sampled | 0.00 | 0 / 20 |
 
 ## Do the source's best codes score better than random ones?
 
@@ -62,8 +66,8 @@ Median p_round (interquartile range) per group, and the fraction of each group b
 | biased idle, source eta = 10 | sampled | 0.00051 (0.00044, 0.00065) | 0.00063 (0.00059, 0.00068) | 0.00074 (0.00069, 0.00092) | 2% | 0% |
 | every channel biased, source eta = 10 | proxy | 0.00045 (0.00038, 0.00058) | 0.00059 (0.00056, 0.00066) | 0.00076 (0.00075, 0.00082) | 0% | 0% |
 | every channel biased, source eta = 10 | sampled | 0.00046 (0.00039, 0.00059) | 0.00064 (0.00055, 0.00068) | 0.00078 (0.00070, 0.00096) | 0% | 0% |
-| IonQ Forte, sequential | proxy | 0.00046 (0.00042, 0.00061) | 0.00051 (0.00049, 0.00054) | 0.00058 (0.00056, 0.00067) | 0% | 0% |
-| IonQ Forte, sequential | sampled | 0.00047 (0.00042, 0.00061) | 0.00048 (0.00046, 0.00054) | 0.00060 (0.00055, 0.00071) | 44% | 2% |
+| Forte preset (public-spec model), sequential | proxy | 0.00046 (0.00042, 0.00061) | 0.00051 (0.00049, 0.00054) | 0.00058 (0.00056, 0.00067) | 0% | 0% |
+| Forte preset (public-spec model), sequential | sampled | 0.00047 (0.00042, 0.00061) | 0.00048 (0.00046, 0.00054) | 0.00060 (0.00055, 0.00071) | 44% | 2% |
 
 ## What predicts the circuit-level rate
 
@@ -76,7 +80,7 @@ Constant across the random sample, so carrying no information here: batches = 2,
 | biased idle, source eta = 4 | 0.28 | 0.72 | -0.00 | 0.01 | 0.61 | 0.61 |
 | biased idle, source eta = 10 | 0.43 | 0.71 | -0.09 | 0.02 | 0.53 | 0.53 |
 | every channel biased, source eta = 10 | 0.50 | 0.73 | -0.12 | 0.02 | 0.54 | 0.54 |
-| IonQ Forte, sequential | n/a | 0.70 | -0.07 | 0.00 | 0.47 | 0.47 |
+| Forte preset (public-spec model), sequential | n/a | 0.70 | -0.07 | 0.00 | 0.47 | 0.47 |
 
 ## Best codes of the population
 
@@ -128,7 +132,7 @@ rotated surface p_round 0.00063, XZZX p_round 0.00051; codes below rotated surfa
 | D60277 | 0.00025 | 12408 | no | 2 | 13 |
 | D44624 | 0.00025 | 18750 | no | 2 | 12 |
 
-### IonQ Forte, sequential
+### Forte preset (public-spec model), sequential
 
 rotated surface p_round 0.00057, XZZX p_round 0.00048; codes below rotated surface: 1454 of 2143, below XZZX: 1060 of 2143.
 
@@ -259,7 +263,7 @@ The 8 best codes of each case at the sampled tier, and the references, re-scored
 | xzzx | 0.00042 | 3% | 0.00051 | reference |
 | rotated_surface | 0.00065 | 3% | 0.00063 | reference |
 
-### IonQ Forte, sequential
+### Forte preset (public-spec model), sequential
 
 | code | confirmed p_round | rel. std. err. | first pass | source rank |
 |---|---|---|---|---|

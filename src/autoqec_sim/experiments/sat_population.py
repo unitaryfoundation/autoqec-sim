@@ -70,7 +70,7 @@ CASE_TITLES = {
     "idle_eta_4": "biased idle, source eta = 4",
     "idle_eta_10": "biased idle, source eta = 10",
     "all_eta_10": "every channel biased, source eta = 10",
-    "forte": "IonQ Forte, sequential",
+    "forte": "Forte preset (public-spec model), sequential",
 }
 CASE_SOURCE_ETA = {"idle_eta_4": 4.0, "idle_eta_10": 10.0, "all_eta_10": 10.0, "forte": 1.0}
 PROXY_KEYS = ("p_round", "layers", "batches", "two_qubit_gates", "d_circ", "d_circ_mass", "mechanisms")
@@ -620,8 +620,12 @@ becomes Z tailoring, and scored by the circuit-level memory objective,
 {settings['rounds']} rounds, under four cases: a depolarizing profile with a
 biased idle channel at source eta 4 and 10 (bias parameter eta / 2, so the
 Z rate is eta times each of the X and Y rates), the same profile with
-every channel biased at source eta 10, and the IonQ Forte preset with
-sequential timing. Tiers: proxy (maximum-likelihood failure over fault
+every channel biased at source eta 10, and the package's Forte preset
+with sequential timing at a quarter of its rates. That preset is a noise
+model assembled from public specifications (arXiv:2308.05071 and the
+product page, with the assumptions listed in the noise-presets page); its
+numbers describe the model, not measurements on any device. Tiers: proxy
+(maximum-likelihood failure over fault
 sets of weight at most two, closed form) and sampled (Monte Carlo from the
 detector error model with a lookup decoder built from the same fault
 sets, {settings['shots']:,} shots and at least {settings['min_failures']} failures

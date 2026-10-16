@@ -15,8 +15,10 @@ worst. The source LER column is theirs; the p_round columns are
 autoqec-sim's circuit-level memory objective, 3 rounds, under a
 depolarizing profile with a biased idle channel whose Z rate is eta times
 each of the X and Y rates (the codes are Hadamard-conjugated on every qubit
-so their X tailoring becomes Z tailoring), and under the IonQ Forte preset
-with sequential timing. Distances are recomputed exactly here.
+so their X tailoring becomes Z tailoring), and under the package's Forte
+preset with sequential timing, a noise model assembled from public
+specifications rather than a device measurement. Distances are recomputed
+exactly here.
 
 Two structural differences between the two scores. The source's channel is
 a single biased code-capacity channel with an exact maximum-likelihood
@@ -106,7 +108,7 @@ Spearman(source LER, proxy p_round) over 17 codes: 0.25
 
 Spearman(source LER, sampled p_round) over 17 codes: 0.26
 
-### IonQ Forte, sequential
+### Forte preset (public-spec model), sequential
 
 | code | d | CSS | proxy p_round | sampled p_round |
 |---|---|---|---|---|

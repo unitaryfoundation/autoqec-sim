@@ -97,7 +97,7 @@ def report_tables(out: dict) -> str:
     lines = []
     for name in next(iter(out["codes"].values()))["cases"]:
         eta = out["codes"][ids[0]]["cases"][name]["eta"]
-        head = f"source eta = {eta:g}" if eta is not None else "IonQ Forte, sequential"
+        head = f"source eta = {eta:g}" if eta is not None else "Forte preset (public-spec model), sequential"
         lines.append(f"\n### {head}\n")
         cols = " | ".join(f"{t} p_round" for t in tiers)
         lines.append(f"| code | d | CSS | source LER (eta = {eta:g}) | {cols} |" if eta is not None else f"| code | d | CSS | {cols} |")
@@ -138,8 +138,10 @@ worst. The source LER column is theirs; the p_round columns are
 autoqec-sim's circuit-level memory objective, {out['rounds']} rounds, under a
 depolarizing profile with a biased idle channel whose Z rate is eta times
 each of the X and Y rates (the codes are Hadamard-conjugated on every qubit
-so their X tailoring becomes Z tailoring), and under the IonQ Forte preset
-with sequential timing. Distances are recomputed exactly here.
+so their X tailoring becomes Z tailoring), and under the package's Forte
+preset with sequential timing, a noise model assembled from public
+specifications rather than a device measurement. Distances are recomputed
+exactly here.
 
 Two structural differences between the two scores. The source's channel is
 a single biased code-capacity channel with an exact maximum-likelihood
