@@ -32,17 +32,34 @@ fault distance.
 The gate-by-gate discovery mode follows Olle, Zen, Puviani, and Marquardt
 ([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
 whose code, [QDX](https://github.com/jolle-ag/qdx), introduced it and has
-reached larger codes than this package has. autoqec-sim rediscovers
-[[5,1,3]], Steane, Shor, and the rotated surface code on every lattice
-tested and has found noise-adapted non-CSS codes up to 16 qubits, but no
-new code above that; the
-[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
-records where it stops. Its schedule synthesizer raised the fault distance
-of the [[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For
-code design at larger sizes, the SAT formulation of DalFavero et al.
+reached larger codes than this package has. For code design at larger
+sizes, the SAT formulation of DalFavero et al.
 ([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs codes with up
 to 100 qubits; the evaluation and schedule tools here take such codes as
 input.
+
+What the package has produced: rediscovery of [[5,1,3]], Steane, Shor, and
+the distance-3 rotated surface code on every lattice tested; a [[25,1,5]]
+code on the 5x5 square lattice in 10 of 10 seeds (median 1.8M environment
+steps and 263 s on one A40), none of them with the rotated surface code's
+stabilizer group; distance-3 codes on square, triangular, and heavy-hex
+lattices at 9 to 18 qubits in 18 of 18 PPO runs, where the package's own
+evolutionary search found none in 18; noise-adapted non-CSS codes up to 16
+qubits; and syndrome-extraction schedules that raised the circuit fault
+distance of qldpc-challenge board circuits from 2 to 3 ([[49,13,4]], merged;
+[[38,10,3]] and [[53,20,3]], filed). Under the memory objective, the codes
+it trains have 0.8 to 3.1 times the rotated surface code's logical error
+rate under BP+OSD on the training noise (median 1.8, one seed at parity),
+and 7 of 9 beat the best code from the encoder objective.
+
+What it has not produced: the rotated surface code's stabilizer group at
+distance 4 or 5 (its [[16,1,4]] and [[25,1,5]] codes are non-CSS); a code
+with every stabilizer generator of weight at most 4 beyond 12 qubits, since
+the constrained action set stops being traversable at 16 qubits on every
+graph tried; a code resolvably below the surface code under the memory
+objective; and no new entry on the qldpc-challenge board. The
+[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
+records each stopping point.
 
 ## Why autoqec-sim?
 
