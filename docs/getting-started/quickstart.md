@@ -13,6 +13,12 @@ its measured rates, the scale the experiments use.
 --8<-- "docs/examples/quickstart.py:score"
 ```
 
+```
+five_qubit (5, 1, 3) error per round 4.26e-03
+steane (7, 1, 3) error per round 2.09e-03
+rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+```
+
 ## Search for a code
 
 A `CodeDiscoveryEnv` holds `batch_size` encoding circuits on `n` qubits
@@ -27,8 +33,11 @@ circuit. This is `docs/examples/quickstart.py`; it runs in under a second.
 --8<-- "docs/examples/quickstart.py:search"
 ```
 
-The output is `(5, 1, 3)` followed by four stabilizer generators: a
-[[5,1,3]] code, the only distance-3 code on five qubits.
+```
+(5, 1, 3) ['-ZZIYX', '+IXXZX', '+XIYXX', '-ZXYIY']
+```
+
+A [[5,1,3]] code, the only distance-3 code on five qubits.
 
 ## Verify and score
 

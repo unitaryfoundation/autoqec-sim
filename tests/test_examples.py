@@ -18,7 +18,7 @@ def _section(path: str, name: str) -> str:
 
 def test_readme_quick_start_equals_the_example():
     readme = (ROOT / "README.md").read_text()
-    section = readme[readme.index("## Quick Start"):readme.index("## Commands")]
+    section = readme[readme.index("## Quick Start"):readme.index("## Contributing")]
     blocks = re.findall(r"```python\n(.*?)```", section, re.S)
     assert len(blocks) == 2
     assert blocks[0].strip() == _section("docs/examples/quickstart.py", "score")

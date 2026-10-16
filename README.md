@@ -69,7 +69,7 @@ pip install git+https://github.com/unitaryfoundation/autoqec-sim
 ```
 
 Python 3.12 to 3.14; the dependencies are `numpy` and `stim`. The PPO agent
-package.
+needs torch: install `"autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"`.
 
 ## Quick Start
 
@@ -89,6 +89,12 @@ for name in ("five_qubit", "steane", "rotated_surface_9"):
     print(name, code.parameters(), f"error per round {objective.evaluate(code).p_round:.2e}")
 ```
 
+```
+five_qubit (5, 1, 3) error per round 4.26e-03
+steane (7, 1, 3) error per round 2.09e-03
+rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+```
+
 Search for a code on five qubits with the evolutionary agent, and read the
 code off the circuit it found:
 
@@ -102,22 +108,16 @@ code = StabilizerCode.from_gates(5, 1, result.gates)
 print(code.parameters(), code.stabilizer_strings())
 ```
 
+```
+(5, 1, 3) ['-ZZIYX', '+IXXZX', '+XIYXX', '-ZXYIY']
+```
+
 Both run in about a second on a laptop. Continue with the
 [Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/), which verifies a found code
 against the reference and scores its encoder under a device profile, or use
 [Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/) to pick a
-reward, agent, and entry point by the result you need.
-
-## Commands
-
-```
-autoqec-regress --budget reduced                           # rediscovery regression, evolutionary search
-autoqec-ppo --budget reduced                               # the same targets with PPO (rl extra)
-autoqec-schedule 49-13-4 --board /path/to/qldpc-challenge  # CX-layer schedule for a board code's circuit
-```
-
-See [Commands](https://unitaryfoundation.github.io/autoqec-sim/stable/reference/commands/) for the options and
-[Reproduce](https://unitaryfoundation.github.io/autoqec-sim/stable/reproduce/) for the expected outputs of the two regressions.
+reward, agent, and entry point by the result you need. The console scripts
+are listed under [Commands](https://unitaryfoundation.github.io/autoqec-sim/stable/reference/commands/).
 
 ## Contributing
 

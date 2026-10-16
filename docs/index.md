@@ -65,6 +65,12 @@ then score three known codes under the IonQ Forte preset:
 --8<-- "docs/examples/quickstart.py:score"
 ```
 
+```
+five_qubit (5, 1, 3) error per round 4.26e-03
+steane (7, 1, 3) error per round 2.09e-03
+rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+```
+
 The [Quick Start](getting-started/quickstart.md) adds the search for a
 code, its verification against the reference, and the encoder score under
 a device profile.
