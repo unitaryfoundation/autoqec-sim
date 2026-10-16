@@ -3,7 +3,7 @@ message: "If you use this software, please cite it using these metadata."
 type: software
 title: "autoqec-sim: vectorized stabilizer-code reward engine and RL environment"
 version: 0.2.0
-date-released: "TBD"
+date-released: "2026-10-16"
 license: Apache-2.0
 repository-code: "https://github.com/unitaryfoundation/autoqec-sim"
 keywords:

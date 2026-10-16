@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (TBD)
+## 0.2.0 (2026-10-16)
 
 - Repository layout: `tools/` (release and reproduce scripts), `benchmarks/`
   (the CPU profile and the CUDA kernel benchmark), one `experiments/<name>/`

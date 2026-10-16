@@ -6,7 +6,7 @@
 [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![CI](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/installation/)
+[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/installation/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 **autoqec-sim** is a batched stabilizer-code simulator and
@@ -31,7 +31,7 @@ on every lattice tested, has found noise-adapted non-CSS codes up to 16
 qubits, and its schedule synthesizer raised the fault distance of the
 [[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. The discovery
 agent has not produced a new code above 16 qubits; the
-[experiments page](https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/) records where it stops.
+[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/) records where it stops.
 
 ## Why autoqec-sim?
 
@@ -64,9 +64,9 @@ next to each marker.
 </p>
 
 PPO reaches a verified rediscovery with 3 to 17 times fewer state
-evaluations than the evolutionary search. See [Rediscovery regression](https://unitaryfoundation.github.io/autoqec-sim/dev/regression/)
+evaluations than the evolutionary search. See [Rediscovery regression](https://unitaryfoundation.github.io/autoqec-sim/stable/regression/)
 for the targets, budgets, LDPC-constrained variants, and the verification,
-and [Reproduce](https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/) to rerun both.
+and [Reproduce](https://unitaryfoundation.github.io/autoqec-sim/stable/reproduce/) to rerun both.
 
 ## Installation
 
@@ -92,9 +92,9 @@ print(code.parameters(), code.stabilizer_strings())
 ```
 
 The search returns a [[5,1,3]] code in under a second on a laptop. Continue
-with the [Quick Start](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/quickstart/), which verifies the
+with the [Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/), which verifies the
 code against the reference and scores its encoder under a device noise
-profile, or use [Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/choosing-a-workflow/)
+profile, or use [Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/)
 to pick a reward, agent, and entry point by the result you need.
 
 ## Commands
@@ -105,8 +105,8 @@ autoqec-ppo --budget reduced                               # the same targets wi
 autoqec-schedule 49-13-4 --board /path/to/qldpc-challenge  # CX-layer schedule for a board code's circuit
 ```
 
-See [Commands](https://unitaryfoundation.github.io/autoqec-sim/dev/reference/commands/) for the options and
-[Reproduce](https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/) for the expected outputs of the two regressions.
+See [Commands](https://unitaryfoundation.github.io/autoqec-sim/stable/reference/commands/) for the options and
+[Reproduce](https://unitaryfoundation.github.io/autoqec-sim/stable/reproduce/) for the expected outputs of the two regressions.
 
 ## Contributing
 
