@@ -2,7 +2,8 @@
 # Release autoqec-sim: tools/release.sh vX.Y.Z
 # Dates CITATION.cff and CHANGELOG.md, commits, makes the repository public,
 # tags, pushes, and enables GitHub Pages. Run from the repository root with
-# a clean tree, gh authenticated, after the owner decisions in RELEASE.md.
+# a clean tree, gh authenticated, after the owner decisions listed in
+# docs/development/releasing.md.
 set -euo pipefail
 TAG="${1:?usage: tools/release.sh vX.Y.Z}"
 VER="${TAG#v}"

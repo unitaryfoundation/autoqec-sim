@@ -4,6 +4,29 @@ Releases are tagged on `main`. There is no PyPI package: the release
 artifacts are the sdist and wheel attached to the GitHub release, the
 Zenodo DOI, and the versioned documentation.
 
+## Before the first release
+
+Decisions that only the owner can take, each needed before `v0.2.0` is
+tagged:
+
+- The institutional copyright holder named in `LICENSE` (a question for
+  Unitary Foundation agreements and IonQ).
+- The author list of `CITATION.cff`, which currently has none. GitHub's
+  "Cite this repository" button and Zenodo's author metadata both read it.
+- Whether to publish on PyPI. The current decision is no: the proposal and
+  the data-management plan ask for a public GitHub release with a Zenodo
+  DOI, and the release workflow attaches the sdist and wheel to the GitHub
+  release only.
+
+Zenodo must be enabled for the repository on zenodo.org before the tag is
+pushed, since its GitHub integration archives only releases created after
+it is switched on, and the repository must be public for that. Once the
+release exists, paste the concept DOI into `CITATION.cff` and commit.
+
+`tools/release.sh vX.Y.Z` runs the mechanical part: it dates `CITATION.cff`
+and `CHANGELOG.md`, switches the README's documentation links from `dev/` to
+`stable/`, commits, makes the repository public, tags, and pushes.
+
 ## Prepare
 
 1. Set the version in `pyproject.toml` and `autoqec_sim.__version__`;

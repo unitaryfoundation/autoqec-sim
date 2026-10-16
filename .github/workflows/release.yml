@@ -2,7 +2,7 @@ name: Release
 
 # Builds the sdist and wheel on a version tag, attaches them to a GitHub
 # release, then publishes the versioned documentation and `stable`.
-# Publishing to PyPI is a separate owner decision (RELEASE.md).
+# Publishing to PyPI is a separate owner decision (docs/development/releasing.md).
 on:
   push:
     tags: ["v*"]
