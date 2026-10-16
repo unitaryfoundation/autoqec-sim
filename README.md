@@ -51,6 +51,23 @@ agent has not produced a new code above 16 qubits; the
   tests, and two fused CUDA kernels take the gate step and the parity masks
   further.
 
+## Rediscovery
+
+autoqec-sim rediscovers the [[5,1,3]], Steane, and rotated surface codes in
+between one second and half a minute on a laptop CPU. From the full-budget
+regression at seed 0: the states each agent evaluated before a code was
+found and verified against the reference, with the wall time of the run
+next to each marker.
+
+<p align="center">
+  <img src="docs/assets/figures/rediscovery.png" alt="States evaluated up to a verified rediscovery by the evolutionary search and PPO on three targets" width="700">
+</p>
+
+PPO reaches a verified rediscovery with 3 to 17 times fewer state
+evaluations than the evolutionary search. See [Rediscovery regression](https://unitaryfoundation.github.io/autoqec-sim/dev/regression/)
+for the targets, budgets, LDPC-constrained variants, and the verification,
+and [Reproduce](https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/) to rerun both.
+
 ## Installation
 
 ```bash

@@ -5,6 +5,13 @@ uv run autoqec-regress --budget reduced          # what the pytest runs
 uv run autoqec-regress --budget full --out experiments/regression/regression.json
 ```
 
+States evaluated up to a verified rediscovery at the full budget, seed 0,
+for the three targets both agents share, with each run's wall time next to
+its marker (`experiments/regression/figure.py` draws it from the two
+result files):
+
+![States evaluated up to a verified rediscovery by the evolutionary search and PPO](assets/figures/rediscovery.png)
+
 Targets (all `k = 1`, `d = 3`):
 
 | Target | Graph | Gates | Max gates | Forbidden stabilizer weights |

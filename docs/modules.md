@@ -40,6 +40,7 @@ src/autoqec_sim/experiments/  noise-aware, scaling, LDPC-form, and topology expe
 tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, noise-aware experiment, torch backend vs numpy, the quick-start example)
 experiments/<name>/      one directory per experiment: REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
 experiments/regression/  regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
+experiments/regression/figure.py  the rediscovery-cost figure of the README and the regression page, from those files
 benchmarks/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment (docs/profile.md, docs/gpu.md)
 benchmarks/bench_cuda_kernels.py  the fused CUDA kernels against the torch path (docs/gpu.md)
 tools/reproduce.sh       fresh venv, tests, both reduced regressions (docs/reproduce.md)

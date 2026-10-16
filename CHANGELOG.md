@@ -8,6 +8,9 @@
   (not tracked) and the regression JSONs under `experiments/regression/`,
   and the quick-start scripts under `docs/examples/`, snippeted into the
   documentation and checked against the README by `tests/test_examples.py`.
+- `experiments/regression/figure.py`: states evaluated up to a verified
+  rediscovery for both agents, from the regression records, as
+  `docs/assets/figures/rediscovery.png` in the README and the regression page.
 - `StabilizerCode.from_gates(n, k, gates)` reads the code off a gate
   sequence such as `SearchResult.gates`, and `EvolutionarySearch` is
   exported from the package root, so the README quick start is a search,
