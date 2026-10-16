@@ -108,12 +108,6 @@ autoqec-schedule 49-13-4 --board /path/to/qldpc-challenge  # CX-layer schedule f
 See [Commands](https://unitaryfoundation.github.io/autoqec-sim/dev/reference/commands/) for the options and
 [Reproduce](https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/) for the expected outputs of the two regressions.
 
-## Documentation
-
-https://unitaryfoundation.github.io/autoqec-sim/ (`dev/` tracks `main`,
-`stable/` is the latest release). It builds with MkDocs from `docs/`;
-`uv run --group docs mkdocs serve` renders it locally.
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Participation is governed by the
