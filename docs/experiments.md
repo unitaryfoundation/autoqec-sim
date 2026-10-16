@@ -257,9 +257,10 @@ under Forte span a factor of 2.6; the spread is in how many space-time
 realizations of those logicals go undetected in the extraction circuit
 (342 weight-3 undetectable fault sets for the best codes against 462 to
 472 for the worst, a tenfold spread in probability mass). The mass of
-those fault sets, a quantity only a circuit-level evaluator computes,
-predicts the rate in every case (Spearman about 0.4, R^2 0.2 to 0.3),
-and under bias the low-rate weight-3 mass computed from the stabilizers
+those fault sets over both memory bases, a quantity only a circuit-level
+evaluator computes, predicts the rate in every case (Spearman 0.70 to
+0.73, R^2 0.47 to 0.61 for a log-log fit), and under bias the low-rate
+weight-3 mass computed from the stabilizers
 alone predicts better than the source's exact maximum-likelihood rate at
 its working point of 1e-2. Confirmed at three percent standard error, the
 best codes of the population sit 30 to 40 percent below XZZX under Forte
