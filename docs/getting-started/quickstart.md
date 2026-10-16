@@ -14,8 +14,8 @@ its measured rates, the scale the experiments use.
 ```
 
 ```
-five_qubit (5, 1, 3) error per round 4.26e-03
-steane (7, 1, 3) error per round 2.09e-03
+five_qubit (5, 1, 3) error per round 4.27e-03
+steane (7, 1, 3) error per round 2.10e-03
 rotated_surface_9 (9, 1, 3) error per round 5.89e-04
 ```
 

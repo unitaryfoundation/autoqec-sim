@@ -194,7 +194,7 @@ def evaluate_code(
     objective = MemoryObjective(
         profile, scale, rounds, tier, connectivity, seed=seed, shots=shots, min_failures=min_failures, max_shots=max_shots,
     )
-    orders = hook_orders(code, rounds, seed)
+    orders = hook_orders(code, None, seed)
     per_basis, d_circ, d_circ_mass, faults = {}, {}, {}, []
     for basis in BASES:
         mc = objective.circuit(code, basis, rounds, seed, orders)

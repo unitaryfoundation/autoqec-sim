@@ -30,7 +30,7 @@ in half a second.
 ```
 
 ```
-error per round 9.05e-03  d_circ {'Z': 3, 'X': 3}
+error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
 Z basis, probability 1.4e-06, 3 mechanisms:
   X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
   X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
@@ -50,15 +50,15 @@ in the `Z` basis with a summed mass of `8.7e-6` per shot
 ```
 
 ```
-tesseract error per round 8.45e-03
+tesseract error per round 8.49e-03
   Z: 248 failures in 20000 shots, 2798 distinct syndromes
   X: 257 failures in 20000 shots, 2797 distinct syndromes
 ```
 
 Tesseract [@beni2025] decodes the detector error model as it is, without
 graphlike decomposition, so it applies to non-CSS codes and to the
-correlated channels of the device presets. The proxy above (`9.05e-3`) and
-the sampled tier (`8.79e-3` with the lookup decoder at the same shots and
+correlated channels of the device presets. The proxy above (`9.09e-3`) and
+the sampled tier (`8.83e-3` with the lookup decoder at the same shots and
 seed) agree with it within shot noise on this code. Distinct syndromes are
 decoded once, so the 20,000 shots per basis cost about 2,800 decoder calls
 each, a few seconds on a laptop.

@@ -1366,12 +1366,16 @@ def sample_failures(
 # objective
 # --------------------------------------------------------------------------
 def per_round(p_shot: float, rounds: int) -> float:
-    """Per-round failure probability from the failure probability of an
-    ``R``-round experiment: ``1 - (1 - p)^(1/R)``."""
+    """Per-round logical error from the failure probability ``p`` of an
+    ``R``-round memory experiment, in the convention of the hardware memory
+    experiments: ``(1 - (1 - 2p)^(1/R)) / 2``, the per-round flip
+    probability of a logical bit that can flip back, so that ``p`` saturates
+    at one half. Agrees with ``1 - (1 - p)^(1/R)`` to first order in ``p``.
+    """
     p = min(max(p_shot, 0.0), 1.0)
-    if p >= 1.0:
-        return 1.0
-    return 1.0 - (1.0 - p) ** (1.0 / rounds)
+    if p >= 0.5:
+        return 0.5
+    return 0.5 * (1.0 - (1.0 - 2.0 * p) ** (1.0 / rounds))
 
 
 def code_key(code: StabilizerCode) -> bytes:
@@ -1488,7 +1492,8 @@ class MemoryObjective:
     # ------------------------------------------------------------------
     def circuit(self, code: StabilizerCode, basis: str, rounds: int, seed: int | None = None, orders=None) -> MemoryCircuit:
         seed = self.seed if seed is None else seed
-        return build_memory_circuit(code, rounds, basis, self.connectivity, self.flags, self.order, seed, hook_target=rounds, orders=orders)
+        # the hook-aware order protects the code's distance, whatever the number of rounds
+        return build_memory_circuit(code, rounds, basis, self.connectivity, self.flags, self.order, seed, hook_target=None, orders=orders)
 
     def dem(self, code: StabilizerCode, basis: str, rounds: int, seed: int | None = None, orders=None):
         mc = self.circuit(code, basis, rounds, seed, orders)
@@ -1556,7 +1561,7 @@ class MemoryObjective:
         per, p_round = None, None
         for s in range(self.seed, self.seed + trials):
             # the gate order is a property of the code, shared by the bases
-            orders = hook_orders(code, rounds, s) if self.order == "hook" else None
+            orders = hook_orders(code, None, s) if self.order == "hook" else None
             cand = {b: self.evaluate_basis(code, b, rounds, tier, s, orders) for b in self.bases}
             p = float(sum(cand[b]["p_round"] for b in self.bases))
             if p_round is None or p < p_round:
