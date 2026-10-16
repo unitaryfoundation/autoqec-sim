@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Release autoqec-sim: scripts/release.sh vX.Y.Z
+# Release autoqec-sim: tools/release.sh vX.Y.Z
 # Dates CITATION.cff and CHANGELOG.md, commits, makes the repository public,
 # tags, pushes, and enables GitHub Pages. Run from the repository root with
 # a clean tree, gh authenticated, after the owner decisions in RELEASE.md.
 set -euo pipefail
-TAG="${1:?usage: scripts/release.sh vX.Y.Z}"
+TAG="${1:?usage: tools/release.sh vX.Y.Z}"
 VER="${TAG#v}"
 REPO="unitaryfoundation/autoqec-sim"
 test "$(uv version --short)" = "$VER" || { echo "pyproject version is $(uv version --short), not $VER"; exit 1; }

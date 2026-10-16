@@ -136,7 +136,7 @@ def test_auto_policy_is_mlp_below_twelve_qubits_and_equivariant_above():
 
 
 def test_default_mlp_architecture_unchanged():
-    # the regression targets must keep their networks (results/regression_ppo.json)
+    # the regression targets must keep their networks (experiments/regression/regression_ppo.json)
     assert PPOAgent(_env(5), PPOConfig(max_threads=2), seed=0).num_parameters() == 99_615
     agent = PPOAgent(_env(5), PPOConfig(max_threads=2), seed=0)
     assert type(agent.model).__name__ == "ActorCritic" and agent.model.trunk[0].in_features == 100

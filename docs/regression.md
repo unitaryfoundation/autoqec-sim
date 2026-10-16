@@ -2,7 +2,7 @@
 
 ```
 uv run autoqec-regress --budget reduced          # what the pytest runs
-uv run autoqec-regress --budget full --out results/regression.json
+uv run autoqec-regress --budget full --out experiments/regression/regression.json
 ```
 
 Targets (all `k = 1`, `d = 3`):
@@ -47,7 +47,7 @@ isomorphism. The `full` budget restarts with the next seed until the
 enumerators match; the `reduced` budget stops at the first verified
 nontrivial `[[n,1,3]]` code and reports whether it matched.
 
-Results of the `full` run are in `results/regression.json` (seeds, budgets,
+Results of the `full` run are in `experiments/regression/regression.json` (seeds, budgets,
 evaluations, wall time, the found circuits and stabilizers). Summary of the
 release run (seed 0, batch 512, at most 100,000 circuit evaluations per
 attempt, up to 60 attempts; exclusion targets run 5 seeds to exhaustion):
@@ -129,7 +129,7 @@ Run on one target, or the regression:
 ```
 uv run --extra rl python -m autoqec_sim.agents.ppo --n 5 --max-steps 14 --verbose
 uv run --extra rl autoqec-ppo --budget reduced
-uv run --extra rl autoqec-ppo --budget full --out results/regression_ppo.json
+uv run --extra rl autoqec-ppo --budget full --out experiments/regression/regression_ppo.json
 ```
 
 (`autoqec-ppo` is the console script for `autoqec_sim.agents.ppo_regress`.)
@@ -164,8 +164,8 @@ exhausts 3,000,000 state evaluations or 20 minutes. The `reduced` budget
 nontrivial `[[n,1,3]]` code and is what `tests/test_ppo.py` runs on the
 [[5,1,3]] target (1.5 s).
 
-Results of the `full` run, seed 0, in `results/regression_ppo.json`,
-against the evolutionary search's `results/regression.json` on the same
+Results of the `full` run, seed 0, in `experiments/regression/regression_ppo.json`,
+against the evolutionary search's `experiments/regression/regression.json` on the same
 targets. Circuits are episodes for PPO and evaluated sequences for the
 evolutionary search; state evaluations are reward calls per batch element
 (one PPO environment step of the batch is 256 of them; one evolutionary
@@ -206,7 +206,7 @@ padding penalty) and match criterion (enumerators of `S` and `N(S)` against
 attempt (`TARGET_BUDGETS`; the `reduced` budget skips it), and
 `policy="auto"` resolves to the equivariant network (123,907 parameters).
 Two seeds at 2 threads (`autoqec-ppo --budget full --targets
-rotated_surface_16 --seed S --threads 2`, `results/regression_ppo_4x4_seed{0,1}.json`;
+rotated_surface_16 --seed S --threads 2`, `experiments/regression/regression_ppo_4x4_seed{0,1}.json`;
 the machine was shared with other sessions at a load of 20 to 150, about
 830 env steps per second):
 

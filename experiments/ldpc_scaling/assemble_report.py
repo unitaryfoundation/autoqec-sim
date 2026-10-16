@@ -3,8 +3,8 @@
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
-"""Assemble experiments/ldpc_scaling/REPORT.md from results/ldpc_scaling/*.json
-and results/regression_ppo_4x4_seed*.json. Every number in the prose is
+"""Assemble experiments/ldpc_scaling/REPORT.md from experiments/ldpc_scaling/runs/*.json
+and experiments/regression/regression_ppo_4x4_seed*.json. Every number in the prose is
 computed here; every qualitative statement is asserted against the data.
 
     uv run --extra rl python experiments/ldpc_scaling/assemble_report.py
@@ -20,7 +20,7 @@ import numpy as np
 from autoqec_sim.experiments import ldpc_scaling as L
 
 ROOT = Path(__file__).resolve().parents[2]
-RES = ROOT / "results" / "ldpc_scaling"
+RES = ROOT / "experiments" / "ldpc_scaling" / "runs"
 OUT = ROOT / "experiments" / "ldpc_scaling" / "REPORT.md"
 FIG = ROOT / "experiments" / "ldpc_scaling" / "figures"
 
@@ -93,7 +93,7 @@ def main():
     # penalty-form reference from the scaling probe (equivariant runs)
     probe = {}
     for name in ("ldpc_n12_k2_all_to_all_12_equivariant_seed0.json", "ldpc_n12_k2_square_3x4_equivariant_seed0.json", "ldpc_n16_k2_all_to_all_16_equivariant_seed0.json"):
-        p = ROOT / "results" / "scaling" / name
+        p = ROOT / "experiments" / "scaling" / "runs" / name
         if p.exists():
             with open(p) as f:
                 probe[name] = json.load(f)
@@ -107,7 +107,7 @@ def main():
     # the 4x4 regression runs
     reg = []
     for seed in (0, 1):
-        p = ROOT / "results" / f"regression_ppo_4x4_seed{seed}.json"
+        p = ROOT / "experiments" / "regression" / f"regression_ppo_4x4_seed{seed}.json"
         if p.exists():
             with open(p) as f:
                 reg.append(json.load(f)["targets"]["rotated_surface_16"])
@@ -216,7 +216,7 @@ def main():
             else:
                 parts.append(f"seed {c['seed']}: none in {c['evaluations']:,} circuits ({c['wall_time_s']:.0f} s), best reward {c['best_reward']:.3f}")
         ctrl_txt = (
-            "\nReachability on the lattice (`results/ldpc_scaling/evo_control_n12_k2_square.json`): the evolutionary search of "
+            "\nReachability on the lattice (`experiments/ldpc_scaling/runs/evo_control_n12_k2_square.json`): the evolutionary search of "
             "`autoqec_sim.search` on the `square:3x4` environment with the same objective, 40-gate episodes, and 512 circuits per "
             "generation, at most 400,000 circuits per seed. " + "; ".join(parts) + ".\n"
         )
@@ -237,7 +237,7 @@ def main():
             "`agents.ppo_regress` gained the PPO-only target `rotated_surface_16` (`[[16, 1, 4]]`, `square:4x4`, H and CNOT, "
             "50-gate episodes, the regression's reward and enumerator match, 1,000,000 env steps in one attempt); two seeds at 2 "
             "threads with `policy=\"auto\"`, which resolves to the equivariant network (123,907 parameters). Files "
-            "`results/regression_ppo_4x4_seed0.json` and `results/regression_ppo_4x4_seed1.json`.\n\n"
+            "`experiments/regression/regression_ppo_4x4_seed0.json` and `experiments/regression/regression_ppo_4x4_seed1.json`.\n\n"
             "| seed | env steps | episodes | wall (s) | first verified [[16, 1, 4]] | distinct [[16, 1, 4]] codes verified | enumerators match | success rate, last 25 updates |\n"
             "|---|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n\n"
             "Both seeds reach distance 4 (the scaling probe's range for this policy on the level distance reward was 217k to 258k env "
@@ -248,13 +248,13 @@ def main():
     text = f"""# LDPC constraint forms above n = 9
 
 Status: complete. Every number below comes from a JSON under
-`results/ldpc_scaling/` (named in the last column of the run table or in
-the text) or from `results/regression_ppo_4x4_seed*.json`; the tables and
+`experiments/ldpc_scaling/runs/` (named in the last column of the run table or in
+the text) or from `experiments/regression/regression_ppo_4x4_seed*.json`; the tables and
 figures regenerate with
 `uv run --extra rl python -m autoqec_sim.experiments.ldpc_scaling report`
 and this file with `uv run --extra rl python experiments/ldpc_scaling/assemble_report.py`.
 Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective`),
-`src/autoqec_sim/experiments/ldpc_scaling.py`. Logs: `results/ldpc_scaling/logs/`.
+`src/autoqec_sim/experiments/ldpc_scaling.py`. Logs: `experiments/ldpc_scaling/runs/logs/`.
 
 ## Summary
 
@@ -307,7 +307,7 @@ have both graphs. Episodes of 40 gates, 256 parallel episodes,
 parameters, `num_parameters` in the JSONs), three seeds per cell, 1.5M env
 steps or 20 minutes per run, whichever comes first, no early stop, 2 BLAS
 and torch threads per run, at most three runs at a time
-(`results/ldpc_scaling/queue.sh`, `jobs.txt`). The machine was shared with
+(`experiments/ldpc_scaling/runs/queue.sh`, `jobs.txt`). The machine was shared with
 other sessions at a 1-minute load average of 15 to 150 for the whole
 period (`logs/queue.log` records it at every start), so the env-step
 totals of wall-capped runs ({steps_range}M) are below what an idle
@@ -348,7 +348,7 @@ per-update history. For the `schedule` form the env step of the switch.
 
 ## Existence of feasible codes
 
-Both targets admit a code within the bound (`results/ldpc_scaling/existence.json`,
+Both targets admit a code within the bound (`experiments/ldpc_scaling/runs/existence.json`,
 each entry verified with the exact distance and exact `w*`):
 
 | code | construction | d | w* | max qubit degree | CSS |
@@ -433,7 +433,7 @@ form is documented as the hard-constraint reference (no trap, no sparsity),
 the `schedule` form as a negative result (the penalty form's ratio traps
 whether it is on from the start or switched on late), and the `penalty`
 form stays the default of the `n <= 9` regression targets, where it works
-(`results/regression.json`).
+(`experiments/regression/regression.json`).
 
 What was not done here: a sparsity signal shaped on the final code rather
 than on every state in count units (the scaling probe's candidate-only
@@ -445,12 +445,12 @@ scale variants.
 ## Sources
 
 {sources}
-| `results/ldpc_scaling/existence.json` | the three codes of the existence table, with their stabilizers and verified parameters |
-| `results/ldpc_scaling/evo_control_n12_k2_square.json` | evolutionary-search reachability control on `square:3x4` |
-| `results/ldpc_scaling/superseded/` | the first `unnormalized` run of `[[12, 2, 3]]` all-to-all under the early-stop protocol (25 updates past the first success), replaced by the fixed-budget rerun |
-| `results/ldpc_scaling/logs/*.log`, `queue.log` | per-update logs of every run, queue log with the load at every start |
-| `results/ldpc_scaling/queue.sh`, `jobs.txt`, `jobs_ldpc2.txt` | the 3-slot runner and the job lists |
-| `results/regression_ppo_4x4_seed{{0,1}}.json` | the 4x4 rediscovery target of Task A |
+| `experiments/ldpc_scaling/runs/existence.json` | the three codes of the existence table, with their stabilizers and verified parameters |
+| `experiments/ldpc_scaling/runs/evo_control_n12_k2_square.json` | evolutionary-search reachability control on `square:3x4` |
+| `experiments/ldpc_scaling/runs/superseded/` | the first `unnormalized` run of `[[12, 2, 3]]` all-to-all under the early-stop protocol (25 updates past the first success), replaced by the fixed-budget rerun |
+| `experiments/ldpc_scaling/runs/logs/*.log`, `queue.log` | per-update logs of every run, queue log with the load at every start |
+| `experiments/ldpc_scaling/runs/queue.sh`, `jobs.txt`, `jobs_ldpc2.txt` | the 3-slot runner and the job lists |
+| `experiments/regression/regression_ppo_4x4_seed{{0,1}}.json` | the 4x4 rediscovery target of Task A |
 | `experiments/ldpc_scaling/figures/` | the two figures, drawn by `report` with `experiments.figstyle` |
 | `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_scaling.py`, `experiments/ldpc_scaling/assemble_report.py` | the objective, the experiment, and this report's assembly |
 """

@@ -33,7 +33,7 @@ The sampled tier took 15 to 61 percent of the evaluations in the bare cells and
 45 codes (9 run-2 selected, 1 run-2 highest-reward alternate that differs from
 the selected code, 12 run-1 best, 12 run-1 lowest-proxy, 9 encoder-objective,
 rotated surface, XZZX) under the four profiles at the proxy, sampled, and bposd
-tiers, all on the sparsest basis (`results/memory_ppo/run2/scores.json`).
+tiers, all on the sparsest basis (`experiments/memory_ppo/runs/run2/scores.json`).
 
 Answer: does selecting on the proxy inside its valid regime close the gap to
 the surface code, and by how much? Partly. Under bposd on the training profile

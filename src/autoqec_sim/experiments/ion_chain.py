@@ -7,7 +7,7 @@
 connectivity at 16 qubits, against the 4x4 lattice cells of
 ``experiments.gpu_scale``.
 
-Question. The noise-aware 4x4 cells (``results/gpu_scale/REPORT.md``) train
+Question. The noise-aware 4x4 cells (``experiments/gpu_scale/runs/REPORT.md``) train
 on the square lattice under three profiles, one of them the IonQ Forte
 sequential profile. An ion chain has all-to-all connectivity, so the
 lattice is an artificial restriction for that profile. Does lifting it
@@ -41,19 +41,19 @@ with the undetected mass under all three profiles).
 The report writes the cross-evaluation matrix (training profile against
 evaluation profile) per setting and, for the ion profile, compares the
 all-to-all codes with (a) the 4x4 lattice codes of
-``results/gpu_scale/run_noise4x4_*.json`` (read, not rerun), (b) the
+``experiments/gpu_scale/runs/run_noise4x4_*.json`` (read, not rerun), (b) the
 rotated surface ``[[16, 1, 4]]`` with its polished lattice encoder from
-``results/noise_aware/baselines_4x4.json`` and, when
-``results/ion_chain/baselines_<setting>.json`` exists (``baselines``
+``experiments/noise_aware/runs/baselines_4x4.json`` and, when
+``experiments/ion_chain/runs/baselines_<setting>.json`` exists (``baselines``
 subcommand: :func:`noise_aware.run_baselines` on the all-to-all setting,
 where stim's elimination encoder is a further seed), its polished
 all-to-all encoder, and (c) the ``n = 16`` codes of
 :mod:`autoqec_sim.known_codes`.
 
-Files: ``results/ion_chain/run_<setting>_<profile>_seed<k>.json`` and a log
-under ``results/ion_chain/logs/``; ``report`` writes
-``results/ion_chain/REPORT.md`` and the figures under
-``results/ion_chain/figures/``. Pod commands as in ``docs/gpu_run.md``
+Files: ``experiments/ion_chain/runs/run_<setting>_<profile>_seed<k>.json`` and a log
+under ``experiments/ion_chain/runs/logs/``; ``report`` writes
+``experiments/ion_chain/runs/REPORT.md`` and the figures under
+``experiments/ion_chain/runs/figures/``. Pod commands as in ``docs/gpu_run.md``
 with this module in place of ``gpu_scale``::
 
     python -m autoqec_sim.experiments.ion_chain matrix --device cuda --threads 8 --profiles ion
@@ -79,9 +79,9 @@ from . import gpu_scale as gs
 from . import noise_aware as na
 from .noise_aware import _fmt, _json_default, _mean_range
 
-DEFAULT_OUT = Path("results/ion_chain")
-DEFAULT_LATTICE = Path("results/gpu_scale")
-DEFAULT_BASELINES = Path("results/noise_aware/baselines_4x4.json")
+DEFAULT_OUT = Path("experiments/ion_chain/runs")
+DEFAULT_LATTICE = Path("experiments/gpu_scale/runs")
+DEFAULT_BASELINES = Path("experiments/noise_aware/runs/baselines_4x4.json")
 PROFILES = na.PROFILES
 SEEDS = (0, 1, 2)
 BATCH = 1024
@@ -428,9 +428,9 @@ def setting_sections(sname: str, recs: list[dict], baselines: dict, lattice: lis
         "Rows: training profile (the best code of each seed that reached d = 4, its own encoding circuit). Columns: "
         "evaluation profile at the calibrated scale of this setting. Entries: undetected fault mass of the encoder "
         "(`circuit_noise.undetected_fault_mass`, absolute probability), mean over seeds with [min, max]. Smaller is better. "
-        "The `lattice` rows are the 4x4 cells of `results/gpu_scale/` (same reward, profiles, batch, budget, and wall cap; "
+        "The `lattice` rows are the 4x4 cells of `experiments/gpu_scale/runs/` (same reward, profiles, batch, budget, and wall cap; "
         "graph `square:4x4`, gates H, CNOT), read from their JSON files. The `known` rows are the polished encoders of "
-        "`results/noise_aware/baselines_4x4.json` (routed on the lattice) and, where present, of "
+        "`experiments/noise_aware/runs/baselines_4x4.json` (routed on the lattice) and, where present, of "
         f"`baselines_{sname}.json` (all-to-all encoders of the same codes).\n"
     )
     L.append("| trained on \\ evaluated on | " + " | ".join(PROFILES) + " | seeds with d = 4 | gates (mean) | S gates (mean) |")
@@ -850,9 +850,9 @@ def write_report(out_dir: Path, lattice_dir: Path = DEFAULT_LATTICE, baselines_p
     by_setting = {s: lst for s, lst in by_setting.items() if lst}
     L = ["# PPO code discovery on all-to-all connectivity at n = 16 under the trapped-ion profile\n"]
     L.append(
-        f"Status: {len(recs)} runs recorded. Every number comes from a JSON under `results/ion_chain/` (last column of the "
-        "run tables), from `results/gpu_scale/run_noise4x4_*.json` (the lattice cells, not rerun), or from "
-        "`results/noise_aware/baselines_4x4.json`; the tables regenerate with "
+        f"Status: {len(recs)} runs recorded. Every number comes from a JSON under `experiments/ion_chain/runs/` (last column of the "
+        "run tables), from `experiments/gpu_scale/runs/run_noise4x4_*.json` (the lattice cells, not rerun), or from "
+        "`experiments/noise_aware/runs/baselines_4x4.json`; the tables regenerate with "
         "`uv run --extra rl python -m autoqec_sim.experiments.ion_chain report`. Code: "
         "`src/autoqec_sim/experiments/ion_chain.py`.\n"
     )
@@ -862,7 +862,7 @@ def write_report(out_dir: Path, lattice_dir: Path = DEFAULT_LATTICE, baselines_p
         L.append(verdict.read_text().strip() + "\n")
     L.append("## Question and protocol\n")
     L.append(
-        "The 4x4 cells of `results/gpu_scale/REPORT.md` train under the IonQ Forte sequential profile on the square lattice, "
+        "The 4x4 cells of `experiments/gpu_scale/runs/REPORT.md` train under the IonQ Forte sequential profile on the square lattice, "
         "a connectivity an ion chain does not have. The two settings here keep everything of those cells (n = 16, k = 1, "
         "target d = 4, 50-gate episodes, the fractional distance term, padding penalty, encoder undetected fault mass under "
         "the training profile, LDPC penalty above w* = 4, equivariant policy, batch 1024, 8M env steps, 40 min wall cap, "

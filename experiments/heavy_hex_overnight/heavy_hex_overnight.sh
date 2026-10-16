@@ -3,17 +3,17 @@
 #
 # Runs python -m autoqec_sim.experiments.heavy_hex_overnight drive under
 # nohup with a global wall cap (default 10 h) and a thread cap (default 4),
-# writes everything under results/heavy_hex_overnight/, and prints the pid.
+# writes everything under experiments/heavy_hex_overnight/runs/, and prints the pid.
 # Rerunning the script resumes: every cell whose JSON exists is skipped.
 #
-#   scripts/heavy_hex_overnight.sh            # 10 h, 4 threads
-#   HOURS=6 THREADS=2 scripts/heavy_hex_overnight.sh
-#   scripts/heavy_hex_overnight.sh status     # heartbeat and last log lines
-#   scripts/heavy_hex_overnight.sh stop       # SIGTERM to the driver (it kills its child)
+#   experiments/heavy_hex_overnight/heavy_hex_overnight.sh            # 10 h, 4 threads
+#   HOURS=6 THREADS=2 experiments/heavy_hex_overnight/heavy_hex_overnight.sh
+#   experiments/heavy_hex_overnight/heavy_hex_overnight.sh status     # heartbeat and last log lines
+#   experiments/heavy_hex_overnight/heavy_hex_overnight.sh stop       # SIGTERM to the driver (it kills its child)
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT="${OUT:-$ROOT/results/heavy_hex_overnight}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+OUT="${OUT:-$ROOT/experiments/heavy_hex_overnight/runs}"
 HOURS="${HOURS:-10}"
 THREADS="${THREADS:-4}"
 cd "$ROOT"

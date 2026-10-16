@@ -1,14 +1,10 @@
 """Rediscover the [[5,1,3]] code with the evolutionary search, verify it
 independently of the reward, and score its encoding circuit under a
-circuit-level noise profile. The documentation's Quick Start walks through
-this script; the README quick start is examples/quickstart.py."""
+circuit-level noise profile. The documentation's Quick Start includes the
+three marked sections."""
 
-import numpy as np
-
-from autoqec_sim import BatchTableau, StabilizerCode, known_codes
-from autoqec_sim.circuit_noise import circuit_level_reward
+# --8<-- [start:search]
 from autoqec_sim.env import CodeDiscoveryEnv
-from autoqec_sim.noise import presets
 from autoqec_sim.regress import TARGETS, make_reward
 from autoqec_sim.search import EvolutionarySearch
 
@@ -20,6 +16,12 @@ env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, gates=target.gates, max_steps=t
                        reward_fn=make_reward(target), seed=0)
 res = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
 print(f"search: success={res.success} evaluations={res.evaluations} gates={len(res.gates)} wall={res.wall_time_s:.1f} s")
+# --8<-- [end:search]
+
+# --8<-- [start:verify]
+import numpy as np
+
+from autoqec_sim import BatchTableau, StabilizerCode, known_codes
 
 # Replay the found gate sequence on a fresh tableau and read the code off it.
 tab = BatchTableau(5, 1)
@@ -30,8 +32,14 @@ ref = known_codes.get("five_qubit")
 print(f"code: n={code.n} k={code.k} d={code.distance_exact()} css={code.is_css()}")
 match = all(np.array_equal(a, b) for a, b in zip(code.weight_enumerators(), ref.weight_enumerators(), strict=True))
 print("enumerators match [[5,1,3]]:", match)
+# --8<-- [end:verify]
+
+# --8<-- [start:score]
+from autoqec_sim.circuit_noise import circuit_level_reward
+from autoqec_sim.noise import presets
 
 # Circuit-level score: every single-fault mechanism of the encoding circuit
 # under the IonQ Forte profile, propagated with stim, as -undetected mass.
 r = circuit_level_reward(tab.array, 1, [res.gates], presets.forte(), scale=0.25)
 print(f"circuit-level reward under forte @ 0.25: {r[0]:.4f}")
+# --8<-- [end:score]

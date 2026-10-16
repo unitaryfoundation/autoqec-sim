@@ -22,7 +22,7 @@
 | `autoqec_sim.experiments.scaling` | The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on `[[16, 1, 4]]` (curriculum, macro actions, equivariant policy, batch and entropy, episode cap), and LDPC-constrained `[[n, k, 3]]` targets at `n = 12` to `16`; see docs/experiments.md. |
 | `autoqec_sim.experiments.ldpc_scaling` | The LDPC constraint forms above `n = 9`: `unnormalized`, `final`, and `schedule` against the regression's `penalty` form on `[[12, 2, 3]]` and `[[16, 4, 3]]` with `w_max = 4`, all-to-all and square graphs, three seeds, equivariant policy, fixed budget per run; see "LDPC constraint" and `experiments/ldpc_scaling/REPORT.md`. |
 | `autoqec_sim.experiments.ldpc_sparsity` | Sparsity as a property of the trained policy: the `shaped` (dense per-step term in reward units), `terminal` (count-unit signal at any candidate), and `mask` (greedy `w*` action mask) variants against `unnormalized` at equal budget on `[[12, 2, 3]]` (all-to-all, `square:3x4`) and `[[16, 4, 3]]` (`square:4x4`), measured as the fraction of at-distance terminal states inside the bound; see `experiments/ldpc_sparsity/REPORT.md`. |
-| `autoqec_sim.experiments.ion_chain` | The noise-aware 4x4 protocol of `gpu_scale` (equivariant PPO, batch 1024, three profiles, cross-evaluation) on all-to-all connectivity at `n = 16`, the connectivity of an ion chain, with and without S in the gate set; the report compares the all-to-all codes under the ion profile with the 4x4 lattice cells of `results/gpu_scale/`, the rotated surface code's lattice and all-to-all encoders, and the `n = 16` known codes; see `results/ion_chain/REPORT.md`. |
+| `autoqec_sim.experiments.ion_chain` | The noise-aware 4x4 protocol of `gpu_scale` (equivariant PPO, batch 1024, three profiles, cross-evaluation) on all-to-all connectivity at `n = 16`, the connectivity of an ion chain, with and without S in the gate set; the report compares the all-to-all codes under the ion profile with the 4x4 lattice cells of `experiments/gpu_scale/runs/`, the rotated surface code's lattice and all-to-all encoders, and the `n = 16` known codes; see `experiments/ion_chain/runs/REPORT.md`. |
 | `autoqec_sim.experiments.topologies` | The three-topology run matrix: the PPO agent alone on square, triangular, and heavy-hex lattices at two qubit-count tiers, one objective (`[[n, 1, 3]]`, no idle qubit, H and CNOT on lattice edges, 50-gate cap), common metrics per cell (steps to success, exact `d`, `w*`, qubit degree, weight enumerators, Heron and board fault masses, rotated surface baseline); see docs/experiments.md. |
 | `autoqec_sim.experiments.memory_objective` | Benchmark of the memory objective's tiers on five codes and three profiles, rank correlation on random distance-3 codes, the XZZX bias-sensitivity test, the lattice-routing comparison, and the PPO smoke run with the memory reward; see `experiments/memory_objective/REPORT.md`. |
 | `autoqec_sim.experiments.memory_ppo` | The noise-aware 4x4 protocol of `gpu_scale` with the memory objective as the noise term (`R = 4` rounds, all-to-all layout, proxy tier in training) on four cells (chain 0.25 bare and one-flag, board 0.25, Heron 0.05), three seeds, and a second run without the LDPC term, with a gate-count term, the sampled tier outside the proxy's regime, and the sparsest generator basis; `score` re-evaluates the discovered codes, the encoder-objective 4x4 codes, and the rotated surface and XZZX codes under every profile at the proxy, sampled, and bposd tiers; see `experiments/memory_ppo/REPORT.md`. |
@@ -37,16 +37,12 @@ src/autoqec_sim/         package
 src/autoqec_sim/backends/  torch backend of the gate kernels and parity masks (opt-in; docs/gpu.md)
 src/autoqec_sim/agents/  PPO agent, its two policies (flat MLP, permutation-equivariant), and its regression
 src/autoqec_sim/experiments/  noise-aware, scaling, LDPC-form, and topology experiments and the shared figure style
-tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, noise-aware experiment, torch backend vs numpy)
-results/                 regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
-results/ldpc_scaling/    per-run JSON, logs, queue, and existence.json of the LDPC-form comparison (working cache, not tracked)
-experiments/ldpc_scaling/REPORT.md  the LDPC-form comparison write-up
-results/noise_aware/     REPORT.md, per-run JSON and CSV, baselines, figures of the noise-aware experiment
-examples/quickstart.py   the README quick start: search, code, stabilizers
-examples/rediscover_and_score.py  rediscover [[5,1,3]], verify it, score its encoder under Forte noise
-scripts/reproduce.sh     fresh venv, tests, both reduced regressions
-docs/reproduce.md        commands and expected outputs for both regressions
-scripts/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment
-docs/profile.md          its output on one laptop, with the time breakdown of an environment step
-docs/gpu.md              the torch backend on a GPU: RunPod procedure, A40 result (2026-09-21), what stays cuQuantum-specific
+tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, noise-aware experiment, torch backend vs numpy, the quick-start example)
+experiments/<name>/      one directory per experiment: REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
+experiments/regression/  regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
+benchmarks/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment (docs/profile.md, docs/gpu.md)
+benchmarks/bench_cuda_kernels.py  the fused CUDA kernels against the torch path (docs/gpu.md)
+tools/reproduce.sh       fresh venv, tests, both reduced regressions (docs/reproduce.md)
+tools/release.sh         the release procedure (docs/development/releasing.md)
+docs/examples/           the quick-start scripts, snippeted into the documentation and checked against the README
 ```

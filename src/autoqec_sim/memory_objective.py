@@ -9,7 +9,7 @@ error rate of a syndrome-extraction memory experiment, not by its encoder.
 The encoder single-fault objective of :mod:`autoqec_sim.circuit_noise`
 cannot see a local-Clifford deformation of a code (a Hadamard at the end of
 the encoder only relabels weight-1 faults, all detected), so it cannot
-express bias tailoring (``results/noise_aware/REPORT.md``, verdict items 2
+express bias tailoring (``experiments/noise_aware/runs/REPORT.md``, verdict items 2
 to 4 and 6). This module builds, for a code given by its stabilizer
 generators and logicals, an ``R``-round syndrome-extraction circuit with
 one ancilla per generator, applies a ``autoqec_sim.noise.Profile`` with its

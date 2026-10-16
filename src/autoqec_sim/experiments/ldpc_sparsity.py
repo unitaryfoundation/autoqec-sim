@@ -40,7 +40,7 @@ of every run (2,560 terminal states) and per update along the run. The
 ``unnormalized`` form is also run at 3M env steps on one cell, the
 longer-budget question the earlier report left open. ``report`` prints
 the tables of ``experiments/ldpc_sparsity/REPORT.md`` from
-``results/ldpc_sparsity/`` and draws its figures.
+``experiments/ldpc_sparsity/runs/`` and draws its figures.
 """
 
 from __future__ import annotations
@@ -63,7 +63,7 @@ from ..symplectic import rref
 from .ldpc_scaling import EXACT_GENERATORS, TERMINAL_WINDOW, StatsEnv, _json_default, summarize_terminal
 from .scaling import describe_code, probe_policy, replay_gates
 
-DEFAULT_OUT = Path("results/ldpc_sparsity")
+DEFAULT_OUT = Path("experiments/ldpc_sparsity/runs")
 VARIANTS = ("unnormalized", "shaped", "terminal", "mask", "mask_terminal")
 MASKED = ("mask", "mask_terminal")  # variants with the action mask
 MASK_METHODS = ("basis", "tableau", "exact")  # ldpc.greedy_action_mask methods; "exact" is the exact feasibility test on the pairs the greedy bound rejects
@@ -567,7 +567,7 @@ def sources_table(recs: list[dict]) -> str:
     lines = ["| file | contents |", "|---|---|"]
     for r in sorted(recs, key=lambda r: r["_file"]):
         lines.append(
-            f"| `results/ldpc_sparsity/{Path(r['_file']).name}` | {label(r)}, [[{r['n']}, {r['k']}, {r['d']}]] w_max {r['w_max']} on {r['graph']}, "
+            f"| `experiments/ldpc_sparsity/runs/{Path(r['_file']).name}` | {label(r)}, [[{r['n']}, {r['k']}, {r['d']}]] w_max {r['w_max']} on {r['graph']}, "
             f"seed {r['seed']}, {r['env_steps']:,} env steps, {r['wall_time_s']:.0f} s, "
             f"{'first feasible code at ' + format(r['first_success']['env_steps'], ',') if r['first_success'] else 'no feasible code'} |"
         )
@@ -931,7 +931,7 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--threads", type=int, default=4)
     p.add_argument("--methods", default="basis,exact")
-    p = sub.add_parser("report", help="print the tables from results/ldpc_sparsity and draw the figures")
+    p = sub.add_parser("report", help="print the tables from experiments/ldpc_sparsity/runs and draw the figures")
     p.add_argument("--dir", default=str(DEFAULT_OUT))
     p.add_argument("--figures", default="experiments/ldpc_sparsity/figures", help="directory for the figures ('' to skip)")
     args = ap.parse_args(argv)

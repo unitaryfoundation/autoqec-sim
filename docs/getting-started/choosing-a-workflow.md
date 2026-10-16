@@ -15,7 +15,7 @@ need.
 | Noisify a `stim.Circuit` of my own | `autoqec_sim.noise.apply`; [Noise interface](../noise.md) |
 | Assign CX layers of a syndrome-extraction circuit for a fixed code | `autoqec-schedule <slug> --board <path>`; [Commands](../reference/commands.md) |
 | Run the reward engine on a GPU | `backends.torch_backend`, `backends.cuda_kernels`; [GPU backend](../gpu.md) |
-| Reproduce the published tables | `scripts/reproduce.sh`; [Reproduce](../reproduce.md) |
+| Reproduce the published tables | `tools/reproduce.sh`; [Reproduce](../reproduce.md) |
 | Read what the discovery agent has and has not found | [Experiments](../experiments.md) |
 
 ## Which agent

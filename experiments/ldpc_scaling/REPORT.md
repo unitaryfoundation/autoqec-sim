@@ -1,13 +1,13 @@
 # LDPC constraint forms above n = 9
 
 Status: complete. Every number below comes from a JSON under
-`results/ldpc_scaling/` (named in the last column of the run table or in
-the text) or from `results/regression_ppo_4x4_seed*.json`; the tables and
+`experiments/ldpc_scaling/runs/` (named in the last column of the run table or in
+the text) or from `experiments/regression/regression_ppo_4x4_seed*.json`; the tables and
 figures regenerate with
 `uv run --extra rl python -m autoqec_sim.experiments.ldpc_scaling report`
 and this file with `uv run --extra rl python experiments/ldpc_scaling/assemble_report.py`.
 Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective`),
-`src/autoqec_sim/experiments/ldpc_scaling.py`. Logs: `results/ldpc_scaling/logs/`.
+`src/autoqec_sim/experiments/ldpc_scaling.py`. Logs: `experiments/ldpc_scaling/runs/logs/`.
 
 ## Summary
 
@@ -60,7 +60,7 @@ have both graphs. Episodes of 40 gates, 256 parallel episodes,
 parameters, `num_parameters` in the JSONs), three seeds per cell, 1.5M env
 steps or 20 minutes per run, whichever comes first, no early stop, 2 BLAS
 and torch threads per run, at most three runs at a time
-(`results/ldpc_scaling/queue.sh`, `jobs.txt`). The machine was shared with
+(`experiments/ldpc_scaling/runs/queue.sh`, `jobs.txt`). The machine was shared with
 other sessions at a 1-minute load average of 15 to 150 for the whole
 period (`logs/queue.log` records it at every start), so the env-step
 totals of wall-capped runs (0.62 to 1.50M) are below what an idle
@@ -101,7 +101,7 @@ per-update history. For the `schedule` form the env step of the switch.
 
 ## Existence of feasible codes
 
-Both targets admit a code within the bound (`results/ldpc_scaling/existence.json`,
+Both targets admit a code within the bound (`experiments/ldpc_scaling/runs/existence.json`,
 each entry verified with the exact distance and exact `w*`):
 
 | code | construction | d | w* | max qubit degree | CSS |
@@ -114,7 +114,7 @@ So a failure below is a failure of the search, not of the target. The
 feasible `[[12, 2, 3]]` codes the PPO runs found (seed 0 on all_to_all:12: 303,104 env steps (294 s), 24 gates, w* 4, degree 4, non-CSS, 1 feasible success in the run; seed 2 on all_to_all:12: 353,792 env steps (357 s), 22 gates, w* 4, degree 4, non-CSS, 1 feasible success in the run; seed 1 on square:3x4: 950,016 env steps (588 s), 31 gates, w* 4, degree 4, non-CSS, 1 feasible success in the run) show the bound is reachable within the 40-gate
 episodes on `all_to_all:12` and `square:3x4`, in 22 to 31 gates.
 
-Reachability on the lattice (`results/ldpc_scaling/evo_control_n12_k2_square.json`): the evolutionary search of `autoqec_sim.search` on the `square:3x4` environment with the same objective, 40-gate episodes, and 512 circuits per generation, at most 400,000 circuits per seed. seed 0: none in 400,384 circuits (972 s), best reward -0.003.
+Reachability on the lattice (`experiments/ldpc_scaling/runs/evo_control_n12_k2_square.json`): the evolutionary search of `autoqec_sim.search` on the `square:3x4` environment with the same objective, 40-gate episodes, and 512 circuits per generation, at most 400,000 circuits per seed. seed 0: none in 400,384 circuits (972 s), best reward -0.003.
 
 ## Results
 
@@ -259,7 +259,7 @@ form is documented as the hard-constraint reference (no trap, no sparsity),
 the `schedule` form as a negative result (the penalty form's ratio traps
 whether it is on from the start or switched on late), and the `penalty`
 form stays the default of the `n <= 9` regression targets, where it works
-(`results/regression.json`).
+(`experiments/regression/regression.json`).
 
 What was not done here: a sparsity signal shaped on the final code rather
 than on every state in count units (the scaling probe's candidate-only
@@ -270,7 +270,7 @@ scale variants.
 
 ## Task A companion: the 4x4 rediscovery target
 
-`agents.ppo_regress` gained the PPO-only target `rotated_surface_16` (`[[16, 1, 4]]`, `square:4x4`, H and CNOT, 50-gate episodes, the regression's reward and enumerator match, 1,000,000 env steps in one attempt); two seeds at 2 threads with `policy="auto"`, which resolves to the equivariant network (123,907 parameters). Files `results/regression_ppo_4x4_seed0.json` and `results/regression_ppo_4x4_seed1.json`.
+`agents.ppo_regress` gained the PPO-only target `rotated_surface_16` (`[[16, 1, 4]]`, `square:4x4`, H and CNOT, 50-gate episodes, the regression's reward and enumerator match, 1,000,000 env steps in one attempt); two seeds at 2 threads with `policy="auto"`, which resolves to the equivariant network (123,907 parameters). Files `experiments/regression/regression_ppo_4x4_seed0.json` and `experiments/regression/regression_ppo_4x4_seed1.json`.
 
 | seed | env steps | episodes | wall (s) | first verified [[16, 1, 4]] | distinct [[16, 1, 4]] codes verified | enumerators match | success rate, last 25 updates |
 |---|---|---|---|---|---|---|---|
@@ -283,51 +283,51 @@ Both seeds reach distance 4 (the scaling probe's range for this policy on the le
 
 | file | contents |
 |---|---|
-| `results/ldpc_scaling/final_n12_k2_all_to_all_seed0.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,245,184 env steps, 1200 s, no success |
-| `results/ldpc_scaling/final_n12_k2_all_to_all_seed1.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 929,792 env steps, 1202 s, no success |
-| `results/ldpc_scaling/final_n12_k2_all_to_all_seed2.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,212,416 env steps, 1203 s, no success |
-| `results/ldpc_scaling/final_n12_k2_square_seed0.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 598 s, no success |
-| `results/ldpc_scaling/final_n12_k2_square_seed1.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 812 s, no success |
-| `results/ldpc_scaling/final_n12_k2_square_seed2.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 710 s, no success |
-| `results/ldpc_scaling/final_n16_k4_all_to_all_seed0.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 667,648 env steps, 1205 s, no success |
-| `results/ldpc_scaling/final_n16_k4_all_to_all_seed1.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 630,784 env steps, 1206 s, no success |
-| `results/ldpc_scaling/final_n16_k4_all_to_all_seed2.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 790,528 env steps, 1207 s, no success |
-| `results/ldpc_scaling/final_n16_k4_square_seed0.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,294,336 env steps, 1201 s, no success |
-| `results/ldpc_scaling/final_n16_k4_square_seed1.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,466,368 env steps, 1202 s, no success |
-| `results/ldpc_scaling/final_n16_k4_square_seed2.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 998 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_all_to_all_seed0.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,241,088 env steps, 1204 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_all_to_all_seed1.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,007,616 env steps, 1202 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_all_to_all_seed2.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,208,320 env steps, 1200 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_square_seed0.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 585 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_square_seed1.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 782 s, no success |
-| `results/ldpc_scaling/schedule_n12_k2_square_seed2.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 663 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_all_to_all_seed0.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 655,360 env steps, 1206 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_all_to_all_seed1.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 622,592 env steps, 1205 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_all_to_all_seed2.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 774,144 env steps, 1204 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_square_seed0.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,298,432 env steps, 1202 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_square_seed1.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,503,232 env steps, 1095 s, no success |
-| `results/ldpc_scaling/schedule_n16_k4_square_seed2.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 882 s, no success |
-| `results/ldpc_scaling/unnormalized_n12_k2_all_to_all_seed0.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,179,648 env steps, 1203 s, success |
-| `results/ldpc_scaling/unnormalized_n12_k2_all_to_all_seed1.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 872,448 env steps, 1201 s, no success |
-| `results/ldpc_scaling/unnormalized_n12_k2_all_to_all_seed2.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,138,688 env steps, 1203 s, success |
-| `results/ldpc_scaling/unnormalized_n12_k2_square_seed0.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 659 s, no success |
-| `results/ldpc_scaling/unnormalized_n12_k2_square_seed1.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 897 s, success |
-| `results/ldpc_scaling/unnormalized_n12_k2_square_seed2.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 695 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_all_to_all_seed0.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 671,744 env steps, 1201 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_all_to_all_seed1.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 622,592 env steps, 1200 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_all_to_all_seed2.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 782,336 env steps, 1203 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_square_seed0.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,126,400 env steps, 1204 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_square_seed1.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,413,120 env steps, 1204 s, no success |
-| `results/ldpc_scaling/unnormalized_n16_k4_square_seed2.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 1020 s, no success |
-| `results/ldpc_scaling/unnormalized_scale0.5_n12_k2_all_to_all_seed0.json` | unnormalized (scale 0.5) form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 897,024 env steps, 1201 s, success |
-| `results/ldpc_scaling/unnormalized_scale0.5_n12_k2_square_seed0.json` | unnormalized (scale 0.5) form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 998 s, no success |
-| `results/ldpc_scaling/unnormalized_scale1_n12_k2_all_to_all_seed0.json` | unnormalized (scale 1) form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 901,120 env steps, 1202 s, success |
-| `results/ldpc_scaling/unnormalized_scale1_n12_k2_square_seed0.json` | unnormalized (scale 1) form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 975 s, no success |
-| `results/ldpc_scaling/existence.json` | the three codes of the existence table, with their stabilizers and verified parameters |
-| `results/ldpc_scaling/evo_control_n12_k2_square.json` | evolutionary-search reachability control on `square:3x4` |
-| `results/ldpc_scaling/superseded/` | the first `unnormalized` run of `[[12, 2, 3]]` all-to-all under the early-stop protocol (25 updates past the first success), replaced by the fixed-budget rerun |
-| `results/ldpc_scaling/logs/*.log`, `queue.log` | per-update logs of every run, queue log with the load at every start |
-| `results/ldpc_scaling/queue.sh`, `jobs.txt`, `jobs_ldpc2.txt` | the 3-slot runner and the job lists |
-| `results/regression_ppo_4x4_seed{0,1}.json` | the 4x4 rediscovery target of Task A |
+| `experiments/ldpc_scaling/runs/final_n12_k2_all_to_all_seed0.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,245,184 env steps, 1200 s, no success |
+| `experiments/ldpc_scaling/runs/final_n12_k2_all_to_all_seed1.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 929,792 env steps, 1202 s, no success |
+| `experiments/ldpc_scaling/runs/final_n12_k2_all_to_all_seed2.json` | final form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,212,416 env steps, 1203 s, no success |
+| `experiments/ldpc_scaling/runs/final_n12_k2_square_seed0.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 598 s, no success |
+| `experiments/ldpc_scaling/runs/final_n12_k2_square_seed1.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 812 s, no success |
+| `experiments/ldpc_scaling/runs/final_n12_k2_square_seed2.json` | final form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 710 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_all_to_all_seed0.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 667,648 env steps, 1205 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_all_to_all_seed1.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 630,784 env steps, 1206 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_all_to_all_seed2.json` | final form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 790,528 env steps, 1207 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_square_seed0.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,294,336 env steps, 1201 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_square_seed1.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,466,368 env steps, 1202 s, no success |
+| `experiments/ldpc_scaling/runs/final_n16_k4_square_seed2.json` | final form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 998 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_all_to_all_seed0.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,241,088 env steps, 1204 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_all_to_all_seed1.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,007,616 env steps, 1202 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_all_to_all_seed2.json` | schedule form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,208,320 env steps, 1200 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_square_seed0.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 585 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_square_seed1.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 782 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n12_k2_square_seed2.json` | schedule form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 663 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_all_to_all_seed0.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 655,360 env steps, 1206 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_all_to_all_seed1.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 622,592 env steps, 1205 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_all_to_all_seed2.json` | schedule form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 774,144 env steps, 1204 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_square_seed0.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,298,432 env steps, 1202 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_square_seed1.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,503,232 env steps, 1095 s, no success |
+| `experiments/ldpc_scaling/runs/schedule_n16_k4_square_seed2.json` | schedule form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 882 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_all_to_all_seed0.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,179,648 env steps, 1203 s, success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_all_to_all_seed1.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 872,448 env steps, 1201 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_all_to_all_seed2.json` | unnormalized form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,138,688 env steps, 1203 s, success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_square_seed0.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 659 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_square_seed1.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 1, 1,503,232 env steps, 897 s, success |
+| `experiments/ldpc_scaling/runs/unnormalized_n12_k2_square_seed2.json` | unnormalized form, [[12, 2, 3]] w_max 4 on square:3x4, seed 2, 1,503,232 env steps, 695 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_all_to_all_seed0.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 671,744 env steps, 1201 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_all_to_all_seed1.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 622,592 env steps, 1200 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_all_to_all_seed2.json` | unnormalized form, [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 782,336 env steps, 1203 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_square_seed0.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 1,126,400 env steps, 1204 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_square_seed1.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 1,413,120 env steps, 1204 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_n16_k4_square_seed2.json` | unnormalized form, [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 1,503,232 env steps, 1020 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_scale0.5_n12_k2_all_to_all_seed0.json` | unnormalized (scale 0.5) form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 897,024 env steps, 1201 s, success |
+| `experiments/ldpc_scaling/runs/unnormalized_scale0.5_n12_k2_square_seed0.json` | unnormalized (scale 0.5) form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 998 s, no success |
+| `experiments/ldpc_scaling/runs/unnormalized_scale1_n12_k2_all_to_all_seed0.json` | unnormalized (scale 1) form, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 901,120 env steps, 1202 s, success |
+| `experiments/ldpc_scaling/runs/unnormalized_scale1_n12_k2_square_seed0.json` | unnormalized (scale 1) form, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 975 s, no success |
+| `experiments/ldpc_scaling/runs/existence.json` | the three codes of the existence table, with their stabilizers and verified parameters |
+| `experiments/ldpc_scaling/runs/evo_control_n12_k2_square.json` | evolutionary-search reachability control on `square:3x4` |
+| `experiments/ldpc_scaling/runs/superseded/` | the first `unnormalized` run of `[[12, 2, 3]]` all-to-all under the early-stop protocol (25 updates past the first success), replaced by the fixed-budget rerun |
+| `experiments/ldpc_scaling/runs/logs/*.log`, `queue.log` | per-update logs of every run, queue log with the load at every start |
+| `experiments/ldpc_scaling/runs/queue.sh`, `jobs.txt`, `jobs_ldpc2.txt` | the 3-slot runner and the job lists |
+| `experiments/regression/regression_ppo_4x4_seed{0,1}.json` | the 4x4 rediscovery target of Task A |
 | `experiments/ldpc_scaling/figures/` | the two figures, drawn by `report` with `experiments.figstyle` |
 | `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_scaling.py`, `experiments/ldpc_scaling/assemble_report.py` | the objective, the experiment, and this report's assembly |

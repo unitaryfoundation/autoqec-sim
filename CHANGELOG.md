@@ -2,12 +2,18 @@
 
 ## 0.2.0 (TBD)
 
+- Repository layout: `tools/` (release and reproduce scripts), `benchmarks/`
+  (the CPU profile and the CUDA kernel benchmark), one `experiments/<name>/`
+  directory per experiment with raw output under `experiments/<name>/runs/`
+  (not tracked) and the regression JSONs under `experiments/regression/`,
+  and the quick-start scripts under `docs/examples/`, snippeted into the
+  documentation and checked against the README by `tests/test_examples.py`.
 - `StabilizerCode.from_gates(n, k, gates)` reads the code off a gate
   sequence such as `SearchResult.gates`, and `EvolutionarySearch` is
   exported from the package root, so the README quick start is a search,
-  a code, and its stabilizers (`examples/quickstart.py`). The longer
+  a code, and its stabilizers (`docs/examples/quickstart.py`). The longer
   rediscover, verify, and score walkthrough is
-  `examples/rediscover_and_score.py`. README after clifft's: logo, badges,
+  `docs/examples/rediscover_and_score.py`. README after clifft's: logo, badges,
   one-line install, short quick start; CODE_OF_CONDUCT.md (Contributor
   Covenant 2.1).
 - `backends.cuda_kernels`: two opt-in fused CUDA kernels (CuPy, NVRTC) behind
@@ -77,7 +83,7 @@ agent with its own rediscovery regression.
 - PPO rediscovery regression (`agents.ppo_regress`, run as `python -m`):
   same targets, reward, and enumerator verification as `regress`; every
   distinct code a run produces is verified. Full-budget results in
-  `results/regression_ppo.json`: [[5,1,3]], Steane, and the rotated surface
+  `experiments/regression/regression_ppo.json`: [[5,1,3]], Steane, and the rotated surface
   code all matched on seed 0 with 3 to 17 times fewer state evaluations
   than the evolutionary search.
 - `tests/test_ppo.py` (6 tests, skipped without torch; 15 items with the
@@ -101,9 +107,9 @@ agent with its own rediscovery regression.
   rotated surface, XZZX, Hadamard-deformed surface, Shor, transposed Shor
   at `n = 9` and `n = 16`) with standard-form encoders routed onto the
   lattice and polished per profile; training-curve CSVs and figures
-  (`experiments.figstyle`, one style); `results/noise_aware/REPORT.md`.
+  (`experiments.figstyle`, one style); `experiments/noise_aware/runs/REPORT.md`.
 - RL scaling probe (`experiments.scaling`, run as `python -m`; report in
-  `experiments/scaling/REPORT.md`, runs in `results/scaling/`). Diagnosis
+  `experiments/scaling/REPORT.md`, runs in `experiments/scaling/runs/`). Diagnosis
   of the 4x4 failure of the noise-aware experiment (`[[16, 1, 4]]`, H and
   CNOT on the lattice, 50-gate episodes): a distance-4 state is reachable
   at 50 gates (evolutionary search finds one after 369k circuits) but rare
@@ -128,7 +134,7 @@ agent with its own rediscovery regression.
   stabilizer groups of distance 1, because the normalized Knill-Laflamme term
   pays 1/630 to 1/1128 per detected error against 0.25 per unit of w* excess.
 - Three-topology run matrix (`experiments.topologies`, run as `python -m`;
-  report in `results/topologies/REPORT.md`). The PPO agent alone, not the
+  report in `experiments/topologies/runs/REPORT.md`). The PPO agent alone, not the
   LLM meta-agent of milestone M2, on square, triangular, and heavy-hex
   lattices at two tiers (`3x3` and `4x4`; heavy-hex `1x1` with 12 qubits and
   `2x1` with 18, the nearest sizes the honeycomb construction allows), one
@@ -169,7 +175,7 @@ agent with its own rediscovery regression.
   reduced PPO regression reproduces `docs/reproduce.md` step for step
   (counts, gates, and per-update history checked). `experiments.scaling`
   keeps its recorded-run protocol (build the MLP, then swap the equivariant
-  network in) so `results/scaling/` stays reproducible; it now passes
+  network in) so `experiments/scaling/runs/` stays reproducible; it now passes
   `policy="mlp"` explicitly. Seven test functions (nine items) in
   `tests/test_ppo.py`, which now collects 15 items.
 - `known_codes.rotated_surface(d)` (the rotated surface code of any
@@ -181,7 +187,7 @@ agent with its own rediscovery regression.
   50-gate episodes, the regression's reward and enumerator match, a budget
   of 1,000,000 env steps in one attempt (`TARGET_BUDGETS`), skipped by the
   `reduced` budget (`REDUCED_SKIP`); `target_budget()` and `--threads`.
-  Result at 2 threads (`results/regression_ppo_4x4_seed{0,1}.json`): both
+  Result at 2 threads (`experiments/regression/regression_ppo_4x4_seed{0,1}.json`): both
   seeds reach a verified `[[16, 1, 4]]` code (88,576 and 268,288 env
   steps, 46 and 48 gates, non-CSS, `w*` 5 and 6), 66 and 2 distinct
   codes over 1M steps, none with the rotated surface enumerators, so the
@@ -209,7 +215,7 @@ agent with its own rediscovery regression.
   trials in one batched call, single-qubit gates always allowed).
 - Sparsity comparison (`experiments.ldpc_sparsity`, run as `python -m`;
   report in `experiments/ldpc_sparsity/REPORT.md`, runs in
-  `results/ldpc_sparsity/`): `shaped` at `c` = 0.05, 0.1, 0.2, `terminal`,
+  `experiments/ldpc_sparsity/runs/`): `shaped` at `c` = 0.05, 0.1, 0.2, `terminal`,
   and `mask` against `unnormalized` at 1.5M env steps on `[[12, 2, 3]]`
   (all-to-all, `square:3x4`) and `[[16, 4, 3]]` (`square:4x4`), equivariant
   policy, on the RunPod pod's CPU with every run under the compute ledger's
@@ -300,7 +306,7 @@ agent with its own rediscovery regression.
   carries `_tableau`.
 - LDPC-form comparison (`experiments.ldpc_scaling`, run as `python -m`;
   report in `experiments/ldpc_scaling/REPORT.md`, runs in
-  `results/ldpc_scaling/`): the forms
+  `experiments/ldpc_scaling/runs/`): the forms
   `unnormalized`, `final`, and `schedule` on `[[12, 2, 3]]` and
   `[[16, 4, 3]]` with `w_max = 4`, all-to-all and square graphs, three
   seeds each, equivariant policy, 1.5M env steps or 20 minutes per run
@@ -317,14 +323,14 @@ agent with its own rediscovery regression.
   puts any form on a regression target (`make_reward` returns the
   objective, `env_kwargs(target, reward)` its `success_fn`; both
   regressions pass it). Also existence
-  constructions for both targets (`results/ldpc_scaling/existence.json`:
+  constructions for both targets (`experiments/ldpc_scaling/runs/existence.json`:
   `[[5,1,3]]` plus Steane, and two copies of a searched `[[8,2,3]]` with
   `w* = 4`).
 - Tests: the 4x4 target and reference (`tests/test_ppo.py`), the four
   objective forms on known codes and in environment rollouts
   (`tests/test_ldpc.py`), one tiny run per form and the report tables
   (`tests/test_ldpc_scaling.py`).
-- `scripts/profile_tableau.py` and `docs/profile.md`: CPU throughput and
+- `benchmarks/profile_tableau.py` and `docs/profile.md`: CPU throughput and
   memory profile of the vectorized simulator (numpy on the host, not the
   GPU version the roadmap names) for `n` in 5 to 49 and batch 256 to 4096:
   gate applications, reward evaluations, and environment steps per second,
@@ -356,15 +362,15 @@ agent with its own rediscovery regression.
   items, skipped without torch) checks every kernel and every mask
   against numpy bit for bit on random tableaux and the known codes at
   `n` in 5, 9, 16.
-- `scripts/profile_tableau.py`: `--backend {numpy,torch}`, `--device
+- `benchmarks/profile_tableau.py`: `--backend {numpy,torch}`, `--device
   {cpu,cuda}`, `--json` (record a run), `--render` (tables from records),
   `--no-breakdown`. `docs/gpu.md`: running the profile on a RunPod GPU,
-  the A40 result (`results/profile_pod/`), and what stays cuQuantum-specific.
+  the A40 result (`experiments/profile_pod/runs/`), and what stays cuQuantum-specific.
 - Packaging for release: SPDX license metadata, ruff configuration, CI and release workflows,
-  `scripts/reproduce.sh`, `docs/reproduce.md`, CITATION.cff. The
+  `tools/reproduce.sh`, `docs/reproduce.md`, CITATION.cff. The
   `autoqec-ppo` console script runs the PPO regression.
 - All-to-all ion-chain cells (`experiments.ion_chain`, run as `python -m`;
-  report in `results/ion_chain/REPORT.md`): the noise-aware 4x4 protocol
+  report in `experiments/ion_chain/runs/REPORT.md`): the noise-aware 4x4 protocol
   of `experiments.gpu_scale` (equivariant PPO, batch 1024, 8M env steps,
   40 min cap, three profiles calibrated to equal total fault mass, three
   seeds) with the graph changed to `all_to_all:16`, in two settings
@@ -374,8 +380,8 @@ agent with its own rediscovery regression.
   from `gpu_scale`; adds nothing to `noise_aware.SETTINGS`. The report
   gives the cross-evaluation matrix per setting and compares the
   all-to-all codes under the ion profile with the 4x4 lattice cells of
-  `results/gpu_scale/` (read from their JSON files), the rotated surface
-  code's polished lattice encoder (`results/noise_aware/baselines_4x4.json`)
+  `experiments/gpu_scale/runs/` (read from their JSON files), the rotated surface
+  code's polished lattice encoder (`experiments/noise_aware/runs/baselines_4x4.json`)
   and, from the `baselines` subcommand, its all-to-all encoder, and the
   `n = 16` codes of `known_codes`, with seed-level permutation tests.
   `tests/test_ion_chain.py` (2 items, skipped without torch).
@@ -384,7 +390,7 @@ agent with its own rediscovery regression.
   A code is scored by the logical error rate per round of an `R`-round
   syndrome-extraction memory experiment instead of by its encoder's
   single-fault mass, which cannot see a local-Clifford deformation of the
-  code (`results/noise_aware/REPORT.md`). `build_memory_circuit` builds
+  code (`experiments/noise_aware/runs/REPORT.md`). `build_memory_circuit` builds
   the circuit for arbitrary (non-CSS) generators: one ancilla per
   generator with controlled-X/Y/Z gates, hook-aware gate orders
   (`hook_orders`, the ion-search suffix and segment criterion, exact
@@ -414,7 +420,7 @@ agent with its own rediscovery regression.
   regression skipped without torch).
 - PPO with the memory objective on the 4x4 setting
   (`experiments.memory_ppo`, run as `python -m`; report in
-  `experiments/memory_ppo/REPORT.md`, runs in `results/memory_ppo/`): the
+  `experiments/memory_ppo/REPORT.md`, runs in `experiments/memory_ppo/runs/`): the
   noise-aware 4x4 protocol of `gpu_scale` (equivariant policy, batch 1024,
   H and CNOT on `square:4x4`, 50-gate episodes, fractional distance term,
   padding and LDPC penalties) with the memory term of `MemoryReward`
@@ -429,7 +435,7 @@ agent with its own rediscovery regression.
   process pool (`MemoryTermPool`, one evaluation per distinct stabilizer
   group, synchronous with the training loop). `score` evaluates the best
   code of every run, the nine encoder-objective 4x4 codes of
-  `results/gpu_scale`, and the rotated surface `[[16,1,4]]` with its XZZX
+  `experiments/gpu_scale/runs`, and the rotated surface `[[16,1,4]]` with its XZZX
   deformation under the four profiles at the proxy and the bposd tier;
   `report` writes the tables and figures. Result of the 12-run matrix
   (RunPod A40, 150 min per run, host CPU capped at four cores): every run
@@ -440,7 +446,7 @@ agent with its own rediscovery regression.
   own appears under the ion profile; the proxy tier underestimates the
   discovered codes 5 to 20 times (sampled tier agrees with bposd) because
   their memory circuits carry 0.9 to 1.5 expected faults per shot.
-  Run 2 (`--variant run2`, `results/memory_ppo/run2/`, second section of
+  Run 2 (`--variant run2`, `experiments/memory_ppo/runs/run2/`, second section of
   the report): no LDPC term, selection by the training `p_round`, a
   gate-count term above 1.25 times the surface code's two-qubit gates per
   round, the sampled tier for candidates above 0.8 expected faults per

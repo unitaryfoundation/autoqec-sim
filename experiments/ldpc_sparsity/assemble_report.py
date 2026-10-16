@@ -3,7 +3,7 @@
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
-"""Assemble experiments/ldpc_sparsity/REPORT.md from results/ldpc_sparsity/*.json.
+"""Assemble experiments/ldpc_sparsity/REPORT.md from experiments/ldpc_sparsity/runs/*.json.
 Every number in the prose is computed here from the JSONs; the planned
 cells that have no JSON are listed as pending.
 
@@ -21,7 +21,7 @@ from autoqec_sim.experiments import ldpc_sparsity as S
 from autoqec_sim.experiments.ldpc_sparsity import CELL_SPECS, TARGETS
 
 ROOT = Path(__file__).resolve().parents[2]
-RES = ROOT / "results" / "ldpc_sparsity"
+RES = ROOT / "experiments" / "ldpc_sparsity" / "runs"
 OUT = ROOT / "experiments" / "ldpc_sparsity" / "REPORT.md"
 FIG = ROOT / "experiments" / "ldpc_sparsity" / "figures"
 
@@ -93,7 +93,7 @@ def _time_split(r):
 def exact_section(A, recs):
     """The exact-mask section: the masked variants on the 16-qubit cells,
     exact mask against the greedy controls, with the benchmark of the mask
-    cost (``results/ldpc_sparsity/bench/*.json``) and the hand-written
+    cost (``experiments/ldpc_sparsity/runs/bench/*.json``) and the hand-written
     reading in ``exact_mask.md``."""
     rs = S.exact_section_recs(recs)
     if not rs:
@@ -231,14 +231,14 @@ def main():
     n_planned = sum(len(v) for v in PLANNED.values())
     status = "complete" if not pending else f"partial ({len(recs)} of {n_planned} planned runs; the pending cells are listed at the end)"
     A(f"Status: {status}. Every number below comes from a JSON under")
-    A("`results/ldpc_sparsity/` (named in the last column of the run table);")
+    A("`experiments/ldpc_sparsity/runs/` (named in the last column of the run table);")
     A("the tables and figures regenerate with")
     A("`uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity report`")
     A("and this file with `uv run --extra rl python experiments/ldpc_sparsity/assemble_report.py`.")
     A("Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective` forms `shaped` and `terminal`,")
     A("`heavy_generator_count`, `greedy_action_mask`),")
-    A("`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `results/ldpc_sparsity/logs/`;")
-    A("compute records: `results/ldpc_sparsity/compute_pod.jsonl`, imported into")
+    A("`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;")
+    A("compute records: `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, imported into")
     A("`genesis/ledger/compute.jsonl`.")
     A("")
     A("## Question")
@@ -403,11 +403,11 @@ def main():
     A("")
     A("| file | contents |")
     A("|---|---|")
-    A("| `results/ldpc_sparsity/logs/*.log`, `logs/queue.log` | per-update logs of every run, queue log with the load at every start |")
-    A("| `results/ldpc_sparsity/queue.sh`, `make_job.sh`, `jobs/` | the 3-slot pod runner and the job scripts (each run under the compute ledger's `wrap`) |")
-    A("| `results/ldpc_sparsity/compute_pod.jsonl`, `import_pod_ledger.py` | the pod's ledger records and their import into `genesis/ledger/compute.jsonl` |")
+    A("| `experiments/ldpc_sparsity/runs/logs/*.log`, `logs/queue.log` | per-update logs of every run, queue log with the load at every start |")
+    A("| `experiments/ldpc_sparsity/runs/queue.sh`, `make_job.sh`, `jobs/` | the 3-slot pod runner and the job scripts (each run under the compute ledger's `wrap`) |")
+    A("| `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, `import_pod_ledger.py` | the pod's ledger records and their import into `genesis/ledger/compute.jsonl` |")
     A("| `experiments/ldpc_sparsity/figures/` | the figures, drawn by `report` with `experiments.figstyle` |")
-    A("| `results/ldpc_sparsity/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |")
+    A("| `experiments/ldpc_sparsity/runs/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |")
     A("| `experiments/ldpc_sparsity/exact_mask.md`, `verdict.md` | the hand-written reading of the exact-mask section and the verdict, inserted by the assembly |")
     A("| `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_sparsity.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |")
     text = "\n".join(lines) + "\n"

@@ -18,7 +18,7 @@ target distance, which this module sets per cell. The next heavy-hex size
 (``heavy_hex:1x2``, 21 qubits) is excluded because
 :meth:`autoqec_sim.code.StabilizerCode.distance_exact` refuses ``n > 20``.
 
-Files under the output directory (default ``results/heavy_hex_overnight``):
+Files under the output directory (default ``experiments/heavy_hex_overnight/runs``):
 
 - ``run_<spec>_n<n>_d<d>_seed<s>.json``: one record per finished run,
   written when the run completes; these are the checkpoints, and ``drive``
@@ -58,7 +58,7 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-DEFAULT_OUT = Path("results/heavy_hex_overnight")
+DEFAULT_OUT = Path("experiments/heavy_hex_overnight/runs")
 SEEDS = tuple(range(6))
 THREADS = 4
 BATCH = 256

@@ -1,14 +1,14 @@
 # Sparsity as a property of the trained policy
 
 Status: partial (32 of 60 planned runs; the pending cells are listed at the end). Every number below comes from a JSON under
-`results/ldpc_sparsity/` (named in the last column of the run table);
+`experiments/ldpc_sparsity/runs/` (named in the last column of the run table);
 the tables and figures regenerate with
 `uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity report`
 and this file with `uv run --extra rl python experiments/ldpc_sparsity/assemble_report.py`.
 Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective` forms `shaped` and `terminal`,
 `heavy_generator_count`, `greedy_action_mask`),
-`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `results/ldpc_sparsity/logs/`;
-compute records: `results/ldpc_sparsity/compute_pod.jsonl`, imported into
+`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;
+compute records: `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, imported into
 `genesis/ledger/compute.jsonl`.
 
 ## Question
@@ -557,45 +557,45 @@ Planned runs without a result JSON at the time of writing:
 
 | file | contents |
 |---|---|
-| `results/ldpc_sparsity/mask_n12_k2_all_to_all_seed0.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 8434 s, first feasible code at 92,160 |
-| `results/ldpc_sparsity/mask_n12_k2_all_to_all_seed1.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,503,232 env steps, 9447 s, first feasible code at 81,152 |
-| `results/ldpc_sparsity/mask_n12_k2_all_to_all_seed2.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,503,232 env steps, 9678 s, first feasible code at 120,576 |
-| `results/ldpc_sparsity/mask_n12_k2_square_seed0.json` | mask, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 2502 s, first feasible code at 296,448 |
-| `results/ldpc_sparsity/mask_terminal_3M_b1024_n16_k4_all_to_all_seed0.json` | mask_terminal (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,014,656 env steps, 3665 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_3M_b1024_n20_k4_all_to_all_seed0.json` | mask_terminal (3M steps, batch 1024), [[20, 4, 3]] w_max 4 on all_to_all:20, seed 0, 3,014,656 env steps, 5797 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_3M_n16_k4_all_to_all_seed0.json` | mask_terminal (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,002,368 env steps, 22212 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_3M_n16_k4_square_seed0.json` | mask_terminal (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 10971 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_3M_tableau_n16_k4_square_seed0.json` | mask_terminal (3M steps, tableau mask), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 2840 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_b1024_n16_k4_all_to_all_seed0.json` | mask_terminal (exact mask) (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,014,656 env steps, 17949 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_b1024_n16_k4_square_seed0.json` | mask_terminal (exact mask) (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,014,656 env steps, 4736 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_all_to_all_seed0.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,002,368 env steps, 27719 s, first feasible code at 1,565,696 |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_all_to_all_seed1.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 3,002,368 env steps, 28135 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_all_to_all_seed2.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 3,002,368 env steps, 27972 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_square_seed0.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 12088 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_square_seed1.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 3,002,368 env steps, 9502 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_exact_3M_n16_k4_square_seed2.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 3,002,368 env steps, 10568 s, no feasible code |
-| `results/ldpc_sparsity/mask_terminal_n12_k2_all_to_all_seed0.json` | mask_terminal, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 9216 s, first feasible code at 192,512 |
-| `results/ldpc_sparsity/mask_terminal_n12_k2_square_seed0.json` | mask_terminal, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 3490 s, first feasible code at 296,448 |
-| `results/ldpc_sparsity/shaped_c0.05_n12_k2_all_to_all_seed0.json` | shaped (c = 0.05), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 4156 s, first feasible code at 346,880 |
-| `results/ldpc_sparsity/shaped_c0.05_n12_k2_square_seed0.json` | shaped (c = 0.05), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1478 s, no feasible code |
-| `results/ldpc_sparsity/shaped_c0.1_n12_k2_all_to_all_seed0.json` | shaped (c = 0.1), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 5999 s, no feasible code |
-| `results/ldpc_sparsity/shaped_c0.1_n12_k2_square_seed0.json` | shaped (c = 0.1), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1383 s, first feasible code at 194,304 |
-| `results/ldpc_sparsity/shaped_c0.2_n12_k2_all_to_all_seed0.json` | shaped (c = 0.2), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 3567 s, no feasible code |
-| `results/ldpc_sparsity/shaped_c0.2_n12_k2_square_seed0.json` | shaped (c = 0.2), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1188 s, no feasible code |
-| `results/ldpc_sparsity/terminal_n12_k2_all_to_all_seed0.json` | terminal, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 6684 s, first feasible code at 250,880 |
-| `results/ldpc_sparsity/terminal_n12_k2_square_seed0.json` | terminal, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1774 s, no feasible code |
-| `results/ldpc_sparsity/unnormalized_3M_n12_k2_square_seed0.json` | unnormalized (3M steps), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 3,002,368 env steps, 4260 s, no feasible code |
-| `results/ldpc_sparsity/unnormalized_n12_k2_all_to_all_seed0.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 6699 s, no feasible code |
-| `results/ldpc_sparsity/unnormalized_n12_k2_all_to_all_seed1.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,503,232 env steps, 4908 s, no feasible code |
-| `results/ldpc_sparsity/unnormalized_n12_k2_all_to_all_seed2.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,503,232 env steps, 5276 s, first feasible code at 373,248 |
-| `results/ldpc_sparsity/unnormalized_n12_k2_square_seed0.json` | unnormalized, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1844 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_n12_k2_all_to_all_seed0.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 8434 s, first feasible code at 92,160 |
+| `experiments/ldpc_sparsity/runs/mask_n12_k2_all_to_all_seed1.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,503,232 env steps, 9447 s, first feasible code at 81,152 |
+| `experiments/ldpc_sparsity/runs/mask_n12_k2_all_to_all_seed2.json` | mask, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,503,232 env steps, 9678 s, first feasible code at 120,576 |
+| `experiments/ldpc_sparsity/runs/mask_n12_k2_square_seed0.json` | mask, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 2502 s, first feasible code at 296,448 |
+| `experiments/ldpc_sparsity/runs/mask_terminal_3M_b1024_n16_k4_all_to_all_seed0.json` | mask_terminal (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,014,656 env steps, 3665 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_3M_b1024_n20_k4_all_to_all_seed0.json` | mask_terminal (3M steps, batch 1024), [[20, 4, 3]] w_max 4 on all_to_all:20, seed 0, 3,014,656 env steps, 5797 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_3M_n16_k4_all_to_all_seed0.json` | mask_terminal (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,002,368 env steps, 22212 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_3M_n16_k4_square_seed0.json` | mask_terminal (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 10971 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_3M_tableau_n16_k4_square_seed0.json` | mask_terminal (3M steps, tableau mask), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 2840 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_b1024_n16_k4_all_to_all_seed0.json` | mask_terminal (exact mask) (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,014,656 env steps, 17949 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_b1024_n16_k4_square_seed0.json` | mask_terminal (exact mask) (3M steps, batch 1024), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,014,656 env steps, 4736 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_all_to_all_seed0.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 0, 3,002,368 env steps, 27719 s, first feasible code at 1,565,696 |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_all_to_all_seed1.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 1, 3,002,368 env steps, 28135 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_all_to_all_seed2.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on all_to_all:16, seed 2, 3,002,368 env steps, 27972 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_square_seed0.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 0, 3,002,368 env steps, 12088 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_square_seed1.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 1, 3,002,368 env steps, 9502 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_exact_3M_n16_k4_square_seed2.json` | mask_terminal (exact mask) (3M steps), [[16, 4, 3]] w_max 4 on square:4x4, seed 2, 3,002,368 env steps, 10568 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/mask_terminal_n12_k2_all_to_all_seed0.json` | mask_terminal, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 9216 s, first feasible code at 192,512 |
+| `experiments/ldpc_sparsity/runs/mask_terminal_n12_k2_square_seed0.json` | mask_terminal, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 3490 s, first feasible code at 296,448 |
+| `experiments/ldpc_sparsity/runs/shaped_c0.05_n12_k2_all_to_all_seed0.json` | shaped (c = 0.05), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 4156 s, first feasible code at 346,880 |
+| `experiments/ldpc_sparsity/runs/shaped_c0.05_n12_k2_square_seed0.json` | shaped (c = 0.05), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1478 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/shaped_c0.1_n12_k2_all_to_all_seed0.json` | shaped (c = 0.1), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 5999 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/shaped_c0.1_n12_k2_square_seed0.json` | shaped (c = 0.1), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1383 s, first feasible code at 194,304 |
+| `experiments/ldpc_sparsity/runs/shaped_c0.2_n12_k2_all_to_all_seed0.json` | shaped (c = 0.2), [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 3567 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/shaped_c0.2_n12_k2_square_seed0.json` | shaped (c = 0.2), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1188 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/terminal_n12_k2_all_to_all_seed0.json` | terminal, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 6684 s, first feasible code at 250,880 |
+| `experiments/ldpc_sparsity/runs/terminal_n12_k2_square_seed0.json` | terminal, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1774 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/unnormalized_3M_n12_k2_square_seed0.json` | unnormalized (3M steps), [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 3,002,368 env steps, 4260 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/unnormalized_n12_k2_all_to_all_seed0.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 0, 1,503,232 env steps, 6699 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/unnormalized_n12_k2_all_to_all_seed1.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 1, 1,503,232 env steps, 4908 s, no feasible code |
+| `experiments/ldpc_sparsity/runs/unnormalized_n12_k2_all_to_all_seed2.json` | unnormalized, [[12, 2, 3]] w_max 4 on all_to_all:12, seed 2, 1,503,232 env steps, 5276 s, first feasible code at 373,248 |
+| `experiments/ldpc_sparsity/runs/unnormalized_n12_k2_square_seed0.json` | unnormalized, [[12, 2, 3]] w_max 4 on square:3x4, seed 0, 1,503,232 env steps, 1844 s, no feasible code |
 
 | file | contents |
 |---|---|
-| `results/ldpc_sparsity/logs/*.log`, `logs/queue.log` | per-update logs of every run, queue log with the load at every start |
-| `results/ldpc_sparsity/queue.sh`, `make_job.sh`, `jobs/` | the 3-slot pod runner and the job scripts (each run under the compute ledger's `wrap`) |
-| `results/ldpc_sparsity/compute_pod.jsonl`, `import_pod_ledger.py` | the pod's ledger records and their import into `genesis/ledger/compute.jsonl` |
+| `experiments/ldpc_sparsity/runs/logs/*.log`, `logs/queue.log` | per-update logs of every run, queue log with the load at every start |
+| `experiments/ldpc_sparsity/runs/queue.sh`, `make_job.sh`, `jobs/` | the 3-slot pod runner and the job scripts (each run under the compute ledger's `wrap`) |
+| `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, `import_pod_ledger.py` | the pod's ledger records and their import into `genesis/ledger/compute.jsonl` |
 | `experiments/ldpc_sparsity/figures/` | the figures, drawn by `report` with `experiments.figstyle` |
-| `results/ldpc_sparsity/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |
+| `experiments/ldpc_sparsity/runs/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |
 | `experiments/ldpc_sparsity/exact_mask.md`, `verdict.md` | the hand-written reading of the exact-mask section and the verdict, inserted by the assembly |
 | `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_sparsity.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |

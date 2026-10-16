@@ -6,7 +6,7 @@
 """RL scaling probe: how far the PPO agent scales in ``n``.
 
 Three questions, each answered by a small controlled run with a fixed
-budget (``results/scaling/`` holds the outputs, ``experiments/scaling/
+budget (``experiments/scaling/runs/`` holds the outputs, ``experiments/scaling/
 REPORT.md`` the write-up):
 
 1. ``diag``: why the 4x4 setting (``n = 16``, ``k = 1``, target ``d = 4``,
@@ -60,7 +60,7 @@ from ..reward import (
 from ..symplectic import rref
 from ..tableau import ActionTable, BatchTableau, apply_gate
 
-DEFAULT_OUT = Path("results/scaling")
+DEFAULT_OUT = Path("experiments/scaling/runs")
 EXACT_GENERATORS = 15  # exact w* up to n - k = 15 (the 4x4 target)
 W_STAR_SAMPLE = 16  # terminal states per sampled update for the w* statistic
 W_STAR_EVERY = 10  # updates between w* samples
@@ -297,7 +297,7 @@ def w_star_sample(env: DiagEnv) -> dict | None:
 # equivariant policy: now ``autoqec_sim.agents.policies.equivariant_actor_critic``
 # (``PPOConfig(policy="equivariant")``). The runs below still build the agent
 # with ``policy="mlp"`` and swap the network in afterwards, exactly as the
-# recorded runs in results/scaling/ did, so that their torch RNG stream (MLP
+# recorded runs in experiments/scaling/runs/ did, so that their torch RNG stream (MLP
 # initialization first, then the equivariant one) and hence their trajectories
 # are reproducible.
 # --------------------------------------------------------------------------
@@ -1003,7 +1003,7 @@ def main(argv=None):
     p.add_argument("--out", default=None)
     p.add_argument("--verbose", action="store_true")
 
-    p = sub.add_parser("report", help="print the tables and draw the figures from results/scaling")
+    p = sub.add_parser("report", help="print the tables and draw the figures from experiments/scaling/runs")
     p.add_argument("--dir", default=str(DEFAULT_OUT))
     p.add_argument("--figures", default="experiments/scaling/figures")
 

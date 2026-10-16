@@ -1,6 +1,6 @@
 # PPO with the memory objective on the 4x4 setting
 
-Status: 12 runs of run 1 and 9 runs of run 2 recorded. Every number below is read from a JSON under `results/memory_ppo/` (`run_*.json`, `scores.json`, `run2/`) or `results/gpu_scale/run_noise4x4_*.json`; the tables regenerate with `python -m autoqec_sim.experiments.memory_ppo report`. Code: `src/autoqec_sim/experiments/memory_ppo.py` (module docstring: reward, profiles, scales, selection); objective: `src/autoqec_sim/memory_objective.py`, `docs/memory_objective.md`.
+Status: 12 runs of run 1 and 9 runs of run 2 recorded. Every number below is read from a JSON under `experiments/memory_ppo/runs/` (`run_*.json`, `scores.json`, `run2/`) or `experiments/gpu_scale/runs/run_noise4x4_*.json`; the tables regenerate with `python -m autoqec_sim.experiments.memory_ppo report`. Code: `src/autoqec_sim/experiments/memory_ppo.py` (module docstring: reward, profiles, scales, selection); objective: `src/autoqec_sim/memory_objective.py`, `docs/memory_objective.md`.
 
 # Run 1: memory term with the LDPC penalty, proxy tier, highest-reward selection
 
@@ -13,7 +13,7 @@ which is denser than the sparsest basis of the same group (the replayed rotated
 surface code itself carries 224 two-qubit gates per round in that basis against
 192 in its sparsest; the known codes below were entered in their sparse form,
 so they were not affected). The run-2 scoring pass
-(`results/memory_ppo/run2/scores.json`) re-scores the 12 best codes of this
+(`experiments/memory_ppo/runs/run2/scores.json`) re-scores the 12 best codes of this
 section on their sparsest bases: 236 to 360 two-qubit gates per round instead
 of 280 to 468, 0.75 to 1.25 expected faults per shot instead of 0.94 to 1.54,
 and bposd `p_round` on the training profile 1.5 to 5.3 times the surface code
@@ -32,9 +32,9 @@ seed concurrent, 150 min cap per run, host CPU capped at four cores (`taskset
 1.18M to 2.21M env steps (budget 3M) and every run reached `d = 4` (first
 success at 256k to 444k env steps). Scores: the best code of each run, the
 lowest-proxy code of each run, the nine encoder-objective 4x4 codes of
-`results/gpu_scale`, and the rotated surface `[[16,1,4]]` with its XZZX
+`experiments/gpu_scale/runs`, and the rotated surface `[[16,1,4]]` with its XZZX
 deformation (35 codes), under the four profiles at the proxy, sampled, and
-bposd tiers (`results/memory_ppo/scores.json`). Profiles: `ion` is the chain
+bposd tiers (`experiments/memory_ppo/runs/scores.json`). Profiles: `ion` is the chain
 preset at 0.25 with sequential timing and bare ancillas, `ion+flag` the same
 with one flag per generator, `board` the qldpc-challenge recipe at 0.25,
 `heron` the Heron r2 rates at 0.05 (the "Scales" paragraph below says why not 1
@@ -293,7 +293,7 @@ Modal code of the last 20 updates: 7864 of 13761 successes, same as selected: no
 
 ## Cross-evaluation
 
-Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `results/gpu_scale` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. Entries: memory p_round (both bases summed, `R = 4`), mean over codes with [min, max]. Smaller is better. bposd tier: the pinned BP+OSD decoder, 5000 initial shots grown to 100 failures or 100000 shots per basis.
+Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `experiments/gpu_scale/runs` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. Entries: memory p_round (both bases summed, `R = 4`), mean over codes with [min, max]. Smaller is better. bposd tier: the pinned BP+OSD decoder, 5000 initial shots grown to 100 failures or 100000 shots per basis.
 
 bposd tier (validation):
 
@@ -496,7 +496,7 @@ The sampled tier took 15 to 61 percent of the evaluations in the bare cells and
 45 codes (9 run-2 selected, 1 run-2 highest-reward alternate that differs from
 the selected code, 12 run-1 best, 12 run-1 lowest-proxy, 9 encoder-objective,
 rotated surface, XZZX) under the four profiles at the proxy, sampled, and bposd
-tiers, all on the sparsest basis (`results/memory_ppo/run2/scores.json`).
+tiers, all on the sparsest basis (`experiments/memory_ppo/runs/run2/scores.json`).
 
 Answer: does selecting on the proxy inside its valid regime close the gap to
 the surface code, and by how much? Partly. Under bposd on the training profile
@@ -663,7 +663,7 @@ Modal code of the last 20 updates: 8816 of 12231 successes, same as selected: no
 
 ## Cross-evaluation
 
-Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `results/gpu_scale` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. Entries: memory p_round (both bases summed, `R = 4`), mean over codes with [min, max]. Smaller is better. bposd tier: the pinned BP+OSD decoder, 5000 initial shots grown to 100 failures or 100000 shots per basis.
+Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `experiments/gpu_scale/runs` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. Entries: memory p_round (both bases summed, `R = 4`), mean over codes with [min, max]. Smaller is better. bposd tier: the pinned BP+OSD decoder, 5000 initial shots grown to 100 failures or 100000 shots per basis.
 
 bposd tier (validation):
 

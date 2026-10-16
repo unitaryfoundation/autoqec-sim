@@ -18,7 +18,7 @@ Rules of the repository:
   in `docs/gpu.md`, so a GPU backend can
   replace them without touching the surrounding code.
 - A change that affects search results reruns the full-budget regressions
-  and updates `results/regression.json` or `results/regression_ppo.json`
+  and updates `experiments/regression/regression.json` or `experiments/regression/regression_ppo.json`
   and the tables in `docs/experiments.md` (`docs/reproduce.md` has the commands).
 - New reward terms or constraints get a verification independent of the
   reward (exact distance, enumerators), as `regress` does.

@@ -27,7 +27,7 @@ policy:
     ``schedule_rate``;
 ``penalty``
     the regression's form, for reference (the scaling probe's runs of it
-    are in ``results/scaling/``).
+    are in ``experiments/scaling/runs/``).
 
 Every run gets the same budget, 1,500,000 env steps or 20 minutes,
 whichever comes first, and no early stop, so the success rate of the
@@ -38,7 +38,7 @@ the updates after the first success and over the last 25 updates, the
 distribution of exact ``d`` and ``w*`` over the terminal states of the
 last 25 updates, a probe of the trained policy (256 sampled episodes from
 a fresh reset), and the per-update history. ``report`` prints the tables of
-``experiments/ldpc_scaling/REPORT.md`` from ``results/ldpc_scaling/``.
+``experiments/ldpc_scaling/REPORT.md`` from ``experiments/ldpc_scaling/runs/``.
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ from ..reward import batched_distance, low_weight_stabilizer_penalty
 from ..symplectic import rref
 from .scaling import describe_code, probe_policy, replay_gates
 
-DEFAULT_OUT = Path("results/ldpc_scaling")
+DEFAULT_OUT = Path("experiments/ldpc_scaling/runs")
 EXACT_GENERATORS = 15
 TERMINAL_WINDOW = 25  # updates over which the terminal-state statistics of the report are summed
 
@@ -394,7 +394,7 @@ def sources_table(recs: list[dict]) -> str:
     lines = ["| file | contents |", "|---|---|"]
     for r in sorted(recs, key=lambda r: r["_file"]):
         lines.append(
-            f"| `results/ldpc_scaling/{Path(r['_file']).name}` | {form_label(r)} form, [[{r['n']}, {r['k']}, {r['d']}]] w_max {r['w_max']} on {r['graph']}, "
+            f"| `experiments/ldpc_scaling/runs/{Path(r['_file']).name}` | {form_label(r)} form, [[{r['n']}, {r['k']}, {r['d']}]] w_max {r['w_max']} on {r['graph']}, "
             f"seed {r['seed']}, {r['env_steps']:,} env steps, {r['wall_time_s']:.0f} s, {'success' if r['success'] else 'no success'} |"
         )
     return "\n".join(lines)
@@ -509,7 +509,7 @@ def main(argv=None):
     p.add_argument("--policy", choices=("mlp", "equivariant", "auto"), default="equivariant")
     p.add_argument("--out", default=None)
     p.add_argument("--verbose", action="store_true")
-    p = sub.add_parser("report", help="print the tables from results/ldpc_scaling and draw the figures")
+    p = sub.add_parser("report", help="print the tables from experiments/ldpc_scaling/runs and draw the figures")
     p.add_argument("--dir", default=str(DEFAULT_OUT))
     p.add_argument("--figures", default="experiments/ldpc_scaling/figures", help="directory for the figures ('' to skip)")
     args = ap.parse_args(argv)

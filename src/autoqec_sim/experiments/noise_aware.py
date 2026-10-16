@@ -47,7 +47,7 @@ with ``max_weight = 1``, the padding penalty of the rediscovery
 regression: without it the agent embeds a smaller code and leaves qubits
 idle, which the circuit-level objective rewards since an idle ``|0>`` qubit
 contributes only trivially detected faults; see
-``results/noise_aware/pilot/no_padding_penalty/``), ``d(s)`` is the exact
+``experiments/noise_aware/runs/pilot/no_padding_penalty/``), ``d(s)`` is the exact
 distance computed up to ``d* - 1``
 (:func:`autoqec_sim.reward.distance_reward`, shifted by -1 so that every
 non-target state has a negative dense reward and termination is never
@@ -91,7 +91,7 @@ Run one cell (setting, profile, seed)::
         --setting 3x3 --profile ion --seed 0 --threads 2
 
 then ``baselines --setting 3x3``, and ``report`` to write
-``results/noise_aware/REPORT.md`` and the figures.
+``experiments/noise_aware/runs/REPORT.md`` and the figures.
 """
 
 from __future__ import annotations
@@ -153,7 +153,7 @@ EXACT_GENERATORS = 15  # exact w* up to n - k = 15 (the 4x4 setting)
 CALIBRATION_CIRCUITS = 64
 CALIBRATION_SEED = 0
 BATCH = 256
-DEFAULT_OUT = Path("results/noise_aware")
+DEFAULT_OUT = Path("experiments/noise_aware/runs")
 
 
 # --------------------------------------------------------------------------

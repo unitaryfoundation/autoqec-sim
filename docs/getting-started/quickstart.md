@@ -8,16 +8,10 @@ undetected mass over all Paulis below the target distance of 3, and its
 default gate set is H, S, and CNOT on all-to-all connectivity. The
 evolutionary search evolves gate sequences until one reaches the target
 reward, and `StabilizerCode.from_gates` reads the code off the winning
-circuit. This is `examples/quickstart.py`; it runs in under a second.
+circuit. This is `docs/examples/quickstart.py`; it runs in under a second.
 
 ```python
-from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
-
-env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, seed=0)
-result = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
-
-code = StabilizerCode.from_gates(5, 1, result.gates)
-print(code.parameters(), code.stabilizer_strings())
+--8<-- "docs/examples/quickstart.py:quickstart"
 ```
 
 The output is `(5, 1, 3)` followed by four stabilizer generators: a
@@ -28,7 +22,7 @@ The output is `(5, 1, 3)` followed by four stabilizer generators: a
 The rest of this page rediscovers the [[5,1,3]] code with the
 regression's target, verifies it independently of the reward, and scores
 its encoding circuit under a device noise profile. The whole script is
-`examples/rediscover_and_score.py` and runs in about two seconds.
+`docs/examples/rediscover_and_score.py` and runs in about two seconds.
 
 ### Search
 
@@ -41,15 +35,7 @@ over all weight-1 and weight-2 Paulis plus a penalty on weight-1
 stabilizers.
 
 ```python
-from autoqec_sim.env import CodeDiscoveryEnv
-from autoqec_sim.regress import TARGETS, make_reward
-from autoqec_sim.search import EvolutionarySearch
-
-target = TARGETS["five_qubit"]
-env = CodeDiscoveryEnv(n=5, k=1, batch_size=512, gates=target.gates, max_steps=target.max_steps,
-                       reward_fn=make_reward(target), seed=0)
-res = EvolutionarySearch(env, seed=0).run(max_evaluations=30_000)
-print(f"search: success={res.success} evaluations={res.evaluations} gates={len(res.gates)} wall={res.wall_time_s:.1f} s")
+--8<-- "docs/examples/rediscover_and_score.py:search"
 ```
 
 ### Verify
@@ -60,18 +46,7 @@ the stabilizer group and its normalizer, which are compared with the
 reference code. This check does not use the reward.
 
 ```python
-import numpy as np
-
-from autoqec_sim import BatchTableau, StabilizerCode, known_codes
-
-tab = BatchTableau(5, 1)
-for gate, a, b in res.gates:
-    tab.apply(gate, a, b if b >= 0 else None)
-code = StabilizerCode.from_tableau(tab.array, k=1)
-ref = known_codes.get("five_qubit")
-print(f"code: n={code.n} k={code.k} d={code.distance_exact()} css={code.is_css()}")
-match = all(np.array_equal(a, b) for a, b in zip(code.weight_enumerators(), ref.weight_enumerators(), strict=True))
-print("enumerators match [[5,1,3]]:", match)
+--8<-- "docs/examples/rediscover_and_score.py:verify"
 ```
 
 The code has distance 3, is not CSS, and its enumerators match the
@@ -86,11 +61,7 @@ preset at a quarter of its measured rates is one of the
 [device presets](../noise_presets.md).
 
 ```python
-from autoqec_sim.circuit_noise import circuit_level_reward
-from autoqec_sim.noise import presets
-
-r = circuit_level_reward(tab.array, 1, [res.gates], presets.forte(), scale=0.25)
-print(f"circuit-level reward under forte @ 0.25: {r[0]:.4f}")
+--8<-- "docs/examples/rediscover_and_score.py:score"
 ```
 
 ## Noisify a circuit of your own
@@ -98,35 +69,10 @@ print(f"circuit-level reward under forte @ 0.25: {r[0]:.4f}")
 The noise module also works on a plain `stim.Circuit`. A skeleton in the
 TICK-layer convention is noisified under a preset, and the detector error
 model gives the mechanism count and the expected number of faults. The
-script is `examples/noise_quickstart.py`.
+script is `docs/examples/noise_quickstart.py`.
 
 ```python
-import stim
-
-from autoqec_sim import noise as nm
-from autoqec_sim.noise import presets
-
-skeleton = stim.Circuit("""
-    R 0 1 2 3 4
-    TICK
-    CX 0 1 2 3
-    TICK
-    CX 2 1 4 3
-    TICK
-    M 1 3
-    DETECTOR rec[-2]
-    DETECTOR rec[-1]
-    TICK
-    M 0 2 4
-    OBSERVABLE_INCLUDE(0) rec[-3]
-""")
-
-noisy = nm.apply(skeleton, presets.forte(), scale=0.25)
-dem = nm.dem(noisy)
-print("mechanisms:", nm.mechanism_count(dem), "expected faults:", round(nm.fault_expectation(dem), 5))
-
-profile = presets.heron(graph=nm.path(5)).with_bias(10.0).with_timing(nm.partial(1))
-print(nm.summarize(profile, scale=1.0))
+--8<-- "docs/examples/noise_quickstart.py:noise"
 ```
 
 ## Commands

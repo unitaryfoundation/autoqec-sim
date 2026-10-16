@@ -15,7 +15,7 @@ mechanical once the OWNER steps before them are settled.
   without the `rl` extra; one Linux job with CPU torch; a build job) and
   `.github/workflows/release.yml` (build and attach wheels on a `v*` tag).
 - LICENSE (Apache-2.0), CITATION.cff, CONTRIBUTING.md, `docs/reproduce.md`,
-  `scripts/reproduce.sh`. Repository URLs point at `unitaryfoundation`.
+  `tools/reproduce.sh`. Repository URLs point at `unitaryfoundation`.
 
 ## Remaining steps
 
@@ -26,7 +26,7 @@ mechanical once the OWNER steps before them are settled.
    CITATION.cff: fill the ORCID and set `date-released` to the tag date;
    CHANGELOG.md: replace TBD.
 
-2. RUN: `scripts/release.sh v0.2.0` dates CITATION.cff and CHANGELOG.md,
+2. RUN: `tools/release.sh v0.2.0` dates CITATION.cff and CHANGELOG.md,
    commits, makes the repository public, tags, and pushes. GitHub Pages is
    already enabled on the `gh-pages` branch the docs workflow maintains (on
    this plan the Pages site is public while the repository is still

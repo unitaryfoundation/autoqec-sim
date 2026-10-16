@@ -3,7 +3,7 @@
 Module `src/autoqec_sim/memory_objective.py`; experiment
 `src/autoqec_sim/experiments/memory_objective.py`; results
 `experiments/memory_objective/REPORT.md` (every number below is copied from
-there, which regenerates from `results/memory_objective/*.json`).
+there, which regenerates from `experiments/memory_objective/runs/*.json`).
 
 ## Why
 
@@ -13,7 +13,7 @@ tested with the Knill-Laflamme kernel. A Hadamard on a data qubit at the
 end of the encoder relabels the weight-1 faults of the last layer, all of
 which the code detects, so the objective cannot distinguish a code from its
 local-Clifford deformations (the rotated surface code, XZZX, and the
-outer-column deformation tie exactly in `results/noise_aware/REPORT.md`,
+outer-column deformation tie exactly in `experiments/noise_aware/runs/REPORT.md`,
 verdict items 3, 4, and 6). Bias tailoring is a statement about how the
 code's stabilizers align with the dominant fault type during repeated
 syndrome extraction, so the reward has to be a memory experiment.
@@ -123,7 +123,7 @@ cached by the reduced row echelon form of the stabilizer group, so each
 distinct code is evaluated once per run. The term depends only on the code,
 not on the encoding circuit that produced it, which is the point: the
 encoder objective rewarded degenerate codes with weight-2 stabilizers and
-saturated at about ten undetected mechanisms (`results/ion_chain/REPORT.md`).
+saturated at about ten undetected mechanisms (`experiments/ion_chain/runs/REPORT.md`).
 
 ## Regime of validity and scales
 
@@ -145,7 +145,7 @@ fault count per shot so a caller can see when a code is outside the regime.
 
 Measured on the laptop (arm64, one BLAS thread, one process) for both
 bases at `R = d`, all-to-all layout, hook-aware order; from
-`results/memory_objective/benchmark.json`. The DEM derivation is 40 to 60
+`experiments/memory_objective/runs/benchmark.json`. The DEM derivation is 40 to 60
 ms per basis at `n = 9` and dominates the proxy tier; the hook-order search
 is 1 to 2 ms at `n <= 9` and 0.1 s for the weight-6 checks of the
 [[16,4,4]] code.
@@ -169,7 +169,7 @@ the term parallelizes over codes across processes).
 
 ## Benchmark and rank correlation
 
-Benchmark (`results/memory_objective/benchmark.json`): five codes
+Benchmark (`experiments/memory_objective/runs/benchmark.json`): five codes
 ([[5,1,3]], Steane, rotated surface [[9,1,3]], the board's [[16,4,4]] SAT
 code, the non-CSS [[9,1,3]] of the noise-aware ion run), three profiles,
 `R = d`, all-to-all, bare ancillas, hook-aware order. `p_round` per code
@@ -266,7 +266,7 @@ is 1e-5 per gate slot at this scale while its readout flips 2.25e-3 per
 ancilla dominate, consistent with the ion-search finding that the chain
 set makes measurement error dominant. The encoder objective could not
 separate the two codes under any profile (exact tie,
-`results/noise_aware/REPORT.md` item 4).
+`experiments/noise_aware/runs/REPORT.md` item 4).
 
 ## Lattice layout
 

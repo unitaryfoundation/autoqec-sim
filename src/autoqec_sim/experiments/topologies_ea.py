@@ -25,7 +25,7 @@ from pathlib import Path
 from ..search import EvolutionarySearch
 from . import topologies as T
 
-DEFAULT_OUT = Path("results/topologies_ea")
+DEFAULT_OUT = Path("experiments/topologies_ea/runs")
 
 
 def run_cell(topology: str, target_n: int, seed: int, max_evaluations: int | None = None,

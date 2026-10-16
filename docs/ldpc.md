@@ -39,7 +39,7 @@ hands its `success` method to the environment as `success_fn`); the
 the forms on `[[12, 2, 3]]` and `[[16, 4, 3]]` with `w_max = 4` on the
 all-to-all and the square graph, three seeds each, equivariant policy,
 1.5M env steps or 20 minutes per run (`experiments/ldpc_scaling/REPORT.md`,
-runs in `results/ldpc_scaling/`). Result (36 runs plus 4 scale variants, 0.62M to 1.5M env steps each on a
+runs in `experiments/ldpc_scaling/runs/`). Result (36 runs plus 4 scale variants, 0.62M to 1.5M env steps each on a
 shared machine): the `unnormalized` form is the default
 (`ldpc.DEFAULT_LDPC_FORM`). It learns distance where the penalty form
 never did (61 to 69 percent of terminal states at distance 3 on five of
@@ -59,7 +59,7 @@ and the bound is reachable, but the sparsity part is not yet a property of
 the trained policy.
 
 `experiments.ldpc_sparsity` takes the sparsity part further
-(`experiments/ldpc_sparsity/REPORT.md`, runs in `results/ldpc_sparsity/`;
+(`experiments/ldpc_sparsity/REPORT.md`, runs in `experiments/ldpc_sparsity/runs/`;
 the 12-qubit cells, `[[16, 4, 3]]` pending): a dense per-step term in
 reward units (`LdpcObjective(form="shaped", shaping=c)`, `c` = 0.05, 0.1,
 0.2) traps at distance 1 like the penalty form; a count-unit terminal

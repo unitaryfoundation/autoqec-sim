@@ -1,6 +1,7 @@
 """Quick start: noisify a one-round repetition-code skeleton under two presets.
-Kept identical to the snippet in README.md and run by scripts/reproduce.sh."""
+The documentation's Quick Start includes the marked section."""
 
+# --8<-- [start:noise]
 import stim
 
 from autoqec_sim import noise as nm
@@ -34,3 +35,4 @@ print("mechanisms:", nm.mechanism_count(dem), "expected faults:", round(nm.fault
 profile = presets.heron(graph=nm.path(5)).with_bias(10.0).with_timing(nm.partial(1))
 print(nm.summarize(profile, scale=1.0))
 print("exact DEM:", profile.dem_exact, "layers:", str(nm.apply(skeleton, profile, 1.0)).count("TICK") + 1)
+# --8<-- [end:noise]

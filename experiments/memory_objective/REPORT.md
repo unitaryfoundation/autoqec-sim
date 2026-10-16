@@ -1,6 +1,6 @@
 # Memory objective: tiers, benchmark, bias sensitivity, PPO smoke run
 
-Every number below is read from the JSON files under `results/memory_objective/` (regenerate with `python -m autoqec_sim.experiments.memory_objective <subcommand>`; this file with `report`). Module `src/autoqec_sim/memory_objective.py`, design note `docs/memory_objective.md`.
+Every number below is read from the JSON files under `experiments/memory_objective/runs/` (regenerate with `python -m autoqec_sim.experiments.memory_objective <subcommand>`; this file with `report`). Module `src/autoqec_sim/memory_objective.py`, design note `docs/memory_objective.md`.
 
 ## Verdict
 

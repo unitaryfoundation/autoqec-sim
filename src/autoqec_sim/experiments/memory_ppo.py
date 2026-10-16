@@ -5,7 +5,7 @@
 # of the License at http://www.apache.org/licenses/LICENSE-2.0
 """PPO on the 4x4 setting with the memory objective as the noise term.
 
-Question. ``results/gpu_scale/REPORT.md`` trains the noise-aware 4x4 cells
+Question. ``experiments/gpu_scale/runs/REPORT.md`` trains the noise-aware 4x4 cells
 (``n = 16``, ``k = 1``, target ``d = 4``, ``square:4x4``, H and CNOT,
 50-gate episodes, equivariant policy, 1024 parallel episodes) with the
 encoder objective: the undetected fault mass of the encoding circuit. That
@@ -75,7 +75,7 @@ their calibrated scales, the numbers of the ``gpu_scale`` tables) and
 scored with the memory objective under all four cells' profiles at the
 proxy tier. ``score`` then evaluates, in a host process pool, the best code
 of every run, the best codes of the nine encoder-objective cells of
-``results/gpu_scale``, and the rotated surface ``[[16,1,4]]`` with its
+``experiments/gpu_scale/runs``, and the rotated surface ``[[16,1,4]]`` with its
 XZZX deformation under the four profiles at the proxy tier and at the
 bposd tier (the board's pinned BP+OSD decoder, sampled, validation);
 ``report`` writes the tables of ``experiments/memory_ppo/REPORT.md`` from
@@ -95,9 +95,9 @@ code: 224 against 192 two-qubit gates per round). Run 1 evaluated the
 discovered codes on their tableau bases; ``score --sparsify`` re-scores
 them on the sparsest basis for the run-2 comparison.
 
-Files. ``results/memory_ppo/run_<profile>_seed<k>.json`` and a log under
-``results/memory_ppo/logs/``; ``results/memory_ppo/scores.json``; run 2
-under ``results/memory_ppo/run2/``; ``experiments/memory_ppo/REPORT.md``
+Files. ``experiments/memory_ppo/runs/run_<profile>_seed<k>.json`` and a log under
+``experiments/memory_ppo/runs/logs/``; ``experiments/memory_ppo/runs/scores.json``; run 2
+under ``experiments/memory_ppo/runs/run2/``; ``experiments/memory_ppo/REPORT.md``
 (two sections, verdicts from ``verdict.md`` and ``verdict_run2.md``) and
 ``figures/``.
 
@@ -148,9 +148,9 @@ from . import gpu_scale as gs
 from . import noise_aware as na
 from .noise_aware import _json_default, _mean_range
 
-DEFAULT_OUT = Path("results/memory_ppo")
+DEFAULT_OUT = Path("experiments/memory_ppo/runs")
 REPORT_DIR = Path("experiments/memory_ppo")
-ENCODER_DIR = Path("results/gpu_scale")
+ENCODER_DIR = Path("experiments/gpu_scale/runs")
 SETTING = na.SETTINGS["4x4"]
 SEEDS = (0, 1, 2)
 BATCH = 1024
@@ -220,7 +220,7 @@ TITLES = {
 }
 FIGURE_SMOOTH = 10  # updates in the moving average of the success-rate curves
 KNOWN = ("rotated_surface", "xzzx")
-ENCODER_PROFILES = ("board", "ion", "heron")  # cells of results/gpu_scale
+ENCODER_PROFILES = ("board", "ion", "heron")  # cells of experiments/gpu_scale/runs
 
 
 def _now() -> str:
@@ -1040,7 +1040,7 @@ def collect_codes(
     lowest-proxy code in run 1, the highest-reward code in run 2), ``run1``
     (best and lowest-proxy codes of ``run1_dir``), ``encoder``, ``known``."""
     codes = {}
-    rel = "results/memory_ppo" if out_dir == DEFAULT_OUT else str(out_dir)
+    rel = "experiments/memory_ppo/runs" if out_dir == DEFAULT_OUT else str(out_dir)
     if "runs" in which:
         codes.update(_run_codes(load_runs(out_dir), "best", runs_group, rel))
     if "lowest" in which:
@@ -1051,8 +1051,8 @@ def collect_codes(
         )
     if "run1" in which and run1_dir is not None:
         r1 = load_runs(run1_dir)
-        codes.update(_run_codes(r1, "best", "memory", "results/memory_ppo"))
-        codes.update(_run_codes(r1, "lowest_p_round", "memory_low", "results/memory_ppo"))
+        codes.update(_run_codes(r1, "best", "memory", "experiments/memory_ppo/runs"))
+        codes.update(_run_codes(r1, "lowest_p_round", "memory_low", "experiments/memory_ppo/runs"))
     if "encoder" in which:
         for r in load_encoder_runs(encoder_dir):
             if r.get("best"):
@@ -1576,7 +1576,7 @@ def _sections(
         L += [
             f"{h} Cross-evaluation",
             "",
-            f"Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `results/gpu_scale` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. "
+            f"Rows: training cell (selected code of each seed), the alternate codes, the encoder-objective cells of `experiments/gpu_scale/runs` (their best codes, re-scored with the memory objective), and the known codes; columns: evaluation profile. "
             f"Entries: memory p_round (both bases summed, `R = {ROUNDS}`), mean over codes with [min, max]. Smaller is better. bposd tier: the pinned BP+OSD decoder, "
             f"{meta.get('shots')} initial shots grown to {meta.get('min_failures')} failures or {meta.get('max_shots')} shots per basis.",
             "",
@@ -1646,8 +1646,8 @@ def write_report(
     L = [
         "# PPO with the memory objective on the 4x4 setting",
         "",
-        f"Status: {len(recs)} runs of run 1 and {len(recs2)} runs of run 2 recorded. Every number below is read from a JSON under `results/memory_ppo/` "
-        f"(`run_*.json`, `scores.json`, `run2/`) or `results/gpu_scale/run_noise4x4_*.json`; the tables regenerate with "
+        f"Status: {len(recs)} runs of run 1 and {len(recs2)} runs of run 2 recorded. Every number below is read from a JSON under `experiments/memory_ppo/runs/` "
+        f"(`run_*.json`, `scores.json`, `run2/`) or `experiments/gpu_scale/runs/run_noise4x4_*.json`; the tables regenerate with "
         "`python -m autoqec_sim.experiments.memory_ppo report`. Code: `src/autoqec_sim/experiments/memory_ppo.py` "
         "(module docstring: reward, profiles, scales, selection); objective: `src/autoqec_sim/memory_objective.py`, `docs/memory_objective.md`.",
         "",

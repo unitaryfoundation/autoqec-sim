@@ -43,7 +43,7 @@ square and triangular lattices, the latter containing the square edges),
 the same masses for that code's standard-form encoder routed onto the
 graph (best over logical qubit and pivot choice, unpolished).
 
-Every run writes one JSON under ``results/topologies/``; ``report`` writes
+Every run writes one JSON under ``experiments/topologies/runs/``; ``report`` writes
 ``REPORT.md`` from the JSONs. ``python -m autoqec_sim.experiments.topologies
 --help``.
 """
@@ -75,7 +75,7 @@ from ..ldpc import sparsest_basis_stats
 from .noise_aware import code_from_circuit, css_standard_encoder, rotated_surface, route_gates
 from .scaling import LevelDistanceReward, _json_default, replay_gates
 
-DEFAULT_OUT = Path("results/topologies")
+DEFAULT_OUT = Path("experiments/topologies/runs")
 TOPOLOGIES = ("square", "triangular", "heavy_hex")
 TIERS = {"small": 9, "large": 16}
 BUDGETS = {"small": 2_000_000, "large": 4_000_000}

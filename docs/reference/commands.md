@@ -7,7 +7,7 @@ alone; the other two need the `rl` extra.
 
 The known-code rediscovery regression with the evolutionary search.
 `--budget reduced` is what the test suite runs; `--budget full` produced
-`results/regression.json`. [Rediscovery regression](../regression.md) lists
+`experiments/regression/regression.json`. [Rediscovery regression](../regression.md) lists
 the targets and [Reproduce](../reproduce.md) the expected outputs.
 
 ```

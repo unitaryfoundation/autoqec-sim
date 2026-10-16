@@ -25,9 +25,9 @@ stays numpy and calls the torch reward through ``numpy_reward_adapter``
 is the hybrid path. ``--json`` records the run; ``--render`` turns one or
 more such records back into the Markdown tables.
 
-    uv run python scripts/profile_tableau.py --out docs/profile.md
-    uv run --extra rl python scripts/profile_tableau.py --backend torch --device cpu --json out.json
-    uv run python scripts/profile_tableau.py --render out.json
+    uv run python benchmarks/profile_tableau.py --out docs/profile.md
+    uv run --extra rl python benchmarks/profile_tableau.py --backend torch --device cpu --json out.json
+    uv run python benchmarks/profile_tableau.py --render out.json
 """
 
 from __future__ import annotations
@@ -500,7 +500,7 @@ def main(argv=None) -> int:
 def render_generic(be, table: str, bdt: str | None, machine: str, bn: int, bb: int) -> str:
     body = f"""# Profile of the vectorized simulator ({be.name} backend, {be.device})
 
-Output of `scripts/profile_tableau.py --backend {be.name} --device {be.device}`.
+Output of `benchmarks/profile_tableau.py --backend {be.name} --device {be.device}`.
 Columns as in `docs/profile.md`; with the torch backend the reward
 intermediate is the float32 `(B, M, n + k)` block reduced in place (`4 M (n +
 k)` bytes per element) and the env-steps column is the numpy environment
@@ -526,7 +526,7 @@ def render_doc(table: str, bdt: str, machine: str, recs: list[dict], bd: dict, b
     return f"""# CPU profile of the vectorized simulator
 
 Throughput and memory of the batched tableau, the Knill-Laflamme reward,
-and `CodeDiscoveryEnv`, measured by `scripts/profile_tableau.py` (stdlib
+and `CodeDiscoveryEnv`, measured by `benchmarks/profile_tableau.py` (stdlib
 and numpy; no torch). This is a numpy profile on the host CPU of one
 laptop, not the GPU-vectorized simulator the roadmap's week-4 wording
 names; the cuQuantum kernels have not been written (README, "What is left

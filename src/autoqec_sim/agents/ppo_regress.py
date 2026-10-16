@@ -32,7 +32,7 @@ criterion is the same (enumerators of ``S`` and ``N(S)`` against
 ``known_codes.ROTATED_SURFACE_16``). The ``reduced`` budget skips it.
 
 Run as ``python -m autoqec_sim.agents.ppo_regress --budget full --out
-results/regression_ppo.json``.
+experiments/regression/regression_ppo.json``.
 """
 
 from __future__ import annotations
@@ -277,7 +277,7 @@ def target_budget(name: str, budget: str) -> dict:
 
 def comparison_table(ppo: dict, evo_path: str | Path | None = None) -> str:
     """Markdown table of PPO against the evolutionary-search results JSON
-    (``results/regression.json`` by default) on the same targets."""
+    (``experiments/regression/regression.json`` by default) on the same targets."""
     evo = None
     if evo_path is not None and Path(evo_path).exists():
         with open(evo_path) as f:
@@ -311,7 +311,7 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--targets", nargs="*", default=None, choices=list(TARGETS))
     ap.add_argument("--out", default=None, help="results JSON path")
-    ap.add_argument("--compare", default="results/regression.json", help="evolutionary results JSON")
+    ap.add_argument("--compare", default="experiments/regression/regression.json", help="evolutionary results JSON")
     ap.add_argument("--threads", type=int, default=None, help="torch and BLAS thread cap (default 6)")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args(argv)

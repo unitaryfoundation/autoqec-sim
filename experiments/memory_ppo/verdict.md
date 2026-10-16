@@ -7,7 +7,7 @@ which is denser than the sparsest basis of the same group (the replayed rotated
 surface code itself carries 224 two-qubit gates per round in that basis against
 192 in its sparsest; the known codes below were entered in their sparse form,
 so they were not affected). The run-2 scoring pass
-(`results/memory_ppo/run2/scores.json`) re-scores the 12 best codes of this
+(`experiments/memory_ppo/runs/run2/scores.json`) re-scores the 12 best codes of this
 section on their sparsest bases: 236 to 360 two-qubit gates per round instead
 of 280 to 468, 0.75 to 1.25 expected faults per shot instead of 0.94 to 1.54,
 and bposd `p_round` on the training profile 1.5 to 5.3 times the surface code
@@ -26,9 +26,9 @@ seed concurrent, 150 min cap per run, host CPU capped at four cores (`taskset
 1.18M to 2.21M env steps (budget 3M) and every run reached `d = 4` (first
 success at 256k to 444k env steps). Scores: the best code of each run, the
 lowest-proxy code of each run, the nine encoder-objective 4x4 codes of
-`results/gpu_scale`, and the rotated surface `[[16,1,4]]` with its XZZX
+`experiments/gpu_scale/runs`, and the rotated surface `[[16,1,4]]` with its XZZX
 deformation (35 codes), under the four profiles at the proxy, sampled, and
-bposd tiers (`results/memory_ppo/scores.json`). Profiles: `ion` is the chain
+bposd tiers (`experiments/memory_ppo/runs/scores.json`). Profiles: `ion` is the chain
 preset at 0.25 with sequential timing and bare ancillas, `ion+flag` the same
 with one flag per generator, `board` the qldpc-challenge recipe at 0.25,
 `heron` the Heron r2 rates at 0.05 (the "Scales" paragraph below says why not 1

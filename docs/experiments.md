@@ -15,7 +15,7 @@ distance reward plus, on states at the target distance, the circuit-level
 undetected fault mass (`normalize=False`) and the LDPC penalty at
 `w_max = 4`; the exact combination, the calibration, the cross-evaluation
 matrices, the code lists, the known-code baselines, and the verdict are in
-`results/noise_aware/REPORT.md`. One cell reproduces with
+`experiments/noise_aware/runs/REPORT.md`. One cell reproduces with
 
 ```
 uv run --extra rl python -m autoqec_sim.experiments.noise_aware run --setting 3x3 --profile ion --seed 0
@@ -23,8 +23,8 @@ uv run --extra rl python -m autoqec_sim.experiments.noise_aware baselines --sett
 uv run --extra rl python -m autoqec_sim.experiments.noise_aware report
 ```
 
-(`--threads N` caps torch and BLAS; `results/noise_aware/run_sweep.sh`
-with the job scripts under `results/noise_aware/jobs/` is the 3-worker,
+(`--threads N` caps torch and BLAS; `experiments/noise_aware/runs/run_sweep.sh`
+with the job scripts under `experiments/noise_aware/runs/jobs/` is the 3-worker,
 6-thread queue the release numbers came from.)
 
 Result (45 runs, 15 per setting): the discovered code depends strongly on
@@ -54,7 +54,7 @@ penalty the agent embeds a smaller code and leaves qubits idle.
 an `R`-round syndrome-extraction memory experiment instead of by its
 encoder's single-fault mass, which cannot see a local-Clifford deformation
 of the code (a Hadamard at the end of the encoder relabels weight-1
-faults, all detected; `results/noise_aware/REPORT.md`). The circuit is
+faults, all detected; `experiments/noise_aware/runs/REPORT.md`). The circuit is
 built for arbitrary (non-CSS) generators, one ancilla per generator with
 controlled-X/Y/Z gates in a hook-aware order (`hook_orders`: without it
 the sorted order gives the Shor code a circuit-level distance of 1 in the
@@ -155,7 +155,7 @@ success, env steps and wall time to first success, the best code (exact `d`,
 mass of its encoder under the Heron preset on the cell's graph and under the
 board preset, and the same mass for the rotated surface encoder routed onto the
 graph where one exists. Results and the write-up are in
-`results/topologies/REPORT.md`: all 18 runs reached distance 3, at 6k to 12k
+`experiments/topologies/runs/REPORT.md`: all 18 runs reached distance 3, at 6k to 12k
 env steps on the 9-qubit lattices (within the first three updates, before any
 learning), 49k to 113k at 12 and 16 qubits, and 307k to 345k on the 18-qubit
 heavy-hex graph.
@@ -168,7 +168,7 @@ uv run --extra rl python -m autoqec_sim.experiments.topologies report
 
 ## Evolutionary search against PPO
 
-`autoqec_sim.experiments.topologies_ea` runs the three-topology matrix with the package's evolutionary search in place of the PPO agent: same cells, objective ([[n, 1, 3]] with no idle qubit), gate set, 50-gate episodes, and environment-step budget per tier (evolutionary evaluations count as whole episodes). Run 16 October 2026 on one laptop; results in `results/topologies_ea/`.
+`autoqec_sim.experiments.topologies_ea` runs the three-topology matrix with the package's evolutionary search in place of the PPO agent: same cells, objective ([[n, 1, 3]] with no idle qubit), gate set, 50-gate episodes, and environment-step budget per tier (evolutionary evaluations count as whole episodes). Run 16 October 2026 on one laptop; results in `experiments/topologies_ea/runs/`.
 
 | lattice | n | PPO successes | PPO median steps to success | EA successes | EA median steps to success | EA median wall |
 |---|---|---|---|---|---|---|

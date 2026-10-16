@@ -1,10 +1,10 @@
 # RL scaling probe: PPO at n = 16 and LDPC targets at n = 12 to 16
 
 Status: complete. Every number below comes from a JSON under
-`results/scaling/` (named in the last column of each table or in the text)
+`experiments/scaling/runs/` (named in the last column of each table or in the text)
 and the tables regenerate with
 `uv run --extra rl python -m autoqec_sim.experiments.scaling report`.
-Code: `src/autoqec_sim/experiments/scaling.py`. Logs: `results/scaling/logs/`.
+Code: `src/autoqec_sim/experiments/scaling.py`. Logs: `experiments/scaling/runs/logs/`.
 
 ## Summary
 
@@ -50,7 +50,7 @@ over the 1024-bit tableau observation, 256 parallel episodes, 16-step
 rollouts, 4 epochs, minibatch 512, learning rate 3e-4, gamma 0.98, entropy
 coefficient 0.01, undo mask). Target: `[[16, 1, 4]]` on `square:4x4` with H
 and CNOT along lattice edges (64 actions), 50-gate episodes, the 4x4
-setting of `results/noise_aware/REPORT.md`. Reward: the level distance term
+setting of `experiments/noise_aware/runs/REPORT.md`. Reward: the level distance term
 `min(d, 4)/4 - 1` plus the padding penalty (minus the fraction of weight-1
 Paulis in the stabilizer group, `reward.low_weight_stabilizer_penalty`),
 dense; the episode ends at the first state with `d >= 4` and no idle
@@ -360,52 +360,52 @@ in") and the table gives them per run.
 
 | file | contents |
 |---|---|
-| `results/scaling/evo_4x4_steps50_seed0.json` | evolutionary-search control, episode cap 50, seed 0, 369,152 circuits |
-| `results/scaling/ldpc_n12_k2_all_to_all_12_equivariant_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy equivariant, penalty scale 0.25, seed 0, 1,925,120 env steps |
-| `results/scaling/ldpc_n12_k2_all_to_all_12_scale0.05_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.05, seed 0, 21,266,432 env steps |
-| `results/scaling/ldpc_n12_k2_all_to_all_12_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 21,155,840 env steps |
-| `results/scaling/ldpc_n12_k2_all_to_all_12_seed0_finalonly.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 21,028,864 env steps (final-state-only form) |
-| `results/scaling/ldpc_n12_k2_all_to_all_12_seed1.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 1, 19,800,064 env steps |
-| `results/scaling/ldpc_n12_k2_square_3x4_equivariant_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy equivariant, penalty scale 0.25, seed 0, 3,997,696 env steps |
-| `results/scaling/ldpc_n12_k2_square_3x4_scale0.05_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.05, seed 0, 23,982,080 env steps |
-| `results/scaling/ldpc_n12_k2_square_3x4_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 0, 23,400,448 env steps |
-| `results/scaling/ldpc_n12_k2_square_3x4_seed1.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 1, 23,920,640 env steps |
-| `results/scaling/ldpc_n12_k4_all_to_all_12_seed0.json` | LDPC run [[12, 4, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 20,951,040 env steps |
-| `results/scaling/ldpc_n12_k4_square_3x4_seed0.json` | LDPC run [[12, 4, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 0, 23,994,368 env steps |
-| `results/scaling/ldpc_n16_k2_all_to_all_16_equivariant_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy equivariant, penalty scale 0.25, seed 0, 1,232,896 env steps |
-| `results/scaling/ldpc_n16_k2_all_to_all_16_scale0.05_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.05, seed 0, 12,541,952 env steps |
-| `results/scaling/ldpc_n16_k2_all_to_all_16_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 0, 11,583,488 env steps |
-| `results/scaling/ldpc_n16_k2_all_to_all_16_seed1.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 1, 14,127,104 env steps |
-| `results/scaling/ldpc_n16_k2_square_4x4_scale0.05_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on square:4x4, policy mlp, penalty scale 0.05, seed 0, 15,724,544 env steps |
-| `results/scaling/ldpc_n16_k2_square_4x4_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on square:4x4, policy mlp, penalty scale 0.25, seed 0, 14,639,104 env steps |
-| `results/scaling/ldpc_n16_k4_all_to_all_16_seed0.json` | LDPC run [[16, 4, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 0, 12,156,928 env steps |
-| `results/scaling/random_4x4_seed0.json` | uniform random gate sequences, 8,192 per length, lengths 50, 60, 70, 80, 100 |
-| `results/scaling/variant_3x3_baseline_seed0.json` | PPO run, variant `baseline`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 0, 86,016 env steps, 3 s |
-| `results/scaling/variant_3x3_baseline_seed1.json` | PPO run, variant `baseline`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 1, 139,264 env steps, 4 s |
-| `results/scaling/variant_3x3_equivariant_seed0.json` | PPO run, variant `equivariant`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 0, 49,152 env steps, 12 s |
-| `results/scaling/variant_3x3_equivariant_seed1.json` | PPO run, variant `equivariant`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 1, 49,152 env steps, 11 s |
-| `results/scaling/variant_4x4_actions_seed0.json` | PPO run, variant `actions`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 40,960 env steps, 2 s |
-| `results/scaling/variant_4x4_actions_seed1.json` | PPO run, variant `actions`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 24,576 env steps, 1 s |
-| `results/scaling/variant_4x4_baseline_cap100_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 100, seed 0, 126,976 env steps, 6 s |
-| `results/scaling/variant_4x4_baseline_cap100_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 100, seed 1, 28,672 env steps, 1 s |
-| `results/scaling/variant_4x4_baseline_cap60_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 60, seed 0, 44,769,280 env steps, 1800 s |
-| `results/scaling/variant_4x4_baseline_cap60_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 60, seed 1, 41,553,920 env steps, 1800 s |
-| `results/scaling/variant_4x4_baseline_cap70_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 70, seed 0, 41,455,616 env steps, 1800 s |
-| `results/scaling/variant_4x4_baseline_cap70_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 70, seed 1, 37,326,848 env steps, 1800 s |
-| `results/scaling/variant_4x4_baseline_cap80_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 80, seed 0, 3,112,960 env steps, 191 s |
-| `results/scaling/variant_4x4_baseline_cap80_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 80, seed 1, 5,406,720 env steps, 795 s |
-| `results/scaling/variant_4x4_baseline_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 24,104,960 env steps, 900 s |
-| `results/scaling/variant_4x4_baseline_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 20,987,904 env steps, 900 s |
-| `results/scaling/variant_4x4_baseline_wstar_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 6,336,512 env steps, 300 s |
-| `results/scaling/variant_4x4_bigbatch_seed0.json` | PPO run, variant `bigbatch`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 4,653,056 env steps, 249 s |
-| `results/scaling/variant_4x4_bigbatch_seed1.json` | PPO run, variant `bigbatch`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 4,194,304 env steps, 224 s |
-| `results/scaling/variant_4x4_curriculum_seed0.json` | PPO run, variant `curriculum`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 25,661,440 env steps, 1800 s |
-| `results/scaling/variant_4x4_curriculum_seed1.json` | PPO run, variant `curriculum`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 7,004,160 env steps, 1800 s |
-| `results/scaling/variant_4x4_equivariant_nostop_seed0.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 987,136 env steps, 603 s |
-| `results/scaling/variant_4x4_equivariant_seed0.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 217,088 env steps, 71 s |
-| `results/scaling/variant_4x4_equivariant_seed1.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 241,664 env steps, 80 s |
-| `results/scaling/variant_4x4_equivariant_seed2.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 2, 258,048 env steps, 110 s |
-| `results/scaling/logs/*.log` | per-update training logs of every run, queue logs |
-| `results/scaling/jobs_step*.txt`, `results/scaling/queue.sh` | the job lists and the 3-slot runner |
+| `experiments/scaling/runs/evo_4x4_steps50_seed0.json` | evolutionary-search control, episode cap 50, seed 0, 369,152 circuits |
+| `experiments/scaling/runs/ldpc_n12_k2_all_to_all_12_equivariant_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy equivariant, penalty scale 0.25, seed 0, 1,925,120 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_all_to_all_12_scale0.05_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.05, seed 0, 21,266,432 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_all_to_all_12_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 21,155,840 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_all_to_all_12_seed0_finalonly.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 21,028,864 env steps (final-state-only form) |
+| `experiments/scaling/runs/ldpc_n12_k2_all_to_all_12_seed1.json` | LDPC run [[12, 2, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 1, 19,800,064 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_square_3x4_equivariant_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy equivariant, penalty scale 0.25, seed 0, 3,997,696 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_square_3x4_scale0.05_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.05, seed 0, 23,982,080 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_square_3x4_seed0.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 0, 23,400,448 env steps |
+| `experiments/scaling/runs/ldpc_n12_k2_square_3x4_seed1.json` | LDPC run [[12, 2, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 1, 23,920,640 env steps |
+| `experiments/scaling/runs/ldpc_n12_k4_all_to_all_12_seed0.json` | LDPC run [[12, 4, 3]] w_max 4 on all_to_all:12, policy mlp, penalty scale 0.25, seed 0, 20,951,040 env steps |
+| `experiments/scaling/runs/ldpc_n12_k4_square_3x4_seed0.json` | LDPC run [[12, 4, 3]] w_max 4 on square:3x4, policy mlp, penalty scale 0.25, seed 0, 23,994,368 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_all_to_all_16_equivariant_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy equivariant, penalty scale 0.25, seed 0, 1,232,896 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_all_to_all_16_scale0.05_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.05, seed 0, 12,541,952 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_all_to_all_16_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 0, 11,583,488 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_all_to_all_16_seed1.json` | LDPC run [[16, 2, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 1, 14,127,104 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_square_4x4_scale0.05_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on square:4x4, policy mlp, penalty scale 0.05, seed 0, 15,724,544 env steps |
+| `experiments/scaling/runs/ldpc_n16_k2_square_4x4_seed0.json` | LDPC run [[16, 2, 3]] w_max 4 on square:4x4, policy mlp, penalty scale 0.25, seed 0, 14,639,104 env steps |
+| `experiments/scaling/runs/ldpc_n16_k4_all_to_all_16_seed0.json` | LDPC run [[16, 4, 3]] w_max 4 on all_to_all:16, policy mlp, penalty scale 0.25, seed 0, 12,156,928 env steps |
+| `experiments/scaling/runs/random_4x4_seed0.json` | uniform random gate sequences, 8,192 per length, lengths 50, 60, 70, 80, 100 |
+| `experiments/scaling/runs/variant_3x3_baseline_seed0.json` | PPO run, variant `baseline`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 0, 86,016 env steps, 3 s |
+| `experiments/scaling/runs/variant_3x3_baseline_seed1.json` | PPO run, variant `baseline`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 1, 139,264 env steps, 4 s |
+| `experiments/scaling/runs/variant_3x3_equivariant_seed0.json` | PPO run, variant `equivariant`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 0, 49,152 env steps, 12 s |
+| `experiments/scaling/runs/variant_3x3_equivariant_seed1.json` | PPO run, variant `equivariant`, target [[9, 1, 3]] on square:3x3, episode cap 30, seed 1, 49,152 env steps, 11 s |
+| `experiments/scaling/runs/variant_4x4_actions_seed0.json` | PPO run, variant `actions`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 40,960 env steps, 2 s |
+| `experiments/scaling/runs/variant_4x4_actions_seed1.json` | PPO run, variant `actions`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 24,576 env steps, 1 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap100_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 100, seed 0, 126,976 env steps, 6 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap100_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 100, seed 1, 28,672 env steps, 1 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap60_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 60, seed 0, 44,769,280 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap60_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 60, seed 1, 41,553,920 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap70_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 70, seed 0, 41,455,616 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap70_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 70, seed 1, 37,326,848 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap80_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 80, seed 0, 3,112,960 env steps, 191 s |
+| `experiments/scaling/runs/variant_4x4_baseline_cap80_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 80, seed 1, 5,406,720 env steps, 795 s |
+| `experiments/scaling/runs/variant_4x4_baseline_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 24,104,960 env steps, 900 s |
+| `experiments/scaling/runs/variant_4x4_baseline_seed1.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 20,987,904 env steps, 900 s |
+| `experiments/scaling/runs/variant_4x4_baseline_wstar_seed0.json` | PPO run, variant `baseline`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 6,336,512 env steps, 300 s |
+| `experiments/scaling/runs/variant_4x4_bigbatch_seed0.json` | PPO run, variant `bigbatch`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 4,653,056 env steps, 249 s |
+| `experiments/scaling/runs/variant_4x4_bigbatch_seed1.json` | PPO run, variant `bigbatch`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 4,194,304 env steps, 224 s |
+| `experiments/scaling/runs/variant_4x4_curriculum_seed0.json` | PPO run, variant `curriculum`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 25,661,440 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_curriculum_seed1.json` | PPO run, variant `curriculum`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 7,004,160 env steps, 1800 s |
+| `experiments/scaling/runs/variant_4x4_equivariant_nostop_seed0.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 987,136 env steps, 603 s |
+| `experiments/scaling/runs/variant_4x4_equivariant_seed0.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 0, 217,088 env steps, 71 s |
+| `experiments/scaling/runs/variant_4x4_equivariant_seed1.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 1, 241,664 env steps, 80 s |
+| `experiments/scaling/runs/variant_4x4_equivariant_seed2.json` | PPO run, variant `equivariant`, target [[16, 1, 4]] on square:4x4, episode cap 50, seed 2, 258,048 env steps, 110 s |
+| `experiments/scaling/runs/logs/*.log` | per-update training logs of every run, queue logs |
+| `experiments/scaling/runs/jobs_step*.txt`, `experiments/scaling/runs/queue.sh` | the job lists and the 3-slot runner |
 | `experiments/scaling/figures/diag_4x4.png` (and `.pdf`) | the diagnosis figure, drawn by `report` with `experiments.figstyle` |
 | `src/autoqec_sim/experiments/scaling.py` | all code of this probe |

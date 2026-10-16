@@ -31,7 +31,7 @@ Subcommands (``python -m autoqec_sim.experiments.memory_objective``):
     cost per terminal code.
 ``report``
     ``experiments/memory_objective/REPORT.md`` and the figures from the
-    JSON files under ``results/memory_objective/``.
+    JSON files under ``experiments/memory_objective/runs/``.
 
 Profiles: ``ion`` is ``presets.chain()`` (arXiv:2606.06455 rates, sequential
 gates), ``forte`` is ``presets.forte("sequential")``, ``board`` is the
@@ -73,7 +73,7 @@ from ..env import CodeDiscoveryEnv
 from ..memory_objective import MemoryObjective, MemoryReward, build_memory_circuit, code_key
 from ..reward import batched_distance, low_weight_stabilizer_penalty
 
-DEFAULT_OUT = Path("results/memory_objective")
+DEFAULT_OUT = Path("experiments/memory_objective/runs")
 REPORT_DIR = Path("experiments/memory_objective")
 
 # ----------------------------------------------------------------------
@@ -84,7 +84,7 @@ REPORT_DIR = Path("experiments/memory_objective")
 BOARD_16_4_4_X = [[1, 4, 5, 6, 11, 12], [1, 4, 6, 8, 10, 13], [3, 4, 6, 7, 11, 14], [2, 5, 6, 9, 13, 14], [3, 6, 9, 10, 11, 15], [0, 1, 2, 3, 6, 10]]
 BOARD_16_4_4_Z = [[0, 5, 8, 9, 10, 12], [2, 4, 7, 10, 11, 14], [1, 3, 4, 7, 9, 14], [2, 5, 6, 8, 14, 15], [2, 6, 9, 11, 13, 15], [0, 1, 4, 5, 6, 10]]
 
-# results/noise_aware/runs/3x3_ion_seed0.json, best code (non-CSS [[9,1,3]],
+# experiments/noise_aware/runs/runs/3x3_ion_seed0.json, best code (non-CSS [[9,1,3]],
 # w* = 4, 15-gate encoder), stabilizers as reported (signs dropped).
 NONCSS_9_ION = ["XXXIIIIII", "IZZIZZIII", "ZZIXIIXII", "IXXYYXIII", "IIIIZZIII", "IIIZZIZZI", "IIIIIIXXX", "IIIIIIIZZ"]
 

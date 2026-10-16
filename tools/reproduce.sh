@@ -1,39 +1,25 @@
 #!/usr/bin/env bash
-# Fresh-environment reproduction for autoqec-sim: new venv, install
-# autoqec-noise and autoqec-sim from source, run the test suite and both
+# Fresh-environment reproduction for autoqec-sim: new venv, install the
+# package from a built wheel, run the test suite and both
 # reduced-budget rediscovery regressions (evolutionary search and PPO),
 # print a summary. docs/reproduce.md has the expected outputs.
 #
-#   scripts/reproduce.sh                # about 3.5 min on a laptop CPU (201 s measured)
-#   REPRODUCE_NO_RL=1 scripts/reproduce.sh   # skip torch and the PPO regression
-#
-# autoqec-noise is taken from ../autoqec-noise when that checkout exists, else
-# from NOISE_MODEL_SRC (default: the v0.2.0 git tag under ORG, RELEASE.md).
+#   tools/reproduce.sh                # about 3.5 min on a laptop CPU (201 s measured)
+#   REPRODUCE_NO_RL=1 tools/reproduce.sh   # skip torch and the PPO regression
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WORK="${REPRODUCE_WORK:-$(mktemp -d)}"
 VENV="$WORK/venv"
 PY="${REPRODUCE_PYTHON:-3.12}"
-if [ -d "$ROOT/../autoqec-noise" ]; then
-  NM="${NOISE_MODEL_SRC:-$ROOT/../autoqec-noise}"
-else
-  NM="${NOISE_MODEL_SRC:-autoqec-noise @ git+https://github.com/ORG/autoqec-noise@v0.2.0}"
-fi
 export OMP_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 MKL_NUM_THREADS=6
 t0=$(date +%s)
 
 uv venv -q --python "$PY" "$VENV"
-# Install from built wheels (sdist and wheel of this checkout, wheel of the
-# sibling autoqec-noise when present) so the installed code, not the source
-# tree, is what runs.
+# Install from the built wheel of this checkout so the installed code, not
+# the source tree, is what runs.
 mkdir -p "$WORK/dist"
 uv build -q --out-dir "$WORK/dist" "$ROOT"
-if [ -d "$NM" ]; then
-  uv build -q --wheel --out-dir "$WORK/dist" "$NM"
-  uv pip install -q -p "$VENV/bin/python" "$WORK"/dist/autoqec_sim.noise-*.whl pytest
-else
-  uv pip install -q -p "$VENV/bin/python" "$NM" pytest
-fi
+uv pip install -q -p "$VENV/bin/python" pytest
 if [ -n "${REPRODUCE_NO_RL:-}" ]; then
   uv pip install -q -p "$VENV/bin/python" "$WORK"/dist/autoqec_sim-*.whl
 else
@@ -57,13 +43,13 @@ PPO_STATUS=skipped
 if [ -z "${REPRODUCE_NO_RL:-}" ]; then
   PPO_STATUS=0
   "$VENV/bin/autoqec-ppo" --budget reduced --seed 0 --out "$WORK/regression_ppo_reduced.json" \
-      --compare "$ROOT/results/regression.json" > "$WORK/ppo.log" 2>&1 || PPO_STATUS=$?
+      --compare "$ROOT/experiments/regression/regression.json" > "$WORK/ppo.log" 2>&1 || PPO_STATUS=$?
 fi
 t_ppo=$(date +%s)
 
-echo "autoqec_sim $("$VENV/bin/python" -c 'import autoqec_sim, autoqec_sim.noise; print(autoqec_sim.__version__, "autoqec_sim.noise", autoqec_sim.noise.__version__)')"
+echo "autoqec_sim $("$VENV/bin/python" -c 'import autoqec_sim; print(autoqec_sim.__version__)')"
 echo "python: $("$VENV/bin/python" -V), numpy: $("$VENV/bin/python" -c 'import numpy; print(numpy.__version__)'), torch: $("$VENV/bin/python" -c 'import importlib.util as u; print(__import__("torch").__version__ if u.find_spec("torch") else "not installed")')"
-echo "installed from: $("$VENV/bin/python" -c 'import autoqec_sim, autoqec_sim.noise; print(autoqec_sim.__file__, autoqec_sim.noise.__file__)')"
+echo "installed from: $("$VENV/bin/python" -c 'import autoqec_sim; print(autoqec_sim.__file__)')"
 echo "tests: $TEST_OUT ($((t_tests - t_install)) s)"
 echo "exit status: autoqec-regress $REGRESS_STATUS, autoqec-ppo $PPO_STATUS (0 = every target met its pass criterion)"
 "$VENV/bin/python" - "$WORK" <<'PYEOF'

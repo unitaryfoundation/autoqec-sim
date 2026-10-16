@@ -3,7 +3,7 @@
 `autoqec_sim.backends.torch_backend` runs the two hot paths of the reward
 engine (the tableau gate kernels and the parity masks behind every reward)
 on torch tensors on `cpu` or `cuda`. This page says what it covers, how to
-measure it on a RunPod GPU with `scripts/profile_tableau.py`, and what is
+measure it on a RunPod GPU with `benchmarks/profile_tableau.py`, and what is
 still specific to cuQuantum. The GPU table was measured on a RunPod A40
 on 2026-09-21.
 
@@ -113,9 +113,9 @@ for n in (5, 9, 16):
 PY
 
 # the profile: numpy on the pod's CPU, torch on its CPU, torch on the GPU
-python scripts/profile_tableau.py --backend numpy --json pod_numpy.json
-python scripts/profile_tableau.py --backend torch --device cpu --json pod_torch_cpu.json
-python scripts/profile_tableau.py --backend torch --device cuda --mem-cap-gb 16 --json pod_torch_cuda.json
+python benchmarks/profile_tableau.py --backend numpy --json pod_numpy.json
+python benchmarks/profile_tableau.py --backend torch --device cpu --json pod_torch_cpu.json
+python benchmarks/profile_tableau.py --backend torch --device cuda --mem-cap-gb 16 --json pod_torch_cuda.json
 ```
 
 `--mem-cap-gb` should stay below the GPU's memory: the reward intermediate
@@ -129,7 +129,7 @@ and render the tables:
 
 ```sh
 rsync root@POD_HOST:/workspace/genesis/autoqec-sim/pod_*.json docs/pod/
-uv run python scripts/profile_tableau.py --render docs/pod/pod_numpy.json docs/pod/pod_torch_cpu.json docs/pod/pod_torch_cuda.json
+uv run python benchmarks/profile_tableau.py --render docs/pod/pod_numpy.json docs/pod/pod_torch_cpu.json docs/pod/pod_torch_cuda.json
 ```
 
 The GPU tableau at batch 4096 and `n = 49` is 38 MiB; the gate kernels are
@@ -145,12 +145,12 @@ the run (0 percent, 0 MiB). The host's CPUs were shared with other tenants
 (load average 15 on 96 visible cores), so the pod numpy column is slowed
 and the laptop numpy column (docs/profile.md, Apple M5 Pro, 6 threads,
 unloaded) is the fair CPU reference. Raw records:
-`results/profile_pod/torch_cuda_clean.json` and
-`results/profile_pod/numpy_pod3.json`; an earlier run on a pod whose GPU
+`experiments/profile_pod/runs/torch_cuda_clean.json` and
+`experiments/profile_pod/runs/numpy_pod3.json`; an earlier run on a pod whose GPU
 was already at 100 percent from another job
 (`torch_cuda.json`, `numpy_pod.json`) gave 4 to 5 times lower GPU rates and
 is kept as the contended reference. Render any of them with
-`python scripts/profile_tableau.py --render results/profile_pod/<file>.json`.
+`python benchmarks/profile_tableau.py --render experiments/profile_pod/runs/<file>.json`.
 
 Reward evaluations per second (the term that is 99 percent of an env step
 on the CPU):
@@ -245,7 +245,7 @@ Not on the hot path and fine to leave on the host: GF(2) elimination in
 the circuit-level fault propagation (per circuit, uses stim), and the
 search agent's population update.
 
-Measured on the CPU (`scripts/profile_tableau.py`, `docs/profile.md`; numpy
+Measured on the CPU (`benchmarks/profile_tableau.py`, `docs/profile.md`; numpy
 on one laptop, not a GPU): the reward is 99% of an environment step at
 `n = 16`, batch 1024, and the gate kernels 1%, at every `n` from 5 to 49.
 Inside the reward the float32 GEMM of item 2 is about 15% of the
@@ -274,7 +274,7 @@ float32 `(batch, chunk, n + k)` block, `4 M (n + k)` bytes per element
 instead of `12 M (n + k)`. On CPU torch it is 1.9 to 2.3 times faster than
 numpy on the reward at `n = 9` and `16` (batch 1024; the gate kernels run
 at half the numpy rate and are one to two percent of a step).
-`scripts/profile_tableau.py --backend torch --device cuda --json` produces
+`benchmarks/profile_tableau.py --backend torch --device cuda --json` produces
 the same table on a GPU; `docs/gpu.md` has the RunPod procedure and the
 A40 measurement of 2026-09-21 (798 k reward evaluations per second at
 `n = 16`, batch 4096, 33 times the laptop numpy rate; 240 k at `n = 25`,
@@ -300,7 +300,7 @@ path (no nvcc, no toolkit beyond the driver):
 They are opt-in: `AUTOQEC_CUDA_KERNELS=1` or `cuda_kernels.enable()`. The
 torch backend's agreement tests pass with them on, and
 `tests/test_cuda_kernels.py` compares them with the torch path directly.
-Measured on one NVIDIA A100-SXM4-80GB (torch 2.8.0+cu129, `scripts/bench_cuda_kernels.py`,
+Measured on one NVIDIA A100-SXM4-80GB (torch 2.8.0+cu129, `benchmarks/bench_cuda_kernels.py`,
 `docs/data/bench_cuda_kernels_a100.json`):
 
 | n | batch | errors | gate step, torch path | gate step, kernel | undetected mask, torch path | undetected mask, kernel |

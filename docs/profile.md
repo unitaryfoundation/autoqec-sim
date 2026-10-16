@@ -1,7 +1,7 @@
 # CPU profile of the vectorized simulator
 
 Throughput and memory of the batched tableau, the Knill-Laflamme reward,
-and `CodeDiscoveryEnv`, measured by `scripts/profile_tableau.py` (stdlib
+and `CodeDiscoveryEnv`, measured by `benchmarks/profile_tableau.py` (stdlib
 and numpy; no torch). This is a numpy profile on the host CPU of one
 laptop, not the GPU-vectorized simulator the roadmap's week-4 wording
 names; the cuQuantum kernels have not been written (README, "What is left
