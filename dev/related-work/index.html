@@ -1968,19 +1968,21 @@ none of these use; its one result, on the [[49,13,4]] entry of
 randomized information-set distance <sup id="fnref:pryadko2023"><a class="footnote-ref" href="#fn:pryadko2023">80</a></sup>, parallel
 Brouwer-Zimmermann <sup id="fnref:hernando2024"><a class="footnote-ref" href="#fn:hernando2024">81</a></sup>, and SAT, MILP, and heuristic code and
 circuit distance in one package <sup id="fnref:webster2026"><a class="footnote-ref" href="#fn:webster2026">82</a></sup>; the problem is NP-hard
-<sup id="fnref:kapshikar2022"><a class="footnote-ref" href="#fn:kapshikar2022">83</a></sup>. Weight enumerators are not a complete invariant, and
-local-Clifford equivalence has its own test <sup id="fnref2:danielsen2006"><a class="footnote-ref" href="#fn:danielsen2006">25</a></sup><sup id="fnref:vandennest2004"><a class="footnote-ref" href="#fn:vandennest2004">84</a></sup>;
+<sup id="fnref:kapshikar2022"><a class="footnote-ref" href="#fn:kapshikar2022">83</a></sup>, has been cast as quantum annealing <sup id="fnref:ismail2024"><a class="footnote-ref" href="#fn:ismail2024">84</a></sup>, and
+for large LDPC codes is bounded from above by heuristic witness search
+<sup id="fnref:kasai2026"><a class="footnote-ref" href="#fn:kasai2026">85</a></sup>. Weight enumerators are not a complete invariant, and
+local-Clifford equivalence has its own test <sup id="fnref2:danielsen2006"><a class="footnote-ref" href="#fn:danielsen2006">25</a></sup><sup id="fnref:vandennest2004"><a class="footnote-ref" href="#fn:vandennest2004">86</a></sup>;
 the generator weight this package calls <code>w*</code> is the optimal generator
-weight of <sup id="fnref:wei2026"><a class="footnote-ref" href="#fn:wei2026">85</a></sup>. Fault-counting sensitivities <sup id="fnref:fu2026"><a class="footnote-ref" href="#fn:fu2026">86</a></sup>, Pauli
-diagnostics <sup id="fnref:iyer2021"><a class="footnote-ref" href="#fn:iyer2021">87</a></sup>, and tensor-network enumerators <sup id="fnref:pato2025"><a class="footnote-ref" href="#fn:pato2025">88</a></sup> are
-further evaluation tools. Stim <sup id="fnref:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">89</a></sup> underlies the noise and
-detector-error-model work; Clifft <sup id="fnref:chase2026"><a class="footnote-ref" href="#fn:chase2026">90</a></sup> is the Unitary Foundation's
-near-Clifford sampler; <sup id="fnref:fur2026"><a class="footnote-ref" href="#fn:fur2026">91</a></sup> reports hardware error-detection
+weight of <sup id="fnref:wei2026"><a class="footnote-ref" href="#fn:wei2026">87</a></sup>. Fault-counting sensitivities <sup id="fnref:fu2026"><a class="footnote-ref" href="#fn:fu2026">88</a></sup>, Pauli
+diagnostics <sup id="fnref:iyer2021"><a class="footnote-ref" href="#fn:iyer2021">89</a></sup>, and tensor-network enumerators <sup id="fnref:pato2025"><a class="footnote-ref" href="#fn:pato2025">90</a></sup> are
+further evaluation tools. Stim <sup id="fnref:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">91</a></sup> underlies the noise and
+detector-error-model work; Clifft <sup id="fnref:chase2026"><a class="footnote-ref" href="#fn:chase2026">92</a></sup> is the Unitary Foundation's
+near-Clifford sampler; <sup id="fnref:fur2026"><a class="footnote-ref" href="#fn:fur2026">93</a></sup> reports hardware error-detection
 experiments from the same group.</p>
 <h2 id="reviews">Reviews<a class="headerlink" href="#reviews" title="Permanent link">&para;</a></h2>
-<p>AI for quantum error correction <sup id="fnref:wang2024"><a class="footnote-ref" href="#fn:wang2024">92</a></sup>, reinforcement learning for
-quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:bukov2026">93</a></sup>, and noise-adapted error correction
-<sup id="fnref:jayashankar2022"><a class="footnote-ref" href="#fn:jayashankar2022">94</a></sup>. No dedicated review of automated code design exists.</p>
+<p>AI for quantum error correction <sup id="fnref:wang2024"><a class="footnote-ref" href="#fn:wang2024">94</a></sup>, reinforcement learning for
+quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:bukov2026">95</a></sup>, and noise-adapted error correction
+<sup id="fnref:jayashankar2022"><a class="footnote-ref" href="#fn:jayashankar2022">96</a></sup>. No dedicated review of automated code design exists.</p>
 <div class="footnote">
 <hr />
 <ol>
@@ -2233,38 +2235,44 @@ quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:b
 <li id="fn:kapshikar2022">
 <p>Upendra Kapshikar and Srijita Kundu. On the hardness of the minimum distance problem of quantum codes. <em>IEEE Transactions on Information Theory</em>, 2023. <a href="https://arxiv.org/abs/2203.04262">arXiv:2203.04262</a>, <a href="https://doi.org/10.1109/TIT.2023.3286870">doi:10.1109/TIT.2023.3286870</a>.&#160;<a class="footnote-backref" href="#fnref:kapshikar2022" title="Jump back to footnote 83 in the text">&#8617;</a></p>
 </li>
+<li id="fn:ismail2024">
+<p>Refaat Ismail, Ashish Kakkar, and Anatoly Dymarsky. A quantum annealing approach to the minimum distance problem of quantum codes. <em>Physical Review A</em>, 114:042610, 2026. <a href="https://arxiv.org/abs/2404.17703">arXiv:2404.17703</a>, <a href="https://doi.org/10.1103/573l-6cc2">doi:10.1103/573l-6cc2</a>.&#160;<a class="footnote-backref" href="#fnref:ismail2024" title="Jump back to footnote 84 in the text">&#8617;</a></p>
+</li>
+<li id="fn:kasai2026">
+<p>Kenta Kasai. Heuristic search for minimum-distance upper-bound witnesses in quantum APM-LDPC codes. 2026. <a href="https://arxiv.org/abs/2604.15307">arXiv:2604.15307</a>.&#160;<a class="footnote-backref" href="#fnref:kasai2026" title="Jump back to footnote 85 in the text">&#8617;</a></p>
+</li>
 <li id="fn:vandennest2004">
-<p>Maarten Van den Nest, Jeroen Dehaene, and Bart De Moor. An efficient algorithm to recognize local Clifford equivalence of graph states. <em>Physical Review A</em>, 70:034302, 2004. <a href="https://arxiv.org/abs/quant-ph/0405023">arXiv:quant-ph/0405023</a>, <a href="https://doi.org/10.1103/PhysRevA.70.034302">doi:10.1103/PhysRevA.70.034302</a>.&#160;<a class="footnote-backref" href="#fnref:vandennest2004" title="Jump back to footnote 84 in the text">&#8617;</a></p>
+<p>Maarten Van den Nest, Jeroen Dehaene, and Bart De Moor. An efficient algorithm to recognize local Clifford equivalence of graph states. <em>Physical Review A</em>, 70:034302, 2004. <a href="https://arxiv.org/abs/quant-ph/0405023">arXiv:quant-ph/0405023</a>, <a href="https://doi.org/10.1103/PhysRevA.70.034302">doi:10.1103/PhysRevA.70.034302</a>.&#160;<a class="footnote-backref" href="#fnref:vandennest2004" title="Jump back to footnote 86 in the text">&#8617;</a></p>
 </li>
 <li id="fn:wei2026">
-<p>Fuchuan Wei, Zhengyi Han, Austin Yubo He, Zimu Li, and Zi-Wen Liu. Theory of low-weight quantum codes. 2026. <a href="https://arxiv.org/abs/2601.19848">arXiv:2601.19848</a>.&#160;<a class="footnote-backref" href="#fnref:wei2026" title="Jump back to footnote 85 in the text">&#8617;</a></p>
+<p>Fuchuan Wei, Zhengyi Han, Austin Yubo He, Zimu Li, and Zi-Wen Liu. Theory of low-weight quantum codes. 2026. <a href="https://arxiv.org/abs/2601.19848">arXiv:2601.19848</a>.&#160;<a class="footnote-backref" href="#fnref:wei2026" title="Jump back to footnote 87 in the text">&#8617;</a></p>
 </li>
 <li id="fn:fu2026">
-<p>Winston Fu, J. Wilson Staples, and Jeff D. Thompson. Efficient estimation of logical sensitivities through fault-counting. 2026. <a href="https://arxiv.org/abs/2610.10531">arXiv:2610.10531</a>.&#160;<a class="footnote-backref" href="#fnref:fu2026" title="Jump back to footnote 86 in the text">&#8617;</a></p>
+<p>Winston Fu, J. Wilson Staples, and Jeff D. Thompson. Efficient estimation of logical sensitivities through fault-counting. 2026. <a href="https://arxiv.org/abs/2610.10531">arXiv:2610.10531</a>.&#160;<a class="footnote-backref" href="#fnref:fu2026" title="Jump back to footnote 88 in the text">&#8617;</a></p>
 </li>
 <li id="fn:iyer2021">
-<p>Pavithran Iyer, Aditya Jain, Stephen D. Bartlett, and Joseph Emerson. Efficient diagnostics for quantum error correction. <em>Physical Review Research</em>, 4:043218, 2022. <a href="https://arxiv.org/abs/2108.10830">arXiv:2108.10830</a>, <a href="https://doi.org/10.1103/PhysRevResearch.4.043218">doi:10.1103/PhysRevResearch.4.043218</a>.&#160;<a class="footnote-backref" href="#fnref:iyer2021" title="Jump back to footnote 87 in the text">&#8617;</a></p>
+<p>Pavithran Iyer, Aditya Jain, Stephen D. Bartlett, and Joseph Emerson. Efficient diagnostics for quantum error correction. <em>Physical Review Research</em>, 4:043218, 2022. <a href="https://arxiv.org/abs/2108.10830">arXiv:2108.10830</a>, <a href="https://doi.org/10.1103/PhysRevResearch.4.043218">doi:10.1103/PhysRevResearch.4.043218</a>.&#160;<a class="footnote-backref" href="#fnref:iyer2021" title="Jump back to footnote 89 in the text">&#8617;</a></p>
 </li>
 <li id="fn:pato2025">
-<p>Balint Pato, June Vanlerberghe, and Kenneth R. Brown. Hyper-optimized quantum Lego contraction schedules. <em>Quantum</em>, 10:2092, 2026. <a href="https://arxiv.org/abs/2510.08210">arXiv:2510.08210</a>, <a href="https://doi.org/10.22331/q-2026-05-05-2092">doi:10.22331/q-2026-05-05-2092</a>.&#160;<a class="footnote-backref" href="#fnref:pato2025" title="Jump back to footnote 88 in the text">&#8617;</a></p>
+<p>Balint Pato, June Vanlerberghe, and Kenneth R. Brown. Hyper-optimized quantum Lego contraction schedules. <em>Quantum</em>, 10:2092, 2026. <a href="https://arxiv.org/abs/2510.08210">arXiv:2510.08210</a>, <a href="https://doi.org/10.22331/q-2026-05-05-2092">doi:10.22331/q-2026-05-05-2092</a>.&#160;<a class="footnote-backref" href="#fnref:pato2025" title="Jump back to footnote 90 in the text">&#8617;</a></p>
 </li>
 <li id="fn:gidney2021">
-<p>Craig Gidney. Stim: A fast stabilizer circuit simulator. <em>Quantum</em>, 5:497, 2021. <a href="https://arxiv.org/abs/2103.02202">arXiv:2103.02202</a>, <a href="https://doi.org/10.22331/q-2021-07-06-497">doi:10.22331/q-2021-07-06-497</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021" title="Jump back to footnote 89 in the text">&#8617;</a></p>
+<p>Craig Gidney. Stim: A fast stabilizer circuit simulator. <em>Quantum</em>, 5:497, 2021. <a href="https://arxiv.org/abs/2103.02202">arXiv:2103.02202</a>, <a href="https://doi.org/10.22331/q-2021-07-06-497">doi:10.22331/q-2021-07-06-497</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021" title="Jump back to footnote 91 in the text">&#8617;</a></p>
 </li>
 <li id="fn:chase2026">
-<p>Bradley A. Chase and Farrokh Labib. Clifft: Fast exact simulation of near-Clifford quantum circuits. 2026. <a href="https://arxiv.org/abs/2604.27058">arXiv:2604.27058</a>.&#160;<a class="footnote-backref" href="#fnref:chase2026" title="Jump back to footnote 90 in the text">&#8617;</a></p>
+<p>Bradley A. Chase and Farrokh Labib. Clifft: Fast exact simulation of near-Clifford quantum circuits. 2026. <a href="https://arxiv.org/abs/2604.27058">arXiv:2604.27058</a>.&#160;<a class="footnote-backref" href="#fnref:chase2026" title="Jump back to footnote 92 in the text">&#8617;</a></p>
 </li>
 <li id="fn:fur2026">
-<p>Yanis Le Fur, Ethan Egger, Hong-Ye Hu, Vincent Russo, William J. Zeng, and Ryan LaRose. Opportunities and challenges in scaling quantum error detection on hardware. 2026. <a href="https://arxiv.org/abs/2605.02861">arXiv:2605.02861</a>.&#160;<a class="footnote-backref" href="#fnref:fur2026" title="Jump back to footnote 91 in the text">&#8617;</a></p>
+<p>Yanis Le Fur, Ethan Egger, Hong-Ye Hu, Vincent Russo, William J. Zeng, and Ryan LaRose. Opportunities and challenges in scaling quantum error detection on hardware. 2026. <a href="https://arxiv.org/abs/2605.02861">arXiv:2605.02861</a>.&#160;<a class="footnote-backref" href="#fnref:fur2026" title="Jump back to footnote 93 in the text">&#8617;</a></p>
 </li>
 <li id="fn:wang2024">
-<p>Zihao Wang and Hao Tang. Artificial intelligence for quantum error correction: A comprehensive review. 2024. <a href="https://arxiv.org/abs/2412.20380">arXiv:2412.20380</a>.&#160;<a class="footnote-backref" href="#fnref:wang2024" title="Jump back to footnote 92 in the text">&#8617;</a></p>
+<p>Zihao Wang and Hao Tang. Artificial intelligence for quantum error correction: A comprehensive review. 2024. <a href="https://arxiv.org/abs/2412.20380">arXiv:2412.20380</a>.&#160;<a class="footnote-backref" href="#fnref:wang2024" title="Jump back to footnote 94 in the text">&#8617;</a></p>
 </li>
 <li id="fn:bukov2026">
-<p>Marin Bukov and Florian Marquardt. Reinforcement learning for quantum technology. 2026. <a href="https://arxiv.org/abs/2601.18953">arXiv:2601.18953</a>.&#160;<a class="footnote-backref" href="#fnref:bukov2026" title="Jump back to footnote 93 in the text">&#8617;</a></p>
+<p>Marin Bukov and Florian Marquardt. Reinforcement learning for quantum technology. 2026. <a href="https://arxiv.org/abs/2601.18953">arXiv:2601.18953</a>.&#160;<a class="footnote-backref" href="#fnref:bukov2026" title="Jump back to footnote 95 in the text">&#8617;</a></p>
 </li>
 <li id="fn:jayashankar2022">
-<p>Akshaya Jayashankar and Prabha Mandayam. Quantum error correction: Noise-adapted techniques and applications. 2022. <a href="https://arxiv.org/abs/2208.00365">arXiv:2208.00365</a>.&#160;<a class="footnote-backref" href="#fnref:jayashankar2022" title="Jump back to footnote 94 in the text">&#8617;</a></p>
+<p>Akshaya Jayashankar and Prabha Mandayam. Quantum error correction: Noise-adapted techniques and applications. 2022. <a href="https://arxiv.org/abs/2208.00365">arXiv:2208.00365</a>.&#160;<a class="footnote-backref" href="#fnref:jayashankar2022" title="Jump back to footnote 96 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
