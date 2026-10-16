@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- `experiments.qdx_targets`: QDX's published all-to-all target set
+  through this package's PPO at matched settings, verified by exact
+  distance (`experiments/qdx_targets/REPORT.md`). `experiments.sat_codes`:
+  the SAT-sampled biased-noise codes of DalFavero et al. under the
+  circuit-level memory objective against the rotated surface and XZZX
+  codes (`experiments/sat_codes/REPORT.md`).
+
 ## 0.2.0 (2026-10-16)
 
 - Repository layout: `tools/` (release and reproduce scripts), `benchmarks/`

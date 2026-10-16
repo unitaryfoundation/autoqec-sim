@@ -191,3 +191,36 @@ uv run --extra rl python -m autoqec_sim.experiments.topologies report
 | heavy_hex | 18 | 3/3 | 340,480 | 0/3 | none | 38 s |
 
 Totals: PPO 18 of 18 runs succeed, evolutionary search 0 of 18. The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else.
+
+## QDX's targets
+
+`autoqec_sim.experiments.qdx_targets` runs the full target set that QDX, the
+code of [@olle2024], publishes for all-to-all connectivity at `n <= 15`
+(51 `[[n, k, d]]` triples with `d` up to 5) through this package's PPO at
+matched gate set, connectivity, and success criterion, one run per target
+with a budget of 3M environment steps or 10 minutes, and verifies each
+result by exact distance. `experiments/qdx_targets/REPORT.md` holds the
+table; the QDX columns are read from its archive of discovered codes.
+
+```
+uv run --extra rl python -m autoqec_sim.experiments.qdx_targets run --tier d3
+uv run --extra rl python -m autoqec_sim.experiments.qdx_targets report
+```
+
+## SAT-designed codes under the memory objective
+
+`autoqec_sim.experiments.sat_codes` takes the 9-qubit surface-like codes
+that [@dalfavero2026] sampled by SAT and ranked by exact maximum-likelihood
+logical error rate under code-capacity biased noise, selects the twelve
+best distinct codes at bias 10 and three of the worst, and scores them with
+the circuit-level memory objective against the rotated surface code and its
+XZZX deformation under a biased idle profile at three bias values and under
+the Forte preset, at the proxy and sampled tiers. The question is whether
+the code-capacity ranking survives circuit-level noise.
+`experiments/sat_codes/REPORT.md` holds the tables and the rank
+correlations.
+
+```
+uv run python -m autoqec_sim.experiments.sat_codes run
+uv run python -m autoqec_sim.experiments.sat_codes report
+```
