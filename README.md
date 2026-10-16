@@ -9,47 +9,58 @@
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/installation/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-**autoqec-sim** is a batched stabilizer-code simulator and
-reinforcement-learning environment for discovering small quantum
-error-correcting codes.
+**autoqec-sim** evaluates stabilizer codes and their circuits under device
+noise, and searches for codes, encoders, and syndrome-extraction schedules
+that score well under it.
 
 Developed with support from the U.S. Department of Energy Genesis Mission
 and hosted by the [Unitary Foundation](https://unitary.foundation).
 
-autoqec-sim holds thousands of encoding circuits as one array of stabilizer
-tableaux and advances them together, one Clifford gate per step, on a chosen
-connectivity graph. A reward scores the code each circuit encodes: the
-Knill-Laflamme undetected-error mass, exact distance for small codes, LDPC
-sparsity, circuit-level noise under a device profile, or a multi-round
-memory experiment with a decoder. Two agents search over gate sequences, PPO
-with an optional lattice-equivariant policy and an evolutionary search, and
-a rediscovery regression verifies every code a run produces independently
-of the reward.
+The evaluation layer scores a code three ways: the undetected single-fault
+mass of its encoding circuit under a device noise profile (IonQ Forte, IBM
+Heron, a long ion chain, or the qldpc-challenge recipe, every parameter
+sourced), a multi-round memory experiment with a decoder, and the exact
+distance and weight enumerators that verify any claim independently of the
+objective. The search layer runs on a batched Aaronson-Gottesman tableau
+that holds thousands of encoding circuits as one array and advances them
+one Clifford gate per step on a chosen connectivity graph. PPO, with an
+optional lattice-equivariant policy, and an evolutionary search build
+encoders gate by gate; a schedule synthesizer assigns the CX layers of a
+fixed code's syndrome-extraction circuit against the exact circuit-level
+fault distance.
 
-So far it rediscovers [[5,1,3]], Steane, Shor, and the rotated surface code
-on every lattice tested, has found noise-adapted non-CSS codes up to 16
-qubits, and its schedule synthesizer raised the fault distance of the
-[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. The discovery
-agent has not produced a new code above 16 qubits; the
-[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/) records where it stops.
+The gate-by-gate discovery mode follows Olle, Zen, Puviani, and Marquardt
+([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
+whose code, [QDX](https://github.com/jolle-ag/qdx), introduced it and has
+reached larger codes than this package has. autoqec-sim rediscovers
+[[5,1,3]], Steane, Shor, and the rotated surface code on every lattice
+tested and has found noise-adapted non-CSS codes up to 16 qubits, but no
+new code above that; the
+[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
+records where it stops. Its schedule synthesizer raised the fault distance
+of the [[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For
+code design at larger sizes, the SAT formulation of DalFavero et al.
+([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs codes with up
+to 100 qubits; the evaluation and schedule tools here take such codes as
+input.
 
 ## Why autoqec-sim?
 
-- **Batched tableau simulator**: one `(batch, 2n, 2n+1)` array of
-  Aaronson-Gottesman tableaux, gates applied by gather and scatter indexing
-  with no Python loop over the batch, cross-checked against stim.
-- **Rewards for code quality**: Knill-Laflamme mass, exact distance, an LDPC
-  sparsity constraint, circuit-level noise under sourced device presets
-  (IonQ Forte, a long ion chain, IBM Heron, the qldpc-challenge recipe), and
-  a multi-round memory objective with a decoder.
-- **Two agents and a regression**: PPO with action masking and a
-  permutation-equivariant policy, an evolutionary search, and a rediscovery
-  regression that verifies each found code by exact distance and weight
-  enumerators.
-- **CPU reference, GPU backend**: the numpy engine is the reference; the
-  torch backend runs the same kernels on CUDA with bit-for-bit agreement
-  tests, and two fused CUDA kernels take the gate step and the parity masks
-  further.
+- **Device-level evaluation**: circuit-level noise of the encoder under
+  sourced device presets (IonQ Forte, a long ion chain, IBM Heron, the
+  qldpc-challenge recipe), cross-checked against Stim's detector error model,
+  and a multi-round memory objective with three decoder tiers. Codes designed
+  elsewhere, by SAT or by hand, can be scored here.
+- **Verification independent of the objective**: exact distance, weight
+  enumerators, and the sparsest generator basis for every code a run reports,
+  plus a rediscovery regression that every change passes through.
+- **Schedule synthesis**: PPO over the CX-layer assignment of a
+  syndrome-extraction circuit with the exact circuit-level fault distance as
+  the reward.
+- **Gate-by-gate code and encoder search**, after Olle et al.: PPO with
+  action masking and a permutation-equivariant policy, an evolutionary
+  search, an LDPC sparsity constraint, and a batched tableau simulator on
+  numpy with a bit-identical torch and CUDA path.
 
 ## Rediscovery
 

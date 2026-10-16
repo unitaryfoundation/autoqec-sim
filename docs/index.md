@@ -11,8 +11,8 @@ title: autoqec-sim
 ![autoqec-sim](assets/logos/autoqec-sim-logo.svg){ width=420 }
 
 <p class="hero-tagline">
-A batched stabilizer-code simulator and reinforcement-learning environment
-for discovering small quantum error-correcting codes.
+Evaluation of stabilizer codes under device noise, and search for codes,
+encoders, and syndrome-extraction schedules that score well under it.
 </p>
 
 </div>
@@ -26,30 +26,35 @@ for discovering small quantum error-correcting codes.
 
 ## What is autoqec-sim?
 
-autoqec-sim holds thousands of encoding circuits as one array of stabilizer
-tableaux and advances them together, one Clifford gate per step, on a chosen
-connectivity graph. A reward scores the code each circuit encodes. The
-rewards are the Knill-Laflamme undetected-error mass, exact distance for
-small codes, LDPC sparsity, circuit-level noise under a device profile, and
-a multi-round memory experiment with a decoder.
+autoqec-sim evaluates stabilizer codes and their circuits under device noise,
+and searches for codes, encoders, and syndrome-extraction schedules that
+score well under it.
 
-Two agents search over gate sequences: PPO, with an optional
-lattice-equivariant policy, and an evolutionary search. A rediscovery
-regression verifies every code a run produces independently of the reward,
-by exact distance and weight enumerators. A schedule synthesizer assigns the
-CX layers of a syndrome-extraction circuit for a fixed code to raise its
-fault distance.
+The evaluation layer scores a code three ways: the undetected single-fault
+mass of its encoding circuit under a device noise profile with every
+parameter sourced, a multi-round memory experiment with a decoder, and the
+exact distance and weight enumerators that verify any claim independently of
+the objective. The search layer runs on a batched Aaronson-Gottesman tableau
+that holds thousands of encoding circuits as one array and advances them one
+Clifford gate per step on a chosen connectivity graph. PPO, with an optional
+lattice-equivariant policy, and an evolutionary search build encoders gate
+by gate; a schedule synthesizer assigns the CX layers of a fixed code's
+syndrome-extraction circuit against the exact circuit-level fault distance.
+
+The gate-by-gate discovery mode follows [@olle2024], whose code, QDX,
+introduced it and has reached larger codes than this package has.
+autoqec-sim rediscovers [[5,1,3]], Steane, Shor, and the rotated surface
+code on every lattice tested and has found noise-adapted non-CSS codes up to
+16 qubits, but no new code above that; [Experiments](experiments.md) records
+where it stops. Its schedule synthesizer raised the fault distance of the
+[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For code
+design at larger sizes, the SAT formulation of [@dalfavero2026] designs codes
+with up to 100 qubits; the evaluation and schedule tools here take such codes
+as input.
 
 The numpy engine on the CPU is the reference. The same kernels and rewards
 run on CUDA through the torch backend, with two opt-in fused CUDA kernels
 for the gate updates and the parity masks.
-
-For calibration: the package rediscovers [[5,1,3]], Steane, Shor, and the
-rotated surface code on every lattice tested, has found noise-adapted
-non-CSS codes up to 16 qubits, and raised the fault distance of the
-[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. The discovery
-agent has not produced a new code above 16 qubits; [Experiments](experiments.md)
-records where it stops.
 
 ## Quick Example
 
