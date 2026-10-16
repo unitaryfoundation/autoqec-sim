@@ -16,6 +16,8 @@ permissions:
 
 jobs:
   deploy:
+    # Pages on a private repository would be public on this plan; deploy only once the repository is public.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

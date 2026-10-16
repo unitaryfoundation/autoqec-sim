@@ -18,6 +18,8 @@ git push -q origin main
 gh repo edit "$REPO" --visibility public --accept-visibility-change-consequences
 git tag -a "$TAG" -m "autoqec-sim $VER"
 git push -q origin "$TAG"
+gh workflow run docs.yml --repo "$REPO" >/dev/null 2>&1 || true   # first public deploy of the docs site
+sleep 90
 gh api -X POST "repos/$REPO/pages" -f "source[branch]=gh-pages" -f "source[path]=/" >/dev/null 2>&1 || true
 echo "released $TAG: https://github.com/$REPO/releases/tag/$TAG"
 echo "docs: https://unitaryfoundation.github.io/autoqec-sim/ (Pages enabled on gh-pages)"
