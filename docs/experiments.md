@@ -124,7 +124,11 @@ setting the noise-aware experiment could not solve), plus how the
 LDPC-constrained target behaves at `n = 12` to `16`. Findings, from
 `experiments/scaling/REPORT.md`: the 4x4 failure is exploration (d = 4 states
 within 50 gates exist but are too rare for the default policy to ever see
-one); a per-qubit permutation-equivariant policy
+one). This holds for this setting, nearest-neighbor 4x4 connectivity, the
+unrestricted H and CNOT action space, and 50-gate episodes; a flat policy
+with CSS-restricted actions on a next-to-nearest-neighbor periodic
+lattice reaches distance 5 at 17 qubits in [@olle2024]. Here a per-qubit
+permutation-equivariant policy
 (now `agents.policies.equivariant_actor_critic`, `PPOConfig(policy="equivariant")`) reaches a clean `[[16, 1, 4]]` at the
 50-gate cap in 0.2M to 0.26M env steps on every seed (about 20x fewer than the
 flat MLP with a 4x larger batch, which also works), and it is the recommended

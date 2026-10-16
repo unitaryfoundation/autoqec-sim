@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#c2552c" d="M16 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m9 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m-6 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2m6-12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2M7 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect x="-1.10" y="2.20" width="34.20" height="27.60" rx="3" fill="#fff" stroke="#c9ad7c" stroke-width="1"/>
+  <rect x="0.10" y="3.40" width="5.4" height="5.4" rx="1" fill="#d9a441"/>
+  <rect x="8.30" y="5.00" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="14.90" y="5.00" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="19.90" y="3.40" width="5.4" height="5.4" rx="1" fill="#d9a441"/>
+  <rect x="28.10" y="5.00" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="1.70" y="11.60" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="6.70" y="10.00" width="5.4" height="5.4" rx="1" fill="#d4883a"/>
+  <rect x="14.90" y="11.60" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="21.50" y="11.60" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="26.50" y="10.00" width="5.4" height="5.4" rx="1" fill="#d4883a"/>
+  <rect x="0.10" y="16.60" width="5.4" height="5.4" rx="1" fill="#cf6a2c"/>
+  <rect x="8.30" y="18.20" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="13.30" y="16.60" width="5.4" height="5.4" rx="1" fill="#cf6a2c"/>
+  <rect x="21.50" y="18.20" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="28.10" y="18.20" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="1.70" y="24.80" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="6.70" y="23.20" width="5.4" height="5.4" rx="1" fill="#a0402a"/>
+  <rect x="14.90" y="24.80" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+  <rect x="19.90" y="23.20" width="5.4" height="5.4" rx="1" fill="#a0402a"/>
+  <rect x="28.10" y="24.80" width="2.20" height="2.20" rx="0.8" fill="#c9ad7c" opacity="0.55"/>
+</svg>

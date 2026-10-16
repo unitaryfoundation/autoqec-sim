@@ -76,7 +76,13 @@ surface enumerators but `w* = 6`, that is, a code whose sparsest
 generating set has a weight-6 element, so equal enumerators do not
 certify local-Clifford equivalence to the CSS reference (a local Clifford
 preserves weights, so an equivalent code would have `w* = 4`; the
-enumerators of `S` and `N(S)` coincide without equivalence here). The
+enumerators of `S` and `N(S)` coincide without equivalence here). That
+weight enumerators are not a complete invariant is well known: the
+classification of self-dual additive codes over GF(4) lists 675
+inequivalent codes at 9 qubits with 320 distinct enumerators
+[@danielsen2006], and local-Clifford equivalence has a polynomial-time
+test [@vandennest2004]. The regression reports the enumerator match as
+a necessary check, and `w*` as a second invariant. The
 mask-constrained run matched the enumerators with `w* = 4` in 10
 attempts against 21 unconstrained. The penalty-constrained surface target
 accepts any verified distance-3 code within the bound: in a first full

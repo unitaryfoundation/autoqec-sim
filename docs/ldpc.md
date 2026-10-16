@@ -2,7 +2,9 @@
 
 `ldpc.sparsest_basis_stats` computes, for each batch element, the exact
 minimum bottleneck generator weight `w*` (the smallest `w` such that the
-stabilizer elements of weight at most `w` generate the group) and the
+stabilizer elements of weight at most `w` generate the group; the
+optimal generator weight of [@wei2026], who show computing it is
+NP-hard in general) and the
 maximum qubit degree of a sparsest basis, by bit-packed GF(2) elimination
 over the enumerated group for `n - k <= 14` (about 4 ms at `n = 9`), with a
 greedy pairwise reduction as the bound for larger codes. The environment
