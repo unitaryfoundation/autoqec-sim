@@ -25,3 +25,6 @@ experiments/*/runs/
 
 # mkdocs build output
 site/
+
+# Claude Code worktrees and session files
+.claude/
