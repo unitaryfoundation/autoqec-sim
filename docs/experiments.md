@@ -196,7 +196,7 @@ Totals: PPO 18 of 18 runs succeed, evolutionary search 0 of 18. The evolutionary
 
 `autoqec_sim.experiments.qdx_targets` runs the full target set that QDX, the
 code of [@olle2024], publishes for all-to-all connectivity at `n <= 15`
-(51 `[[n, k, d]]` triples with `d` up to 5) through this package's PPO at
+(50 `[[n, k, d]]` triples with `d` up to 5) through this package's PPO at
 matched gate set, connectivity, and success criterion, one run per target
 with a budget of 3M environment steps or 10 minutes, and verifies each
 result by exact distance. `experiments/qdx_targets/REPORT.md` holds the

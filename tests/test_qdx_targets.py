@@ -8,7 +8,7 @@ from autoqec_sim.experiments import qdx_targets
 
 
 def test_qdx_target_table_is_consistent():
-    assert len(qdx_targets.QDX_TARGETS) == 51
+    assert len(qdx_targets.QDX_TARGETS) == 50
     for (n, k, d), (codes, lo, med, hi) in qdx_targets.QDX_TARGETS.items():
         assert 5 <= n <= 15 and 1 <= k < n and d in (3, 4, 5)
         assert codes >= 1 and lo <= med <= hi
