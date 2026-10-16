@@ -243,6 +243,43 @@ holds the tables and the figure. The `prepare` step reads the source
 repository's `experiments/surface/` directory and writes
 `experiments/sat_population/population.json`, which is committed.
 
+Findings, from the report. The 100,000 sampled codes contain 62,876
+distinct generator lists but 43,563 distinct stabilizer groups. The
+source's code-capacity rate at bias 10 has Spearman 0.09 to 0.21 with the
+circuit-level rate under the biased cases and 0.00 under Forte, and none
+of the 20 best codes by one score is among the 20 best by the other in
+any case. The 100 codes the source ranks best score worse than the random
+sample under bias (median 0.00063 against 0.00051 at bias 10, sampled
+tier) and no better under Forte. Every code in the sample has exactly 24
+weight-3 logical operators, so at code capacity under depolarizing noise
+they are identical to leading order, while their circuit-level rates
+under Forte span a factor of 2.6; the spread is in how many space-time
+realizations of those logicals go undetected in the extraction circuit
+(342 weight-3 undetectable fault sets for the best codes against 462 to
+472 for the worst, a tenfold spread in probability mass). The mass of
+those fault sets, a quantity only a circuit-level evaluator computes,
+predicts the rate in every case (Spearman about 0.4, R^2 0.2 to 0.3),
+and under bias the low-rate weight-3 mass computed from the stabilizers
+alone predicts better than the source's exact maximum-likelihood rate at
+its working point of 1e-2. Confirmed at three percent standard error, the
+best codes of the population sit 30 to 40 percent below XZZX under Forte
+and under both bias-10 cases (0.00034 against 0.00049 under Forte); about
+half the random sample beats XZZX under Forte and two thirds beat the
+rotated surface code.
+
+`experiments/sat_population/local_search.py` is a prototype of the design
+loop these numbers argue for: SAT keeps every candidate a valid
+distance-3 code on the footprint, CMSGen samples completions with all but
+two generators fixed, and the Forte proxy tier ranks them. Three runs of
+40 steps reached proxy rates of 0.000331 to 0.000365 in 129 to 159
+evaluations, against 0.000344 for the best of the 2,000 random draws and
+0.000351 for the median best of 150 draws. At the sampled tier the best
+search result and the population's best code are 0.000333 and 0.000337,
+so the search reaches the random-sampling floor in about a fifteenth of
+the evaluations and does not pass it; on this footprint the floor appears
+to be structural. The script needs the source repository's `qodesign`
+package, `pycmsgen`, and `python-sat`.
+
 ```
 uv run python -m autoqec_sim.experiments.sat_population prepare --source <satisfying-codes>/experiments/surface
 uv run python -m autoqec_sim.experiments.sat_population run --workers 4

@@ -190,6 +190,7 @@ def score(entry: dict, settings: dict | None = None) -> dict:
             z = tiers["proxy"]["per_basis"]["Z"]
             case["proxy"] = {k: z[k] for k in PROXY_KEYS if k in z}
             case["proxy"]["p_round"] = tiers["proxy"]["p_round"]
+            case["proxy"]["d_circ_mass_x"] = tiers["proxy"]["per_basis"]["X"]["d_circ_mass"]
             if "proxy3_p_round" in tiers["proxy"]:
                 case["proxy"]["proxy3_p_round"] = tiers["proxy"]["proxy3_p_round"]
         if "sampled" in tiers:
@@ -263,6 +264,13 @@ def load_records(out_dir: Path) -> list[dict]:
 
 def _p(rec: dict, case: str, tier: str) -> float:
     return rec["cases"][case][tier]["p_round"]
+
+
+def _mass(rec: dict, case: str) -> float:
+    """Mass of the minimum-weight undetectable circuit fault sets, summed
+    over the two memory bases when both were recorded."""
+    pr = rec["cases"][case]["proxy"]
+    return pr["d_circ_mass"] + pr.get("d_circ_mass_x", 0.0)
 
 
 def _src(rec: dict, eta: float) -> float:
@@ -370,7 +378,7 @@ def analyze(recs: list[dict], tiers, stabilizers: dict[str, list[str]] | None = 
                     "batches": [r["cases"][case]["proxy"]["batches"] for r in rnd],
                     "layers": [r["cases"][case]["proxy"]["layers"] for r in rnd],
                     "d_circ": [r["cases"][case]["proxy"]["d_circ"] for r in rnd],
-                    "d_circ_mass": [r["cases"][case]["proxy"]["d_circ_mass"] for r in rnd],
+                    "d_circ_mass": [_mass(r, case) for r in rnd],
                     "num_y": [r["num_y"] for r in rnd],
                     "css": [1.0 if r["css"] else 0.0 for r in rnd],
                 }
@@ -435,7 +443,7 @@ def report_tables(an: dict, pop: dict, tiers) -> str:
              "the weight-3 logical operators under the case's bias (letter weight 1 for X and Y, eta for Z), computed from the "
              "stabilizers alone; batches, groups of generators whose controlled gates cannot interleave; layers, the circuit depth of "
              "one round; d_circ, the exact circuit distance; d_circ_mass, the probability mass of the minimum-weight undetectable "
-             "circuit fault sets in the Z-basis memory; num_y, Y letters among the generators; css. Then the R^2 of a least-squares "
+             "circuit fault sets summed over the two memory bases; num_y, Y letters among the generators; css. Then the R^2 of a least-squares "
              "fit of log10 p_round on log10 source rate alone, on the non-constant features alone, and on both.\n")
     tier = "sampled" if "sampled" in tiers else tiers[0]
     first = next((c["tiers"][tier] for c in an["cases"].values() if "feature_spearman" in c["tiers"][tier]), None)
@@ -524,35 +532,48 @@ def confirm_tables(conf: dict, recs: list[dict]) -> str:
 
 def make_figure(recs: list[dict], stem: Path, tier: str = "sampled") -> Path | None:
     try:
+        from matplotlib.ticker import NullFormatter
+
         from . import figstyle
     except ImportError:  # pragma: no cover
         return None
-    try:
-        plt = figstyle.apply()
-    except ImportError:  # pragma: no cover
-        return None
+    plt = figstyle.apply()
     rnd = [r for r in recs if "random" in r["groups"] and all(c in r["cases"] for c in ("idle_eta_10", "forte"))]
     refs = {r["id"]: r for r in recs if "reference" in r["groups"]}
     fig, axes = plt.subplots(1, 2, figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE + 0.3))
-    panels = (("idle_eta_10", 10.0, "source LER, eta = 10"), ("forte", 1.0, "source LER, eta = 1"))
-    batches = sorted({r["cases"]["idle_eta_10"]["proxy"]["batches"] for r in rnd})
-    colors = {b: figstyle.SERIES_COLORS[i % len(figstyle.SERIES_COLORS)] for i, b in enumerate(batches)}
-    for ax, (case, eta, xlabel), letter in zip(axes, panels, "ab"):
-        for b in batches:
-            pts = [(r["source_ler"][f"{eta:g}"], r["cases"][case][tier]["p_round"]) for r in rnd if r["cases"][case]["proxy"]["batches"] == b]
-            if pts:
-                ax.scatter([p[0] for p in pts], [p[1] for p in pts], s=6, color=colors[b], alpha=0.6, linewidths=0, label=f"{b} batches")
-        for rid, marker, label in (("rotated_surface", "s", "rotated surface"), ("xzzx", "D", "XZZX")):
-            if rid in refs:
-                ax.scatter([refs[rid]["source_ler"][f"{eta:g}"]], [refs[rid]["cases"][case][tier]["p_round"]], s=30, marker=marker,
-                           color="black", facecolors="none", linewidths=1.0, label=label, zorder=5)
+    # (a) the source's code-capacity rate against the circuit-level rate at the matched bias
+    ax = axes[0]
+    ax.scatter([r["source_ler"]["10"] for r in rnd], [r["cases"]["idle_eta_10"][tier]["p_round"] for r in rnd],
+               s=6, color=figstyle.SERIES_COLORS[0], alpha=0.5, linewidths=0, label="random sample")
+    for rid, marker, label in (("rotated_surface", "s", "rotated surface"), ("xzzx", "D", "XZZX")):
+        if rid in refs:
+            ax.scatter([refs[rid]["source_ler"]["10"]], [refs[rid]["cases"]["idle_eta_10"][tier]["p_round"]], s=30, marker=marker,
+                       color="black", facecolors="none", linewidths=1.0, label=label, zorder=5)
+    ax.set_xlabel("source code-capacity LER, eta = 10")
+    ax.set_ylabel(f"circuit-level p_round, {tier} tier")
+    ax.set_title(CASE_TITLES["idle_eta_10"])
+    ax.legend(loc="upper left")
+    # (b) under Forte the source rate is constant to leading order; the circuit-fault mass is the predictor
+    ax = axes[1]
+    ax.scatter([_mass(r, "forte") for r in rnd], [r["cases"]["forte"][tier]["p_round"] for r in rnd],
+               s=6, color=figstyle.SERIES_COLORS[0], alpha=0.5, linewidths=0)
+    for rid, marker in (("rotated_surface", "s"), ("xzzx", "D")):
+        if rid in refs:
+            ax.scatter([_mass(refs[rid], "forte")], [refs[rid]["cases"]["forte"][tier]["p_round"]], s=30, marker=marker,
+                       color="black", facecolors="none", linewidths=1.0, zorder=5)
+    ax.set_xlabel("mass of weight-3 undetectable circuit fault sets, both memories")
+    ax.set_ylabel(f"circuit-level p_round, {tier} tier")
+    ax.set_title(CASE_TITLES["forte"])
+    for ax, letter in zip(axes, "ab"):
         ax.set_xscale("log")
         ax.set_yscale("log")
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(f"circuit-level p_round, {tier} tier")
-        ax.set_title(CASE_TITLES[case])
+        ax.xaxis.set_minor_formatter(NullFormatter())
+        ax.yaxis.set_minor_formatter(NullFormatter())
+        ax.set_yticks([3e-4, 5e-4, 1e-3])
+        ax.set_yticklabels(["3e-4", "5e-4", "1e-3"])
         figstyle.panel_label(ax, letter)
-    axes[0].legend(loc="upper left", ncol=2, handletextpad=0.2, columnspacing=0.8)
+    axes[0].set_xticks([0.02, 0.05, 0.1])
+    axes[0].set_xticklabels(["0.02", "0.05", "0.1"])
     fig.tight_layout()
     figstyle.save(fig, stem)
     return stem.with_suffix(".png")
@@ -570,7 +591,11 @@ def write_report(out_dir: Path, population: Path, figure: Path | None = FIGURE) 
         png = make_figure(recs, figure)
         if png is not None:
             rel = os.path.relpath(png, out_dir.parent)
-            fig_line = f"\n![source rate against circuit-level rate]({rel})\n\nFigure: the random sample's source rate against its circuit-level rate under the biased idle case at eta = 10 (a) and under Forte (b), colored by the number of batches in the extraction circuit; the reference codes are the open markers.\n"
+            fig_line = (f"\n![source rate against circuit-level rate]({rel})\n\nFigure: (a) the random sample's source rate at eta = 10 "
+                        "against its circuit-level rate under the biased idle case at the same eta; (b) under Forte, where the source rate "
+                        "at eta = 1 takes only two values across the sample, the circuit-level rate against the probability mass of the "
+                        "weight-3 undetectable fault sets of the two memory circuits. The reference codes are the open markers "
+                        "(square: rotated surface, diamond: XZZX).\n")
     conf_text = ""
     if (out_dir / "confirm.json").exists():
         conf_text = confirm_tables(json.loads((out_dir / "confirm.json").read_text()), recs)
