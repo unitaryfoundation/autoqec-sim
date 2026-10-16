@@ -1,7 +1,8 @@
 name: Release
 
-# Builds the sdist and wheel on a version tag and attaches them to a
-# GitHub release. Publishing to PyPI is a separate owner decision (RELEASE.md).
+# Builds the sdist and wheel on a version tag, attaches them to a GitHub
+# release, then publishes the versioned documentation and `stable`.
+# Publishing to PyPI is a separate owner decision (RELEASE.md).
 on:
   push:
     tags: ["v*"]
@@ -26,3 +27,26 @@ jobs:
           files: dist/*
           generate_release_notes: false
           body: "See CHANGELOG.md for this version's entry."
+
+  docs:
+    needs: release
+    runs-on: ubuntu-latest
+    concurrency:
+      group: docs-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --group docs
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Publish the versioned docs and stable
+        run: |
+          uv run mike deploy --push --update-aliases "${GITHUB_REF_NAME#v}" stable
+          uv run mike set-default --push stable

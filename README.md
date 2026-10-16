@@ -100,8 +100,9 @@ path on an A100. `docs/gpu.md` has the measurements.
 
 ## Documentation
 
-https://unitaryfoundation.github.io/autoqec-sim/ (built with MkDocs from `docs/`;
-`uv run --group docs mkdocs serve` renders it locally).
+https://unitaryfoundation.github.io/autoqec-sim/ (MkDocs from `docs/`;
+`uv run --group docs mkdocs serve` renders it locally). `stable/` is the
+latest release and `dev/` tracks `main`.
 
 ## License
 

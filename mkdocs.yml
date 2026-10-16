@@ -1,38 +1,71 @@
 site_name: autoqec-sim
 site_url: https://unitaryfoundation.github.io/autoqec-sim/
+site_description: >-
+  Batched stabilizer-code simulator and reinforcement-learning environment
+  for discovering small quantum error-correcting codes.
 repo_url: https://github.com/unitaryfoundation/autoqec-sim
 repo_name: unitaryfoundation/autoqec-sim
 edit_uri: edit/main/docs/
-copyright: Apache-2.0
+copyright: Copyright &copy; 2026 Vincent Russo. Apache-2.0.
+strict: true
 
 theme:
   name: material
-  features:
-    - navigation.sections
-    - navigation.expand
-    - content.code.copy
-    - toc.follow
+  icon:
+    logo: material/dots-hexagon
+  favicon: assets/favicon.svg
   palette:
-    - scheme: default
-      primary: indigo
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: custom
       toggle:
         icon: material/brightness-7
-        name: dark mode
-    - scheme: slate
-      primary: indigo
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: custom
       toggle:
         icon: material/brightness-4
-        name: light mode
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+    - toc.follow
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
   - tables
   - toc:
       permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.snippets:
       base_path: [".", "docs"]
       check_paths: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  version:
+    provider: mike
+    default: stable
 
 plugins:
   - search
@@ -41,29 +74,49 @@ plugins:
         python:
           paths: [src]
           options:
-            docstring_style: google
+            docstring_style: numpy
             show_source: false
             show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_signature_annotations: true
             members_order: source
             separate_signature: true
+            extensions:
+              - docs/griffe_extensions.py:SphinxRolesToCode
 
 nav:
-  - Overview: index.md
-  - Modules: modules.md
-  - Rediscovery regression: regression.md
-  - Experiments: experiments.md
-  - LDPC constraint: ldpc.md
-  - Memory objective: memory_objective.md
-  - Noise module:
-      - Interface: noise.md
-      - Device presets: noise_presets.md
-  - GPU backend: gpu.md
-  - CPU profile: profile.md
-  - Reproduce: reproduce.md
-  - API reference:
-      - autoqec_sim: api/autoqec_sim.md
-      - env and reward: api/env.md
-      - code and tableau: api/code.md
-      - noise: api/noise.md
-      - schedule synthesis: api/schedule.md
-      - backends and agents: api/backends.md
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Choose a Workflow: getting-started/choosing-a-workflow.md
+  - User Guide:
+      - Overview: guide.md
+      - Discovery:
+          - Rediscovery regression: regression.md
+          - Experiments: experiments.md
+      - Rewards and constraints:
+          - LDPC constraint: ldpc.md
+          - Memory objective: memory_objective.md
+      - Noise:
+          - Interface: noise.md
+          - Device presets: noise_presets.md
+      - Execution:
+          - GPU backend: gpu.md
+          - CPU profile: profile.md
+      - Reproduce: reproduce.md
+  - Reference:
+      - Modules: modules.md
+      - Commands: reference/commands.md
+      - Python API:
+          - autoqec_sim: api/autoqec_sim.md
+          - Environment and rewards: api/env.md
+          - Codes and tableaux: api/code.md
+          - Noise module: api/noise.md
+          - Schedule synthesis: api/schedule.md
+          - Backends, agents, search: api/backends.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Releasing: development/releasing.md
+      - Changelog: development/changelog.md

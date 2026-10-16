@@ -1,9 +1,15 @@
 name: Docs
 
+# Publishes the documentation of `main` as the `dev` version with mike.
+# Release tags publish the versioned copy and `stable` (release.yml).
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -13,8 +19,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
       - run: uv sync --group docs
-      - run: uv run mkdocs gh-deploy --force --no-history
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: uv run mike deploy --push dev
+      - name: Point the site root at dev until the first release publishes stable
+        run: |
+          if ! uv run mike list | grep -qw stable; then
+            uv run mike set-default --push dev
+          fi
