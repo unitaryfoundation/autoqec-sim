@@ -56,6 +56,11 @@
   checked against the paper's text, the assumptions are listed per row,
   and the page states that the comparison is model against reported
   number, not a device prediction.
+- A third tracked validation experiment, `experiments/footprints`: CMSGen
+  samples commuting letter assignments on the Steane and 4.8.8 color-code
+  footprints, the exact distance and the proxy tier score them under the
+  Forte preset and a biased idle profile, and Tesseract confirms the best.
+  Needs `pycmsgen` (`uv run --with pycmsgen`).
 - The README is cut to the value proposition: what the evaluator does
   in five bullets, the experiments in three with links, installation, and
   the three examples; the validation numbers stay on the evaluate page

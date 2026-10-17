@@ -216,7 +216,12 @@ commuting gauge generators.
   ([proxy against Tesseract](experiments/proxy_tesseract.md)).
 - The proxy is a leading-order estimate. It holds while `expected_faults`
   per shot stays below about one and underestimates above that; the
-  sampled tiers take over there.
+  sampled tiers take over there. How fast it degrades depends on the
+  circuit: on the [[17,1,5]] 4.8.8 color code under the Forte preset,
+  where the weight-8 check leaves 160 mechanisms at probability 1e-2 and
+  the circuit distance is 3, Tesseract sits 3 to 5 times above the proxy
+  from 0.4 to 1.8 expected faults per shot, the excess coming from shots
+  with three or more faults ([other footprints](experiments/footprints.md)).
 - The circuit-distance search stops at weight 6, about twentyfold more
   work per unit of weight, so a basis with `d_circ` of 7 or more reports
   `None` and a zero proxy.

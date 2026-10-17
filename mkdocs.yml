@@ -116,6 +116,7 @@ nav:
               - SAT population: experiments/sat_population.md
               - Proxy against Tesseract: experiments/proxy_tesseract.md
               - Published experiments: experiments/hardware_comparison.md
+              - Other footprints: experiments/footprints.md
       - Execution:
           - GPU backend: gpu.md
           - CPU profile: profile.md
