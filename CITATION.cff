@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
 type: software
-title: "autoqec-sim: vectorized stabilizer-code reward engine and RL environment"
+title: "autoqec-sim: circuit-level evaluation of stabilizer codes under device noise"
 version: 0.2.0
 date-released: "2026-10-16"
 license: Apache-2.0
@@ -9,14 +9,19 @@ repository-code: "https://github.com/unitaryfoundation/autoqec-sim"
 keywords:
   - quantum error correction
   - stabilizer codes
+  - logical error rate
+  - device noise models
   - reinforcement learning
   - Clifford simulation
 abstract: >-
-  Batched Aaronson-Gottesman tableau simulator, Knill-Laflamme reward,
-  connectivity-restricted RL environment with an LDPC sparsity constraint,
-  circuit-level noise reward through the autoqec_sim.noise package, and the
-  Steane, surface-code, and [[5,1,3]] rediscovery regressions with
-  evolutionary search and PPO.
+  Circuit-level evaluation of stabilizer codes under device noise: one call
+  builds the syndrome-extraction memory experiment of any stabilizer code,
+  applies a noise model with sourced device parameters, and returns the
+  logical error per round, the exact circuit-level distance, and the
+  dominant fault sets, without sampling or a decoder. With the proposers
+  that generate candidates: a SAT-population pipeline, an evolutionary
+  search, and a PPO agent on a batched Aaronson-Gottesman tableau, and the
+  rediscovery regressions that verify what they find.
 references:
   - type: article
     title: "Simultaneous discovery of quantum error correction codes and encoders with a noise-aware reinforcement learning agent"

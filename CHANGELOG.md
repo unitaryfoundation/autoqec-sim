@@ -41,6 +41,13 @@
   and `sat_codes`; the noise-aware, topology, and evolutionary-search
   reports move from the untracked `runs/` directories to
   `experiments/<name>/REPORT.md`.
+- The package is positioned around `evaluate_code`. README, documentation
+  home, user guide, quick start, navigation, and project metadata lead
+  with the circuit-level evaluator and present the SAT-population
+  pipeline, the evolutionary search, and PPO as proposers of candidates
+  for it; the evaluate page states the validation and the limits (leading
+  order below one expected fault per shot, circuit distance up to 6, two
+  measurement windows per round for CSS codes, presets as models).
 - Fixed: `experiments.topologies_ea` built its environment with automatic
   resets, so the evolutionary search read a reset state's reward in place
   of the successful one and never registered a success; its report

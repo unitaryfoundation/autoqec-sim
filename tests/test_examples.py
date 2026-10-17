@@ -1,5 +1,6 @@
-"""The quick-start example is one file: the documentation includes its marked
-section and README.md carries a copy, which this test keeps equal and runs."""
+"""The quick-start examples are files under docs/examples: the documentation
+includes their marked sections and README.md carries copies, which this test
+keeps equal and runs."""
 
 import re
 import subprocess
@@ -20,9 +21,10 @@ def test_readme_quick_start_equals_the_example():
     readme = (ROOT / "README.md").read_text()
     section = readme[readme.index("## Quick Start"):readme.index("## Contributing")]
     blocks = re.findall(r"```python\n(.*?)```", section, re.S)
-    assert len(blocks) == 2
-    assert blocks[0].strip() == _section("docs/examples/quickstart.py", "score")
-    assert blocks[1].strip() == _section("docs/examples/quickstart.py", "search")
+    assert len(blocks) == 3
+    assert blocks[0].strip() == _section("docs/examples/evaluate_code.py", "proxy")
+    assert blocks[1].strip() == _section("docs/examples/quickstart.py", "score")
+    assert blocks[2].strip() == _section("docs/examples/quickstart.py", "search")
 
 
 def test_quick_start_runs_and_finds_a_distance_3_code():

@@ -96,9 +96,14 @@ nav:
       - Choose a Workflow: getting-started/choosing-a-workflow.md
   - User Guide:
       - Overview: guide.md
-      - Evaluate a code: evaluate.md
-      - Discovery:
+      - Evaluate:
+          - Evaluate a code: evaluate.md
+          - Memory objective: memory_objective.md
+          - Noise interface: noise.md
+          - Device presets: noise_presets.md
+      - Propose:
           - Rediscovery regression: regression.md
+          - LDPC constraint: ldpc.md
           - Experiments:
               - Overview: experiments/index.md
               - Noise-aware discovery: experiments/noise_aware.md
@@ -109,12 +114,6 @@ nav:
               - QDX's targets: experiments/qdx_targets.md
               - SAT-designed codes: experiments/sat_codes.md
               - SAT population: experiments/sat_population.md
-      - Rewards and constraints:
-          - LDPC constraint: ldpc.md
-          - Memory objective: memory_objective.md
-      - Noise:
-          - Interface: noise.md
-          - Device presets: noise_presets.md
       - Execution:
           - GPU backend: gpu.md
           - CPU profile: profile.md

@@ -5,13 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "autoqec-sim"
 version = "0.2.0"
-description = "Evaluation of stabilizer codes under device noise, and search for codes, encoders, and syndrome-extraction schedules."
+description = "Circuit-level evaluation of stabilizer codes under device noise, in one call and without sampling, with the search tools that propose candidates."
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Vincent Russo"}]
-keywords = ["quantum", "error-correction", "stabilizer", "reinforcement-learning", "clifford"]
+keywords = ["quantum", "error-correction", "stabilizer", "logical-error-rate", "stim", "reinforcement-learning", "clifford"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",

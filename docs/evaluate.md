@@ -165,3 +165,33 @@ per round (1282 and 1286 failures) in 16 minutes, 8 percent above the
 proxy, at 6.0 expected faults per shot, outside the regime where a
 leading-order estimate is guaranteed to hold. Beyond distance 6 the proxy
 is zero again; the search cost grows about twentyfold per unit of weight.
+
+
+## Validation and limits
+
+- The proxy is exact for what it computes. On the one-round 5x5 surface
+  code its weight-3 form equals the enumeration of every triple, and the
+  weight-5 count and mass match (`tests/test_undetectable_logicals.py`).
+- It ranks like the sampled decoders where they overlap: Spearman 0.79,
+  0.90, and 0.78 against BP+OSD over 32 random [[9,1,3]] codes under the
+  chain, board, and Heron profiles
+  ([memory objective runs](experiments/memory_objective.md)), within 25
+  percent of the exact maximum-likelihood tier on every benchmark code
+  below one expected fault per shot, and within 8 percent of Tesseract on
+  the 5x5 surface code at five rounds (above).
+- The proxy is a leading-order estimate. It holds while `expected_faults`
+  per shot stays below about one and underestimates above that; the
+  sampled tiers take over there.
+- The circuit-distance search stops at weight 6, about twentyfold more
+  work per unit of weight, so a basis with `d_circ` of 7 or more reports
+  `None` and a zero proxy.
+- The memory circuit runs generators that share a qubit with different
+  Pauli letters in separate blocks, each with its own ancilla measurement.
+  For a CSS code that is the X block and then the Z block, two measurement
+  windows per round where hardware interleaves the two in four layers with
+  one measurement, so absolute rates for CSS codes carry the extra idle
+  time. Flags beyond one per generator, gauge measurements, and transport
+  are not expressible.
+- The presets are noise models assembled from public specifications, not
+  device measurements, and `evaluate_code` builds its own circuit. A rate
+  it reports is for that circuit under that model.

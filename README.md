@@ -9,75 +9,89 @@
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/installation/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-**autoqec-sim** evaluates stabilizer codes and their circuits under device
-noise, and searches for codes, encoders, and syndrome-extraction schedules
-that score well under it.
+**autoqec-sim** evaluates stabilizer codes under device noise. One call
+builds the syndrome-extraction memory experiment of any stabilizer code,
+CSS or not, applies a noise model with sourced device parameters, and
+returns the logical error per round, the exact circuit-level distance, and
+the dominant fault sets explained back to gates and qubits, without
+sampling or a decoder. Candidates can come from anywhere. The package also
+ships three proposers, a SAT-population pipeline, an evolutionary search,
+and a PPO agent, and the tools that verify what they find.
 
 Developed with support from the U.S. Department of Energy Genesis Mission
 and hosted by the [Unitary Foundation](https://unitary.foundation).
 
-The evaluation layer scores a code three ways: the undetected single-fault
-mass of its encoding circuit under a device noise profile (IonQ Forte, IBM
-Heron, a long ion chain, or the qldpc-challenge recipe, every parameter
-sourced), a multi-round memory experiment with a decoder, and the exact
-distance and weight enumerators that verify any claim independently of the
-objective. The search layer runs on a batched Aaronson-Gottesman tableau
-that holds thousands of encoding circuits as one array and advances them
-one Clifford gate per step on a chosen connectivity graph. PPO, with an
-optional lattice-equivariant policy, and an evolutionary search build
-encoders gate by gate; a schedule synthesizer assigns the CX layers of a
-fixed code's syndrome-extraction circuit against the exact circuit-level
-fault distance.
+## What the evaluator does
 
-The gate-by-gate discovery mode follows Olle, Zen, Puviani, and Marquardt
+`evaluate_code(code, profile)` takes stabilizer generators as Pauli strings
+and a noise profile (IonQ Forte, IBM Heron, a long ion chain, the
+qldpc-challenge recipe, or uniform depolarizing noise). It builds an
+`R`-round memory circuit with one ancilla per generator in a hook-aware
+gate order, derives stim's detector error model, and scores it at one of
+four tiers: a closed-form maximum-likelihood proxy over low-weight fault
+sets (no shots, no decoder), exact maximum likelihood or a lookup decoder,
+BP+OSD, or Tesseract. The proxy is exact to leading order at circuit
+distance up to 6 and agrees with the sampled decoders where they overlap:
+Spearman 0.78 to 0.90 against BP+OSD over 32 random [[9,1,3]] codes, and
+within 8 percent of Tesseract on the 5x5 surface code at five rounds in
+about a twentieth of the time of 50,000 shots. Beside the rate it returns
+the exact circuit-level distance up to weight 6, the probability mass of
+the minimum-weight undetectable fault sets, and the most probable of them
+as circuit locations.
+
+Its limits: the proxy is a leading-order estimate and holds while the
+expected number of faults per shot stays below about one, where the
+sampled tiers take over; the circuit-distance search stops at weight 6;
+the memory circuit runs the X and Z checks of a CSS code one block after
+the other, each with its own measurement, where hardware interleaves them
+with one; flag and gauge extraction beyond one flag per generator are not
+expressible; and the presets are noise models assembled from public
+specifications, not device measurements.
+
+## What the proposers have found
+
+The evaluator exists because two cheaper rankings fail. Over 2,150
+SAT-designed nine-qubit codes, the code-capacity logical error rate has
+rank correlation 0.00 to 0.21 with the circuit-level rate and none of the
+twenty best codes by one score is among the twenty best by the other,
+while the best codes of the population sit 30 to 40 percent below XZZX
+under biased noise. The gate-by-gate search of Olle, Zen, Puviani, and
+Marquardt
 ([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
-whose code, [QDX](https://github.com/jolle-ag/qdx), introduced it and has
-reached larger codes than this package has. For code design at larger
-sizes, the SAT formulation of DalFavero et al.
-([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs codes with up
-to 100 qubits; the evaluation and schedule tools here take such codes as
-input.
-
-What the package has produced: rediscovery of [[5,1,3]], Steane, Shor, and
-the distance-3 rotated surface code on every lattice tested; a [[25,1,5]]
-code on the 5x5 square lattice in 10 of 10 seeds (median 1.8M environment
-steps and 263 s on one A40), none of them with the rotated surface code's
-stabilizer group; distance-3 codes on square, triangular, and heavy-hex
-lattices at 9 to 18 qubits in 18 of 18 PPO runs, where the package's own
-evolutionary search found none in 18; noise-adapted non-CSS codes up to 16
-qubits; and syndrome-extraction schedules that raised the circuit fault
-distance of qldpc-challenge board circuits from 2 to 3 ([[49,13,4]], merged;
-[[38,10,3]] and [[53,20,3]], filed). Under the memory objective, the codes
-it trains have 0.8 to 3.1 times the rotated surface code's logical error
-rate under BP+OSD on the training noise (median 1.8, one seed at parity),
-and 7 of 9 beat the best code from the encoder objective.
-
-What it has not produced: the rotated surface code's stabilizer group at
-distance 4 or 5 (its [[16,1,4]] and [[25,1,5]] codes are non-CSS); a code
-with every stabilizer generator of weight at most 4 beyond 12 qubits, since
-the constrained action set stops being traversable at 16 qubits on every
-graph tried; a code resolvably below the surface code under the memory
-objective; and no new entry on the qldpc-challenge board. The
-[experiments page](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
-records each stopping point.
+reimplemented here with PPO and an evolutionary search, rediscovers
+[[5,1,3]], Steane, Shor, and the rotated surface code, reaches distance 3
+on square, triangular, and heavy-hex lattices at 9 to 18 qubits in 18 of
+18 PPO runs and 17 of 18 evolutionary runs, matched 24 of the 45 published
+QDX targets it ran within 10 minutes each, and found a [[25,1,5]] code on
+the 5x5 lattice. It does not scale past about 16 qubits under a sparsity
+constraint, and the SAT formulation of DalFavero et al.
+([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs codes with
+up to 100 qubits in minutes; such codes go into the evaluator as they are.
+A schedule synthesizer assigns the CX layers of a fixed code's extraction
+circuit against the exact circuit-level fault distance and raised that
+distance from 2 to 3 for the qldpc-challenge [[49,13,4]] circuit. The
+[experiments pages](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
+hold each result with its figure and the commands that reproduce it.
 
 ## Why autoqec-sim?
 
-- **Device-level evaluation**: circuit-level noise of the encoder under
-  sourced device presets (IonQ Forte, a long ion chain, IBM Heron, the
-  qldpc-challenge recipe), cross-checked against Stim's detector error model,
-  and a multi-round memory objective with three decoder tiers. Codes designed
-  elsewhere, by SAT or by hand, can be scored here.
+- **One-call evaluation of any stabilizer code**: logical error per round,
+  exact circuit-level distance, and dominant faults explained to gates, for
+  CSS and non-CSS codes alike, without a matching decoder or shots.
+- **Noise models with every parameter sourced**: IonQ Forte, IBM Heron, a
+  long ion chain, and the qldpc-challenge recipe, with biased, correlated,
+  and leakage-aware channels, device timing, and connectivity; the same
+  models noisify a `stim.Circuit` of your own.
 - **Verification independent of the objective**: exact distance, weight
-  enumerators, and the sparsest generator basis for every code a run reports,
-  plus a rediscovery regression that every change passes through.
+  enumerators, and the sparsest generator basis for every code a run
+  reports.
+- **Three proposers**: a SAT-population pipeline over the codes of DalFavero
+  et al., an evolutionary search, and PPO with action masking and a
+  permutation-equivariant policy, on a batched tableau simulator with a
+  bit-identical torch and CUDA path.
 - **Schedule synthesis**: PPO over the CX-layer assignment of a
-  syndrome-extraction circuit with the exact circuit-level fault distance as
-  the reward.
-- **Gate-by-gate code and encoder search**, after Olle et al.: PPO with
-  action masking and a permutation-equivariant policy, an evolutionary
-  search, an LDPC sparsity constraint, and a batched tableau simulator on
-  numpy with a bit-identical torch and CUDA path.
+  syndrome-extraction circuit with the exact circuit-level fault distance
+  as the reward.
 
 ## Installation
 
@@ -85,13 +99,48 @@ records each stopping point.
 pip install git+https://github.com/unitaryfoundation/autoqec-sim
 ```
 
-Python 3.12 to 3.14; the dependencies are `numpy` and `stim`. The PPO agent
-needs torch: install `"autoqec-sim[rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"`.
+Python 3.12 to 3.14; the dependencies are `numpy` and `stim`. Tesseract
+sampling needs the `tesseract` extra and the PPO agent needs torch:
+install `"autoqec-sim[tesseract,rl] @ git+https://github.com/unitaryfoundation/autoqec-sim"`.
 
 ## Quick Start
 
-Score three known codes under a device noise profile: a three-round memory
-experiment under the IonQ Forte preset, at the proxy tier.
+Evaluate a code under device noise: the rotated surface code, three noisy
+rounds of depolarizing noise at 1e-3, scored at the proxy tier, with the
+most probable undetectable fault set as circuit errors.
+
+```python
+from autoqec_sim import evaluate_code
+from autoqec_sim.noise import presets
+
+# Rotated surface code [[9,1,3]], qubits on a 3x3 grid, row-major.
+surface = [
+    "XXIXXIIII", "IIIIXXIXX", "IXXIIIIII", "IIIIIIXXI",
+    "IZZIZZIII", "IIIZZIZZI", "ZIIZIIIII", "IIIIIZIIZ",
+]
+
+# Three noisy rounds under uniform depolarizing noise at 1e-3, scored by
+# the closed-form low-weight maximum-likelihood proxy (no decoder).
+result = evaluate_code(surface, presets.depolarizing(1e-3), rounds=3)
+print(f"error per round {result.p_round:.2e}  d_circ {result.d_circ}")
+
+# The most probable minimum-weight undetectable fault set, as circuit errors.
+top = result.dominant_faults[0]
+print(f"{top.basis} basis, probability {top.probability:.1e}, {len(top.mechanisms)} mechanisms:")
+for loc in top.locations:
+    print(f"  {loc.pauli:7s} after {loc.gate} on {loc.qubits} at tick {loc.tick}  ->  {loc.targets}")
+```
+
+```
+error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 1.4e-06, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+```
+
+Compare codes under a device preset: three known codes in a three-round
+memory experiment under the IonQ Forte preset, at a quarter of its rates.
 
 ```python
 from autoqec_sim import known_codes
@@ -112,8 +161,8 @@ steane (7, 1, 3) error per round 2.10e-03
 rotated_surface_9 (9, 1, 3) error per round 5.89e-04
 ```
 
-Search for a code on five qubits with the evolutionary agent, and read the
-code off the circuit it found:
+Propose a code: the evolutionary search on five qubits, and the code read
+off the circuit it found.
 
 ```python
 from autoqec_sim import CodeDiscoveryEnv, EvolutionarySearch, StabilizerCode
@@ -129,12 +178,15 @@ print(code.parameters(), code.stabilizer_strings())
 (5, 1, 3) ['-ZZIYX', '+IXXZX', '+XIYXX', '-ZXYIY']
 ```
 
-Both run in about a second on a laptop. Continue with the
-[Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/), which verifies a found code
-against the reference and scores its encoder under a device profile, or use
-[Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/) to pick a
-reward, agent, and entry point by the result you need. The console scripts
-are listed under [Commands](https://unitaryfoundation.github.io/autoqec-sim/stable/reference/commands/).
+All three run in a few seconds on a laptop. Continue with
+[Evaluate a code](https://unitaryfoundation.github.io/autoqec-sim/stable/evaluate/)
+for the result fields, the tiers, the validation, and a distance-5
+example, the
+[Quick Start](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/quickstart/)
+for verifying a found code against the reference, or
+[Choose a Workflow](https://unitaryfoundation.github.io/autoqec-sim/stable/getting-started/choosing-a-workflow/)
+to pick an entry point by the result you need. The console scripts are
+listed under [Commands](https://unitaryfoundation.github.io/autoqec-sim/stable/reference/commands/).
 
 ## Contributing
 

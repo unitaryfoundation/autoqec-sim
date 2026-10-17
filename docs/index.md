@@ -11,8 +11,8 @@ title: autoqec-sim
 ![autoqec-sim](assets/logos/autoqec-sim.svg){ width=420 }
 
 <p class="hero-tagline">
-Evaluation of stabilizer codes under device noise, and search for codes,
-encoders, and syndrome-extraction schedules that score well under it.
+Circuit-level evaluation of stabilizer codes under device noise, in one
+call and without sampling, for codes from any source.
 </p>
 
 </div>
@@ -26,84 +26,92 @@ encoders, and syndrome-extraction schedules that score well under it.
 
 ## What is autoqec-sim?
 
-autoqec-sim evaluates stabilizer codes and their circuits under device noise,
-and searches for codes, encoders, and syndrome-extraction schedules that
-score well under it.
+autoqec-sim evaluates stabilizer codes under device noise. One call builds
+the syndrome-extraction memory experiment of any stabilizer code, CSS or
+not, applies a noise model with sourced device parameters, and returns the
+logical error per round, the exact circuit-level distance, and the
+dominant fault sets explained back to gates and qubits, without sampling
+or a decoder.
 
-The evaluation layer scores a code three ways: the undetected single-fault
-mass of its encoding circuit under a device noise profile with every
-parameter sourced, a multi-round memory experiment with a decoder, and the
-exact distance and weight enumerators that verify any claim independently of
-the objective. The search layer runs on a batched Aaronson-Gottesman tableau
-that holds thousands of encoding circuits as one array and advances them one
-Clifford gate per step on a chosen connectivity graph. PPO, with an optional
-lattice-equivariant policy, and an evolutionary search build encoders gate
-by gate; a schedule synthesizer assigns the CX layers of a fixed code's
-syndrome-extraction circuit against the exact circuit-level fault distance.
+The evaluator builds an `R`-round memory circuit with one ancilla per
+generator in a hook-aware gate order, derives stim's detector error model
+[@gidney2021], and scores it at one of four tiers: a closed-form
+maximum-likelihood proxy over low-weight fault sets, exact maximum
+likelihood or a lookup decoder, BP+OSD [@roffe2020; @panteleev2021], or
+Tesseract [@beni2025]. The proxy is exact to leading order at circuit
+distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
+0.90), and lands within 8 percent of Tesseract on the 5x5 surface code at
+five rounds in about a twentieth of the time of 50,000 shots. The
+[Evaluate a code](evaluate.md) page has the fields, the tiers, the
+validation, and the limits.
 
-The gate-by-gate discovery mode follows [@olle2024], whose code, QDX,
-introduced it and has reached larger codes than this package has.
-autoqec-sim rediscovers [[5,1,3]], Steane, Shor, and the rotated surface
-code on every lattice tested and has found noise-adapted non-CSS codes up to
-16 qubits, but no new code above that; [Experiments](experiments/index.md) records
-where it stops. Its schedule synthesizer raised the fault distance of the
-[[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For code
-design at larger sizes, the SAT formulation of [@dalfavero2026] designs codes
-with up to 100 qubits; the evaluation and schedule tools here take such codes
-as input.
-
-The numpy engine on the CPU is the reference. The same kernels and rewards
-run on CUDA through the torch backend, with two opt-in fused CUDA kernels
-for the gate updates and the parity masks.
+Candidates can come from anywhere. The package ships three proposers and
+the tools that verify what they find: a SAT-population pipeline over the
+codes of [@dalfavero2026], an evolutionary search, and a PPO agent in the
+gate-by-gate formulation of [@olle2024], all on a batched
+Aaronson-Gottesman tableau with a bit-identical torch and CUDA path. The
+[experiments](experiments/index.md) record what each has found: over 2,150
+SAT-designed codes the code-capacity ranking carries no information about
+the circuit-level rate, the gate-by-gate agents rediscover the small codes
+and reach distance 3 on every lattice tried but do not scale past about 16
+qubits under a sparsity constraint, and a schedule synthesizer raised the
+fault distance of the qldpc-challenge [[49,13,4]] circuit from 2 to 3.
 
 ## Quick Example
 
 Install with `pip install git+https://github.com/unitaryfoundation/autoqec-sim`,
-then score three known codes under the IonQ Forte preset:
+then evaluate the rotated surface code under three rounds of depolarizing
+noise:
 
 ```python
---8<-- "docs/examples/quickstart.py:score"
+--8<-- "docs/examples/evaluate_code.py:proxy"
 ```
 
 ```
-five_qubit (5, 1, 3) error per round 4.27e-03
-steane (7, 1, 3) error per round 2.10e-03
-rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 1.4e-06, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
 ```
 
-The [Quick Start](getting-started/quickstart.md) adds the search for a
-code, its verification against the reference, and the encoder score under
-a device profile.
+The [Quick Start](getting-started/quickstart.md) compares codes under a
+device preset, proposes a code with the evolutionary search, and verifies
+it against the reference.
 
 ## Key Features
 
 <div class="grid cards" markdown>
 
-- **Batched tableau simulator**
+- **Evaluate a code**
 
-    One `(batch, 2n, 2n+1)` array of Aaronson-Gottesman tableaux. Gates
-    apply to selected batch elements with per-element qubit indices through
-    gather and scatter indexing, with no Python loop over the batch, and are
-    cross-checked against stim.
+    [`evaluate_code`](evaluate.md): logical error per round, exact
+    circuit-level distance up to weight 6, and the most probable
+    undetectable fault sets as circuit locations, for CSS and non-CSS
+    codes, at a closed-form proxy tier or with a sampled decoder.
 
-- **Rewards for code quality**
+- **Noise models with sourced parameters**
 
-    Knill-Laflamme undetected-error mass, exact distance, an
-    [LDPC sparsity constraint](ldpc.md), circuit-level noise under
-    [sourced device presets](noise_presets.md), and a
-    [multi-round memory objective](memory_objective.md) with a decoder.
+    [Device presets](noise_presets.md) for IonQ Forte, IBM Heron, a long
+    ion chain, and the qldpc-challenge recipe; biased, correlated, and
+    leakage-aware channels, device timing, and connectivity through one
+    [noise interface](noise.md) that also noisifies a `stim.Circuit` of
+    your own.
 
-- **Two agents and a regression**
+- **Verification independent of the objective**
 
-    PPO with action masking and a permutation-equivariant policy, and an
-    evolutionary search. The [rediscovery regression](regression.md)
-    verifies each found code by exact distance and weight enumerators.
+    Exact distance, weight enumerators, and the sparsest generator basis
+    for every code; the [rediscovery regression](regression.md) checks
+    each found code against its reference.
 
-- **CPU reference, GPU backend**
+- **Proposers**
 
-    The numpy engine is the reference. The [torch backend](gpu.md) runs the
-    same kernels on CUDA with bit-for-bit agreement tests, and two fused
-    CUDA kernels take the gate step and the parity masks further.
+    The SAT-population pipeline of the
+    [experiments](experiments/sat_population.md), an evolutionary search,
+    and PPO with action masking and a permutation-equivariant policy, with
+    an [LDPC sparsity constraint](ldpc.md) and the
+    [memory objective](memory_objective.md) as a reward; the
+    [torch backend](gpu.md) runs the kernels on CUDA.
 
 </div>
 
@@ -113,27 +121,25 @@ best CX-layer schedule at `rounds = d`. See [Commands](reference/commands.md).
 
 ## Get Started
 
-[Quick Start](getting-started/quickstart.md){ .md-button .md-button--primary }
-[Reproduce the regressions](reproduce.md){ .md-button }
+[Evaluate a code](evaluate.md){ .md-button .md-button--primary }
+[Quick Start](getting-started/quickstart.md){ .md-button }
 
-## What's New in 0.2.0
+## What's New
 
-Release 0.2.0 is the first tagged release. On top of 0.1.0 it adds the
-[noise module](noise.md) as the `autoqec_sim.noise` subpackage, with biased,
-correlated, and leakage-aware channels, device timing, topologies, and
-[sourced presets](noise_presets.md) for IonQ Forte, a long ion chain, IBM
-Heron, and the qldpc-challenge recipe. The circuit-level reward lays each
-gate list out as a TICK-layered skeleton so a profile's timing and idle
-model apply, and cross-checks its result against stim's detector error
-model.
+Since release 0.2.0, `main` adds [`evaluate_code`](evaluate.md), the
+Tesseract tier, the proxy at circuit distance 5 and 6 through the
+enumeration of weight-5 and weight-6 undetectable fault sets, the
+SAT-designed-code experiments, and one documentation page per experiment.
 
-The [LDPC constraint](ldpc.md) computes the exact minimum bottleneck
-generator weight per batch element and enters the environment as a hard
-constraint or a reward penalty. The [PPO agent](regression.md#ppo-agent)
-matches the evolutionary search on every rediscovery target with 3 to 17
-times fewer state evaluations, and the [memory objective](memory_objective.md)
-scores a multi-round syndrome-extraction circuit with three fidelity tiers.
-The [torch backend](gpu.md) and two fused CUDA kernels run the reward
-engine on a GPU.
+Release 0.2.0 added the [noise module](noise.md) as the `autoqec_sim.noise`
+subpackage, with biased, correlated, and leakage-aware channels, device
+timing, topologies, and [sourced presets](noise_presets.md) for IonQ Forte,
+a long ion chain, IBM Heron, and the qldpc-challenge recipe; the
+[LDPC constraint](ldpc.md) as a hard constraint or a reward penalty; the
+[PPO agent](regression.md#ppo-agent), which matches the evolutionary
+search on every rediscovery target with 3 to 17 times fewer state
+evaluations; the [memory objective](memory_objective.md) with its
+fidelity tiers; and the [torch backend](gpu.md) with two fused CUDA
+kernels.
 
 [Full Changelog](development/changelog.md){ .md-button }

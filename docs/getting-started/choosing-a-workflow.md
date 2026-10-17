@@ -1,7 +1,9 @@
 # Choose a Workflow
 
-The package separates the search space (qubits, gate set, connectivity),
-the reward, the agent, and where the kernels run. Start from the result you
+The package separates evaluation (a code and a noise profile in, the
+circuit-level rate, distance, and dominant faults out) from the proposers
+that generate candidates, and the proposers separate the search space, the
+reward, the agent, and where the kernels run. Start from the result you
 need.
 
 | I want to... | Start with |

@@ -1,7 +1,18 @@
 # User Guide
 
-A discovery run fixes four things: the search space, the reward, the agent,
-and where the kernels run. The pages in this section cover each one.
+autoqec-sim has two layers. The evaluator takes a stabilizer code and a
+noise profile and returns the circuit-level logical error per round, the
+exact circuit-level distance, and the dominant fault sets:
+[Evaluate a code](evaluate.md) is the one-call entry point,
+[Memory objective](memory_objective.md) the design note behind it, and
+[Noise interface](noise.md) and [Device presets](noise_presets.md) the
+noise models it applies. The proposers generate candidates for it. Codes
+from a SAT sampler or from the literature go in as Pauli strings (the
+[SAT population](experiments/sat_population.md) experiment is that
+pipeline); the gate-by-gate search below builds encoding circuits one
+Clifford gate at a time with an evolutionary search or a PPO agent. A
+gate-by-gate run fixes four things: the search space, the reward, the
+agent, and where the kernels run.
 
 ## 1. Define the search space
 
@@ -21,15 +32,17 @@ on.
 
 | Reward | Page |
 |---|---|
+| Multi-round memory experiment, the evaluator's objective, four fidelity tiers | [Memory objective](memory_objective.md) |
+| Circuit-level noise of the encoding circuit under a device profile | [Noise interface](noise.md), [Device presets](noise_presets.md) |
 | Knill-Laflamme undetected mass [@knill1997] and exact distance, the default of the regression targets | [Rediscovery regression](regression.md) |
 | LDPC sparsity, as a hard constraint (`terminate`, `mask`, `final`) or a penalty | [LDPC constraint](ldpc.md) |
-| Circuit-level noise of the encoding circuit under a device profile | [Noise interface](noise.md), [Device presets](noise_presets.md) |
-| Multi-round memory experiment with a decoder, four fidelity tiers | [Memory objective](memory_objective.md) |
 
 `regress.make_reward(target)` composes the Knill-Laflamme term with the
 low-weight-stabilizer penalty and, on LDPC targets, the sparsity term.
 Any callable from the batched tableau to a reward vector works as
-`reward_fn`.
+`reward_fn`. The encoder-based rewards cannot see a local-Clifford
+deformation of a code, since a Hadamard at the end of the encoder only
+relabels detected weight-1 faults; the memory objective can.
 
 ## 3. Choose the agent
 
@@ -41,9 +54,11 @@ flat MLP and the permutation-equivariant actor-critic. `regress` and
 verifies every distinct code a run produces by exact distance and weight
 enumerators.
 
-[Experiments](experiments/index.md) records the noise-aware discovery runs, the
-memory-objective runs, the RL scaling probe, and the three-topology run
-matrix, with what each found and where the agent stops.
+[Experiments](experiments/index.md) records what each proposer has found:
+the evolutionary search matches PPO on the three-topology matrix at a
+fraction of the wall time, PPO is the more step-efficient of the two and
+needs the permutation-equivariant policy from 12 qubits, and neither
+scales past about 16 qubits under a sparsity constraint.
 
 ## 4. Choose where the kernels run
 

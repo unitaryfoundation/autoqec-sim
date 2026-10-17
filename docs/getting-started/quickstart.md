@@ -1,13 +1,40 @@
 # Quick Start
 
-## Score a code
+## Evaluate a code
 
-`MemoryObjective` builds the syndrome-extraction circuit of any stabilizer
-code, noisifies it under a device profile, and returns the logical error
-per round from its detector error model. Here the three codes are known
-ones; a code from any other tool goes in the same way through
-`StabilizerCode.from_stabilizers`. The Forte preset runs at a quarter of
-its measured rates, the scale the experiments use.
+`evaluate_code` takes a code as stabilizer generators and a noise profile,
+builds a three-round memory experiment in both bases, and returns the
+logical error per round, the exact circuit-level distance, and the most
+probable undetectable fault sets as circuit errors. The script is
+`docs/examples/evaluate_code.py`; its first section runs in under a
+second.
+
+```python
+--8<-- "docs/examples/evaluate_code.py:proxy"
+```
+
+```
+error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 1.4e-06, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+```
+
+The three mechanisms are two-qubit depolarizing faults on three data
+qubits in one round; their X components form a weight-3 logical operator
+that flips no detector. [Evaluate a code](../evaluate.md) describes every
+field of the result, the four tiers, and a distance-5 example.
+
+## Compare codes
+
+`MemoryObjective` is the evaluator's engine: it builds the
+syndrome-extraction circuit of any stabilizer code, noisifies it under a
+device profile, and returns the logical error per round from its detector
+error model. Here the three codes are known ones; a code from any other
+tool goes in the same way through `StabilizerCode.from_stabilizers`. The
+Forte preset runs at a quarter of its rates, the scale the experiments
+use.
 
 ```python
 --8<-- "docs/examples/quickstart.py:score"
@@ -19,7 +46,7 @@ steane (7, 1, 3) error per round 2.10e-03
 rotated_surface_9 (9, 1, 3) error per round 5.89e-04
 ```
 
-## Search for a code
+## Propose a code
 
 A `CodeDiscoveryEnv` holds `batch_size` encoding circuits on `n` qubits
 encoding `k` logical qubits. Its default reward is the Knill-Laflamme
@@ -79,7 +106,7 @@ reference.
 `circuit_level_reward` lays the gate list out as a TICK-layered circuit,
 applies a noise profile, propagates every single-fault mechanism to the
 output with stim, and returns minus the undetected mass. The IonQ Forte
-preset at a quarter of its measured rates is one of the
+preset at a quarter of its rates is one of the
 [device presets](../noise_presets.md).
 
 ```python
@@ -107,9 +134,10 @@ autoqec-schedule 49-13-4 --board /path/to/qldpc-challenge  # CX-layer schedule f
 
 ## Next Steps
 
-- [Choose a Workflow](choosing-a-workflow.md): pick the reward, agent, and entry point for the result you need.
-- [Rediscovery regression](../regression.md): the targets, budgets, and verification behind the two commands.
+- [Evaluate a code](../evaluate.md): the result fields, the tiers, the validation and limits, and a distance-5 example.
+- [Choose a Workflow](choosing-a-workflow.md): pick the entry point for the result you need.
 - [Noise interface](../noise.md): profiles, timing models, topologies, and the circuit-level reward.
+- [Rediscovery regression](../regression.md): the targets, budgets, and verification behind the two commands.
 - [LDPC constraint](../ldpc.md): sparsity as a hard constraint, a mask, or a penalty.
 - [GPU backend](../gpu.md): the same kernels on CUDA.
 - [Python API](../api/autoqec_sim.md): the module reference.
