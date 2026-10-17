@@ -99,7 +99,16 @@ nav:
       - Evaluate a code: evaluate.md
       - Discovery:
           - Rediscovery regression: regression.md
-          - Experiments: experiments.md
+          - Experiments:
+              - Overview: experiments/index.md
+              - Noise-aware discovery: experiments/noise_aware.md
+              - Memory objective runs: experiments/memory_objective.md
+              - RL scaling probe: experiments/scaling.md
+              - Three-topology matrix: experiments/topologies.md
+              - Evolutionary search against PPO: experiments/topologies_ea.md
+              - QDX's targets: experiments/qdx_targets.md
+              - SAT-designed codes: experiments/sat_codes.md
+              - SAT population: experiments/sat_population.md
       - Rewards and constraints:
           - LDPC constraint: ldpc.md
           - Memory objective: memory_objective.md

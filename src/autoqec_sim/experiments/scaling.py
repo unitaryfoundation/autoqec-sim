@@ -943,6 +943,110 @@ def _smooth(x, w=25):
 # --------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------
+FIGURE = Path("docs/assets/figures/scaling")
+
+
+def _graph_label(spec: str) -> str:
+    kind, _, size = spec.partition(":")
+    return "all-to-all" if kind == "all_to_all" else f"{kind} {size}"
+
+
+def _step_axis(ax, ticks):
+    """Log axis of env steps with explicit k/M tick labels."""
+    from matplotlib.ticker import NullFormatter
+
+    ax.set_xscale("log")
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([f"{t / 1e6:g}M" if t >= 1e6 else f"{t / 1e3:g}k" for t in ticks])
+    ax.xaxis.set_minor_formatter(NullFormatter())
+
+
+def make_figure(runs_dir: Path, out_stem: Path | str = FIGURE) -> Path | None:
+    """Headline figure. (a) Env steps to the first clean distance-4 state on
+    the 4x4 target at the 50-gate cap for the equivariant policy, the flat
+    MLP with 1024 parallel episodes and entropy coefficient 0.001, and the
+    default flat MLP, one marker per seed; a run without a success is an
+    open right-pointing marker at the steps it used before its wall cap.
+    (b) The LDPC cells at n = 12 to 16: the steps every run used, none of
+    which reached a distance-3 code with w* <= 4. Writes ``out_stem.png``
+    and ``out_stem.pdf``; returns the PNG path, or ``None`` without
+    matplotlib."""
+    try:
+        from matplotlib.lines import Line2D
+
+        from . import figstyle
+    except ImportError:  # pragma: no cover
+        return None
+    recs = load_all(Path(runs_dir))
+    plt = figstyle.apply()
+    fig, axes = plt.subplots(1, 2, figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE + 0.3))
+    color = {"equivariant": figstyle.SERIES_COLORS[0], "mlp": figstyle.SERIES_COLORS[1]}
+
+    # (a) the 4x4 target at the 50-gate cap, the three variants of the recommendation
+    ax = axes[0]
+    variants = [
+        r for r in recs
+        if r.get("kind") == "variant" and r["target"]["n"] == 16 and r["max_steps"] == 50
+        and "nostop" not in r["_file"] and "wstar" not in r["_file"]
+    ]
+    rows = [
+        ("equivariant policy", "equivariant", [r for r in variants if r["variant"] == "equivariant"]),
+        ("flat MLP, 1024 episodes,\nentropy 0.001", "mlp", [r for r in variants if r["variant"] == "bigbatch"]),
+        ("flat MLP, default", "mlp", [r for r in variants if r["variant"] == "baseline"]),
+    ]
+    for i, (_, pol, rs) in enumerate(rows):
+        y = len(rows) - 1 - i
+        for j, r in enumerate(sorted(rs, key=lambda r: r["seed"])):
+            yj = y + 0.15 * (j - (len(rs) - 1) / 2)
+            if r["first_d_max_clean_env_steps"] is not None:
+                ax.plot([r["first_d_max_clean_env_steps"]], [yj], "o", color=color[pol])
+            else:
+                ax.plot([r["env_steps"]], [yj], ">", color=color[pol], mfc="none")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([label for label, _, _ in reversed(rows)])
+    ax.set_ylim(-0.6, len(rows) - 0.4)
+    _step_axis(ax, [1e5, 3e5, 1e6, 3e6, 1e7, 3e7])
+    ax.set_xlim(8e4, 6e7)
+    ax.set_xlabel("env steps to first clean d = 4 (state evaluations)")
+    ax.set_title("[[16,1,4]] on square 4x4, 50-gate episodes")
+
+    # (b) the LDPC cells, every run censored at the steps it used
+    ax = axes[1]
+    ldpc = [r for r in recs if r.get("kind") == "ldpc"]
+    cells = sorted({(r["n"], r["graph"]) for r in ldpc}, key=lambda c: (c[0], not c[1].startswith("all_to_all")))
+    for i, cell in enumerate(cells):
+        y = len(cells) - 1 - i
+        rs = sorted((r for r in ldpc if (r["n"], r["graph"]) == cell), key=lambda r: (r.get("policy", "mlp"), r["seed"]))
+        for j, r in enumerate(rs):
+            yj = y + 0.5 * ((j + 0.5) / len(rs) - 0.5)
+            pol = r.get("policy", "mlp")
+            if r["first_success"]:
+                ax.plot([r["first_success"]["env_steps"]], [yj], "o", color=color[pol])
+            else:
+                ax.plot([r["env_steps"]], [yj], ">", color=color[pol], mfc="none")
+    ax.set_yticks(range(len(cells)))
+    ax.set_yticklabels([f"n = {n}, {_graph_label(g)}" for n, g in reversed(cells)])
+    ax.set_ylim(-0.6, len(cells) - 0.4)
+    _step_axis(ax, [1e6, 2e6, 5e6, 1e7, 2e7, 5e7])
+    ax.set_xlim(8e5, 5e7)
+    ax.set_xlabel("env steps used, no success (state evaluations)")
+    ax.set_title("[[n,k,3]] with w* <= 4, k = 2 and 4")
+    fig.legend(
+        [Line2D([], [], marker="o", color=figstyle.NEUTRAL, ls="none"),
+         Line2D([], [], marker=">", color=figstyle.NEUTRAL, mfc="none", ls="none"),
+         Line2D([], [], color=color["equivariant"]),
+         Line2D([], [], color=color["mlp"])],
+        ["first clean d = 4, one marker per seed", "no success; steps used before the wall cap",
+         "equivariant policy", "flat MLP"],
+        loc="lower center", ncol=2, bbox_to_anchor=(0.5, -0.14),
+    )
+    figstyle.panel_label(axes[0], "a")
+    figstyle.panel_label(axes[1], "b")
+    fig.tight_layout()
+    figstyle.save(fig, out_stem)
+    return Path(out_stem).with_suffix(".png")
+
+
 def _write(out: Path, rec: dict):
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
@@ -1007,6 +1111,10 @@ def main(argv=None):
     p.add_argument("--dir", default=str(DEFAULT_OUT))
     p.add_argument("--figures", default="experiments/scaling/figures")
 
+    p = sub.add_parser("figure", help="draw the headline figure (4x4 variants and LDPC cells) from experiments/scaling/runs")
+    p.add_argument("--dir", default=str(DEFAULT_OUT))
+    p.add_argument("--stem", default=str(FIGURE), help="output path without extension; .png and .pdf are written")
+
     args = ap.parse_args(argv)
     if args.cmd == "variant":
         target = TARGET_4X4 if args.target == "4x4" else TARGET_3X3
@@ -1058,6 +1166,10 @@ def main(argv=None):
         fig = figure_diag(recs, Path(args.figures) / "diag_4x4")
         if fig:
             print("\nfigure:", fig[0])
+        return 0
+    if args.cmd == "figure":
+        png = make_figure(Path(args.dir), Path(args.stem))
+        print("wrote", png if png else "nothing (matplotlib missing)")
         return 0
     return 1
 

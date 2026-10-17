@@ -59,6 +59,8 @@ def apply():
             "axes.spines.top": False,
             "axes.spines.right": False,
             "legend.frameon": False,
+            "legend.numpoints": 1,
+            "legend.scatterpoints": 1,
             "lines.linewidth": LINE,
             "lines.markersize": MARKER,
             "figure.dpi": 100,

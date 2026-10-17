@@ -91,7 +91,7 @@ Run one cell (setting, profile, seed)::
         --setting 3x3 --profile ion --seed 0 --threads 2
 
 then ``baselines --setting 3x3``, and ``report`` to write
-``experiments/noise_aware/runs/REPORT.md`` and the figures.
+``experiments/noise_aware/REPORT.md`` and the figures.
 """
 
 from __future__ import annotations
@@ -154,6 +154,7 @@ CALIBRATION_CIRCUITS = 64
 CALIBRATION_SEED = 0
 BATCH = 256
 DEFAULT_OUT = Path("experiments/noise_aware/runs")
+REPORT_DIR = Path("experiments/noise_aware")
 
 
 # --------------------------------------------------------------------------
@@ -2004,9 +2005,82 @@ def write_report(out_dir: Path) -> Path:
                 f"{np.mean([r['best']['circuit']['two_qubit_gates'] for r in lst]):.1f} | {np.mean([r['best']['circuit']['depth'] for r in lst]):.1f} |"
             )
         L.append("")
-    path = out_dir / "REPORT.md"
+    path = REPORT_DIR / "REPORT.md"
     path.write_text("\n".join(L))
     return path
+
+
+FIGURE = Path("docs/assets/figures/noise_aware")
+_GRAPH_TITLES = {"all_to_all:7": "all-to-all", "square:3x3": "square 3x3 lattice", "square:4x4": "square 4x4 lattice"}
+
+
+def make_figure(runs_dir: Path, out_stem: Path | str = FIGURE) -> Path | None:
+    """Cross-evaluation figure, one panel per setting that produced codes:
+    the undetected fault mass of every seed's best code (its own encoder)
+    under each evaluation profile, grouped by the training profile, with
+    the best known code of the setting (polished encoder) under that
+    evaluation profile as a reference line. Writes ``out_stem.png`` and
+    ``out_stem.pdf``; returns the PNG path, or ``None`` without matplotlib
+    or without a setting that reached its target distance."""
+    try:
+        from matplotlib.lines import Line2D
+        from matplotlib.ticker import NullFormatter
+
+        from . import figstyle
+    except ImportError:  # pragma: no cover
+        return None
+    runs_dir = Path(runs_dir)
+    runs = load_runs(runs_dir)
+    bases = load_baselines(runs_dir)
+    names = [
+        s for s in SETTINGS
+        if any(r["best"] and r["best"]["distance"] >= SETTINGS[s].d for lst in runs.get(s, {}).values() for r in lst)
+    ]
+    if not names:
+        return None
+    plt = figstyle.apply()
+    fig, axes = plt.subplots(1, len(names), figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE + 0.3), sharey=True, squeeze=False)
+    offset = {p: 0.25 * (i - 1) for i, p in enumerate(PROFILES)}
+    for ax, letter, sname in zip(axes[0], "abc", names):
+        s = SETTINGS[sname]
+        prof_runs = runs[sname]
+        b = bases.get(sname)
+        for xi, ev in enumerate(PROFILES):
+            for tr in PROFILES:
+                vals = [r["best"]["mass"][ev]["undetected"] for r in prof_runs.get(tr, []) if r["best"]]
+                if not vals:
+                    continue
+                x = xi + offset[tr]
+                color = figstyle.PROFILE_COLORS[tr]
+                ax.plot([x] * len(vals), vals, "o", color=color, mfc="none")
+                ax.plot([x], [float(np.median(vals))], "o", color=color,
+                        label=f"trained on {tr} (median of {len(vals)} seeds)" if xi == 0 else None)
+            if b:
+                known = [c["encoders"]["best_by_profile"][ev]["undetected"] for c in b["codes"].values() if ev in c["encoders"]["best_by_profile"]]
+                if known:
+                    ax.hlines(min(known), xi - 0.42, xi + 0.42, color=figstyle.NEUTRAL, ls="--", lw=figstyle.LINE,
+                              label="best known code, polished encoder" if xi == 0 else None)
+        ax.set_xlim(-0.6, len(PROFILES) - 0.4)
+        ax.set_xticks(range(len(PROFILES)))
+        ax.set_xticklabels(PROFILES)
+        ax.set_xlabel("evaluation profile")
+        ax.set_title(f"n = {s.n}, {_GRAPH_TITLES.get(s.graph_spec, s.graph_spec)}, gates {', '.join(s.gates)}")
+        figstyle.panel_label(ax, letter)
+    ax0 = axes[0][0]
+    ax0.set_yscale("log")
+    for ax in axes[0]:
+        ax.yaxis.set_minor_formatter(NullFormatter())
+    ax0.set_ylim(3e-4, 4e-3)
+    ax0.set_yticks([3e-4, 5e-4, 1e-3, 2e-3, 3e-3])
+    ax0.set_yticklabels(["3e-4", "5e-4", "1e-3", "2e-3", "3e-3"])
+    ax0.set_ylabel("undetected fault mass (probability)")
+    handles, labels = ax0.get_legend_handles_labels()
+    handles.append(Line2D([], [], marker="o", color=figstyle.NEUTRAL, mfc="none", ls="none"))
+    labels.append("one seed")
+    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.12))
+    fig.tight_layout()
+    figstyle.save(fig, out_stem)
+    return Path(out_stem).with_suffix(".png")
 
 
 # --------------------------------------------------------------------------
@@ -2032,6 +2106,8 @@ def main(argv=None):
     p.add_argument("--polish-time", type=float, default=90.0, help="seconds of local search per code and profile")
     p.add_argument("--verbose", action="store_true")
     sub.add_parser("report", help="write REPORT.md and the figures from the results directory")
+    p = sub.add_parser("figure", help="draw the cross-evaluation figure (default docs/assets/figures/noise_aware)")
+    p.add_argument("--stem", default=str(FIGURE), help="output path without extension; .png and .pdf are written")
     args = ap.parse_args(argv)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -2076,6 +2152,10 @@ def main(argv=None):
                 f"{args.setting} {name}: d={c['distance']} dX={c['distance_x']} dZ={c['distance_z']} w*={c['w_star']} mass="
                 + "/".join(f"{bb[ev]['undetected']:.4g}" if ev in bb else "none" for ev in PROFILES)
             )
+        return 0
+    if args.cmd == "figure":
+        png = make_figure(out, Path(args.stem))
+        print("wrote", png if png else "nothing (matplotlib missing or no setting reached its target)")
         return 0
     if args.cmd == "report":
         path = write_report(out)

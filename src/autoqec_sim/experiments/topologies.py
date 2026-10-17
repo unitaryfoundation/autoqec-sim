@@ -76,6 +76,7 @@ from .noise_aware import code_from_circuit, css_standard_encoder, rotated_surfac
 from .scaling import LevelDistanceReward, _json_default, replay_gates
 
 DEFAULT_OUT = Path("experiments/topologies/runs")
+REPORT_DIR = Path("experiments/topologies")
 TOPOLOGIES = ("square", "triangular", "heavy_hex")
 TIERS = {"small": 9, "large": 16}
 BUDGETS = {"small": 2_000_000, "large": 4_000_000}
@@ -742,7 +743,7 @@ def write_report(out_dir: Path) -> Path:
         "```",
         "",
     ]
-    path = out_dir / "REPORT.md"
+    path = REPORT_DIR / "REPORT.md"
     path.write_text("\n".join(L))
     return path
 
@@ -750,6 +751,64 @@ def write_report(out_dir: Path) -> Path:
 # --------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------
+FIGURE = Path("docs/assets/figures/topologies")
+TOPOLOGY_LABELS = {"square": "square", "triangular": "triangular", "heavy_hex": "heavy-hex"}
+POLICY_LABELS = {"mlp": "flat MLP", "equivariant": "equivariant"}
+
+
+def _step_axis(ax, ticks, lo: float, hi: float):
+    """Log axis of env steps from ``lo`` to ``hi`` with explicit k/M tick labels."""
+    from matplotlib.ticker import NullFormatter
+
+    ax.set_xscale("log")
+    ax.set_xlim(lo, hi)
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([f"{t / 1e6:g}M" if t >= 1e6 else f"{t / 1e3:g}k" for t in ticks])
+    ax.xaxis.set_minor_formatter(NullFormatter())
+
+
+def make_figure(runs_dir: Path, out_stem: Path | str = FIGURE) -> Path | None:
+    """Env steps to the first success of every PPO run, one marker per seed,
+    grouped by cell (lattice, qubit count, resolved policy) on a log axis;
+    a run without a success would be an open right-pointing marker at the
+    steps it used. Writes ``out_stem.png`` and ``out_stem.pdf``; returns the
+    PNG path, or ``None`` without matplotlib or without runs."""
+    try:
+        from . import figstyle
+    except ImportError:  # pragma: no cover
+        return None
+    cells = _cells(load_all(Path(runs_dir)))
+    if not cells:
+        return None
+    plt = figstyle.apply()
+    fig, ax = plt.subplots(figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE))
+    labels = []
+    for i, ((_, topo, n), rs) in enumerate(cells):
+        y = len(cells) - 1 - i
+        c = figstyle.SERIES_COLORS[TOPOLOGIES.index(topo)]
+        for j, r in enumerate(rs):
+            yj = y + 0.15 * (j - (len(rs) - 1) / 2)
+            if r["first_success"]:
+                ax.plot([r["first_success"]["env_steps"]], [yj], "o", color=c)
+            else:
+                ax.plot([r["env_steps"]], [yj], ">", color=c, mfc="none")
+        policy = POLICY_LABELS.get(rs[0]["ppo_config"].get("policy_resolved"), "?")
+        labels.append(f"{TOPOLOGY_LABELS[topo]}, n = {n}, {policy}")
+    tiers = [tier for (tier, _, _), _ in cells]
+    for i in range(1, len(cells)):
+        if tiers[i] != tiers[i - 1]:
+            ax.axhline(len(cells) - i - 0.5, color=figstyle.NEUTRAL, lw=figstyle.THIN, ls=":")
+    ax.set_yticks(range(len(cells)))
+    ax.set_yticklabels(list(reversed(labels)))
+    ax.set_ylim(-0.6, len(cells) - 0.4)
+    _step_axis(ax, [5e3, 1e4, 2e4, 5e4, 1e5, 2e5, 5e5], 4e3, 6e5)
+    ax.set_xlabel("env steps to first success (state evaluations)")
+    ax.set_title("[[n,1,3]] with no idle qubit, H and CNOT on the lattice edges, 50-gate episodes, seeds 0 to 2")
+    fig.tight_layout()
+    figstyle.save(fig, out_stem)
+    return Path(out_stem).with_suffix(".png")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Three-topology run matrix for the PPO agent.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -782,6 +841,10 @@ def main(argv=None):
 
     p = sub.add_parser("report", help="write REPORT.md from the JSONs")
     p.add_argument("--out-dir", default=str(DEFAULT_OUT))
+
+    p = sub.add_parser("figure", help="draw env steps to first success per cell and seed (default docs/assets/figures/topologies)")
+    p.add_argument("--out-dir", default=str(DEFAULT_OUT))
+    p.add_argument("--stem", default=str(FIGURE), help="output path without extension; .png and .pdf are written")
 
     args = ap.parse_args(argv)
     out_dir = Path(args.out_dir)
@@ -825,6 +888,10 @@ def main(argv=None):
         return 0
     if args.cmd == "report":
         print("report:", write_report(out_dir))
+        return 0
+    if args.cmd == "figure":
+        png = make_figure(out_dir, Path(args.stem))
+        print("wrote", png if png else "nothing (matplotlib missing or no runs)")
         return 0
     return 1
 

@@ -45,7 +45,7 @@ The gate-by-gate discovery mode follows [@olle2024], whose code, QDX,
 introduced it and has reached larger codes than this package has.
 autoqec-sim rediscovers [[5,1,3]], Steane, Shor, and the rotated surface
 code on every lattice tested and has found noise-adapted non-CSS codes up to
-16 qubits, but no new code above that; [Experiments](experiments.md) records
+16 qubits, but no new code above that; [Experiments](experiments/index.md) records
 where it stops. Its schedule synthesizer raised the fault distance of the
 [[49,13,4]] circuit on the qldpc-challenge board from 2 to 3. For code
 design at larger sizes, the SAT formulation of [@dalfavero2026] designs codes

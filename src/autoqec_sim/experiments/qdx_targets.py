@@ -159,6 +159,55 @@ success within budget and circuit length are.{cap_note}
     return path
 
 
+def _steps_label(steps: int) -> str:
+    return f"{steps / 1e6:.1f}M" if steps >= 1e6 else f"{round(steps / 1e3)}k"
+
+
+def make_figure(out_dir: Path = DEFAULT_OUT, out_stem: Path | str = "docs/assets/figures/qdx_targets"):
+    """The target grid: one cell per published ``[[n, k, d]]`` triple at
+    ``d = 3`` and ``d = 4``, filled when this package's PPO found and
+    verified a code within the budget (annotated with the environment
+    steps to success), open when the run hit the budget first. The
+    ``d = 5`` targets, not run, are listed in the legend."""
+    from . import figstyle
+
+    plt = figstyle.apply()
+    recs = {tuple(r["target"]): r for r in load_all(out_dir)}
+    panels = [("d = 3", [t for t in QDX_TARGETS if t[2] == 3]), ("d = 4", [t for t in QDX_TARGETS if t[2] == 4])]
+    fig, axes = plt.subplots(1, 2, figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE + 0.4), gridspec_kw={"width_ratios": [11, 5]})
+    for ax, (title, targets), letter in zip(axes, panels, "ab", strict=True):
+        for n, k, d in targets:
+            r = recs.get((n, k, d))
+            if r is None:
+                ax.add_patch(plt.Rectangle((n - 0.45, k - 0.45), 0.9, 0.9, fill=False, edgecolor=figstyle.NEUTRAL, linestyle=":", linewidth=figstyle.THIN))
+            elif r["success"] and r.get("verified"):
+                ax.add_patch(plt.Rectangle((n - 0.45, k - 0.45), 0.9, 0.9, facecolor=figstyle.SERIES_COLORS[0], edgecolor="none"))
+                ax.text(n, k, _steps_label(r["env_steps"]), ha="center", va="center", color="white", fontsize=5.5)
+            else:
+                ax.add_patch(plt.Rectangle((n - 0.45, k - 0.45), 0.9, 0.9, fill=False, edgecolor=figstyle.SERIES_COLORS[1], linewidth=figstyle.LINE))
+        ns = sorted({t[0] for t in targets})
+        ks = sorted({t[1] for t in targets})
+        ax.set_xlim(min(ns) - 0.6, max(ns) + 0.6)
+        ax.set_ylim(min(ks) - 0.6, max(ks) + 0.6)
+        ax.set_xticks(ns)
+        ax.set_yticks(ks)
+        ax.set_xlabel("n")
+        ax.set_ylabel("k")
+        ax.set_title(title)
+        ax.set_aspect("equal")
+        ax.grid(False)
+        figstyle.panel_label(ax, letter)
+    not_run = ", ".join(f"[[{n},{k},{d}]]" for n, k, d in QDX_TARGETS if (n, k, d) not in recs)
+    handles = [
+        plt.Rectangle((0, 0), 1, 1, facecolor=figstyle.SERIES_COLORS[0], edgecolor="none", label="found and verified (env steps to success)"),
+        plt.Rectangle((0, 0), 1, 1, fill=False, edgecolor=figstyle.SERIES_COLORS[1], label="not found within 3M env steps or 10 min"),
+    ]
+    fig.legend(handles=handles, loc="lower center", ncol=2, bbox_to_anchor=(0.5, -0.04))
+    if not_run:
+        fig.text(0.5, -0.1, f"not run: {not_run}", ha="center", va="top", fontsize=7, color=figstyle.NEUTRAL)
+    fig.tight_layout()
+    return figstyle.save(fig, out_stem)
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -173,10 +222,16 @@ def main(argv=None):
     r.add_argument("--force", action="store_true", help="rerun targets that have a result")
     p = sub.add_parser("report")
     p.add_argument("--out", default=str(DEFAULT_OUT))
+    f = sub.add_parser("figure")
+    f.add_argument("--out", default=str(DEFAULT_OUT))
+    f.add_argument("--stem", default="docs/assets/figures/qdx_targets")
     a = ap.parse_args(argv)
     out = Path(a.out)
     if a.cmd == "report":
         print("wrote", write_report(out))
+        return
+    if a.cmd == "figure":
+        print("wrote", *make_figure(out, a.stem))
         return
     out.mkdir(parents=True, exist_ok=True)
     if a.targets:

@@ -13,6 +13,7 @@ cap. ``report`` joins the two result sets into a comparison table.
 
     python -m autoqec_sim.experiments.topologies_ea run --topology square --target-n 9 --seed 0
     python -m autoqec_sim.experiments.topologies_ea report
+    python -m autoqec_sim.experiments.topologies_ea figure
 """
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ from ..search import EvolutionarySearch
 from . import topologies as T
 
 DEFAULT_OUT = Path("experiments/topologies_ea/runs")
+REPORT_DIR = Path("experiments/topologies_ea")
 
 
 def run_cell(topology: str, target_n: int, seed: int, max_evaluations: int | None = None,
@@ -37,7 +39,10 @@ def run_cell(topology: str, target_n: int, seed: int, max_evaluations: int | Non
         max_evaluations = budget_steps // T.MAX_STEPS
     reward = T.LevelDistanceReward(T.D_TARGET, T.D_TARGET)
     env = T.TrackingEnv(n=graph.n, k=1, graph=graph, batch_size=batch, max_steps=T.MAX_STEPS, gates=T.GATES,
-                        reward_fn=reward, seed=seed, auto_reset=True)
+                        reward_fn=reward, seed=seed)
+    # no auto reset: ``rollout`` reads the state reward after the loop, and an
+    # auto-reset environment would have replaced a successful element's state
+    # by a fresh one, so the search would never register its success
     search = EvolutionarySearch(env, seed=seed)
     t0 = time.perf_counter()
     res = search.run(max_evaluations=max_evaluations, stop_on_success=True, verbose=verbose) if "verbose" in search.run.__code__.co_varnames \
@@ -99,17 +104,76 @@ def report(out_dir: Path, ppo_dir: Path) -> Path:
 
         pmed = med(ps, lambda r: r["first_success"]["env_steps"]) if p else "no run"
         emed = med(es, lambda r: r["first_success"]["env_steps_equivalent"]) if e else "no run"
-        ewall = f"{statistics.median(r['wall_time_s'] for r in e):.0f} s" if e else "no run"
+        ewall = (lambda w: f"{w:.1f} s" if w < 10 else f"{w:.0f} s")(statistics.median(r["wall_time_s"] for r in e)) if e else "no run"
         lines.append(f"| {top} | {n} | {len(ps)}/{len(p)} | {pmed} | {len(es)}/{len(e)} | {emed} | {ewall} |")
     tot_p = sum(1 for r in ppo if r.get("success"))
     tot_e = sum(1 for r in ea if r.get("success"))
     lines += ["", f"Totals: PPO {tot_p} of {len(ppo)} runs succeed, evolutionary search {tot_e} of {len(ea)}. "
               "The evolutionary search is autoqec-sim's own (population of gate sequences, mutation, one batched rollout per generation), "
               "not a tuned evolutionary agent; the comparison fixes the budget, objective, and action space, nothing else."]
-    out = out_dir / "REPORT.md"
+    out = REPORT_DIR / "REPORT.md"
     out.write_text("\n".join(lines) + "\n")
     return out
 
+
+FIGURE = Path("docs/assets/figures/topologies_ea")
+
+
+def make_figure(runs_dir: Path, out_stem: Path | str = FIGURE, ppo_dir: Path = T.DEFAULT_OUT) -> Path | None:
+    """Env steps to the first success of every PPO run (filled circles, one
+    marker per seed) and of every evolutionary-search run (filled squares,
+    at the env-step equivalent of its evaluations), with runs that exhausted
+    their budget without success as open right-pointing markers at the
+    steps spent. Writes ``out_stem.png`` and ``out_stem.pdf``; returns the
+    PNG path, or ``None`` without matplotlib or without runs."""
+    try:
+        from matplotlib.lines import Line2D
+
+        from . import figstyle
+    except ImportError:  # pragma: no cover
+        return None
+    ea = load_all(Path(runs_dir))
+    ppo = [r for r in T.load_all(Path(ppo_dir)) if r.get("kind") == "run"]
+    cells = sorted({(r["topology"], r["n"]) for r in ea} | {(r["topology"], r["n"]) for r in ppo},
+                   key=lambda c: (c[1], T.TOPOLOGIES.index(c[0])))
+    if not cells:
+        return None
+    plt = figstyle.apply()
+    fig, ax = plt.subplots(figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE + 0.3))
+    ys = {c: len(cells) - 1 - i for i, c in enumerate(cells)}
+    c_ppo, c_ea = figstyle.SERIES_COLORS[0], figstyle.SERIES_COLORS[1]
+
+    def jitter(y, j, count, sign):
+        return y + sign * 0.18 + 0.1 * (j - (count - 1) / 2)
+
+    for c in cells:
+        p = sorted((r for r in ppo if (r["topology"], r["n"]) == c), key=lambda r: r["seed"])
+        e = sorted((r for r in ea if (r["topology"], r["n"]) == c), key=lambda r: r["seed"])
+        for j, r in enumerate(p):
+            if r["first_success"]:
+                ax.plot([r["first_success"]["env_steps"]], [jitter(ys[c], j, len(p), 1)], "o", color=c_ppo)
+            else:
+                ax.plot([r["env_steps"]], [jitter(ys[c], j, len(p), 1)], ">", color=c_ppo, mfc="none")
+        for j, r in enumerate(e):
+            if r["success"]:
+                ax.plot([r["first_success"]["env_steps_equivalent"]], [jitter(ys[c], j, len(e), -1)], "s", color=c_ea)
+            else:
+                ax.plot([r["env_steps_equivalent"]], [jitter(ys[c], j, len(e), -1)], ">", color=c_ea, mfc="none")
+    ax.set_yticks(range(len(cells)))
+    ax.set_yticklabels([f"{T.TOPOLOGY_LABELS[t]}, n = {n}" for t, n in reversed(cells)])
+    ax.set_ylim(-0.6, len(cells) - 0.4)
+    T._step_axis(ax, [1e4, 3e4, 1e5, 3e5, 1e6, 3e6], 4e3, 7e6)
+    ax.set_xlabel("env steps to first success (state evaluations)")
+    ax.set_title("[[n,1,3]] with no idle qubit, H and CNOT on the lattice edges, 50-gate episodes, seeds 0 to 2")
+    fig.legend(
+        [Line2D([], [], marker="o", color=c_ppo, ls="none"), Line2D([], [], marker="s", color=c_ea, ls="none"),
+         Line2D([], [], marker=">", color=c_ea, mfc="none", ls="none")],
+        ["PPO, first success", "evolutionary search, first success", "evolutionary search, budget spent without success"],
+        loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.12),
+    )
+    fig.tight_layout()
+    figstyle.save(fig, out_stem)
+    return Path(out_stem).with_suffix(".png")
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
@@ -125,6 +189,10 @@ def main(argv=None):
     r = sub.add_parser("report")
     r.add_argument("--out-dir", default=str(DEFAULT_OUT))
     r.add_argument("--ppo-dir", default=str(T.DEFAULT_OUT))
+    f = sub.add_parser("figure")
+    f.add_argument("--out-dir", default=str(DEFAULT_OUT))
+    f.add_argument("--ppo-dir", default=str(T.DEFAULT_OUT))
+    f.add_argument("--stem", default=str(FIGURE), help="output path without extension; .png and .pdf are written")
     a = ap.parse_args(argv)
     if a.cmd == "run":
         rec = run_cell(a.topology, a.target_n, a.seed, a.max_evaluations, batch=a.batch, verbose=a.verbose)
@@ -135,8 +203,11 @@ def main(argv=None):
         fs = rec["first_success"]
         print(f"{a.topology} n={rec['n']} seed={a.seed}: success={rec['success']} evaluations={rec['evaluations']:,} "
               f"({rec['env_steps_equivalent']:,} env steps) wall={rec['wall_time_s']}s" + (f" first success at {fs['evaluations']:,} evaluations, {fs['gate_count']} gates" if fs else ""))
-    else:
+    elif a.cmd == "report":
         print("wrote", report(Path(a.out_dir), Path(a.ppo_dir)))
+    else:
+        png = make_figure(Path(a.out_dir), Path(a.stem), Path(a.ppo_dir))
+        print("wrote", png if png else "nothing (matplotlib missing or no runs)")
     return 0
 
 

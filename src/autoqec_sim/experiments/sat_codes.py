@@ -159,6 +159,70 @@ noise; the proxy tier is deterministic.
     return path
 
 
+def make_figure(out_dir: Path = DEFAULT_OUT, out_stem: Path | str = "docs/assets/figures/sat_codes"):
+    """(a) The source's code-capacity logical error rate at bias 10 against
+    the circuit-level per-round rate of the sampled tier under the matching
+    biased idle profile; (b) the same circuit-level rate per case for every
+    code: the source's twelve best, its three worst, and the two references."""
+    from . import figstyle
+
+    plt = figstyle.apply()
+    out = json.loads((out_dir / "sat_codes.json").read_text())
+    codes = out["codes"]
+    # the selection: the source's twelve best distinct codes at bias 10 and three of its worst
+    ranked = sorted((c for c in codes if c not in ("rotated_surface", "xzzx")), key=lambda c: codes[c]["source_ler"]["10.0"])
+    best, worst = ranked[:12], ranked[12:]
+    cases = [(f"depol_idle_eta_{int(e)}", f"idle bias {int(e)}") for e in ETAS] + [("forte_sequential", "Forte preset")]
+    cases = [(key, label) for key, label in cases if key in codes["xzzx"]["cases"]]
+    tier = "sampled" if "sampled" in codes["xzzx"]["cases"][cases[0][0]] else "proxy"
+
+    def rate(c, key):
+        return codes[c]["cases"][key][tier]["p_round"]
+
+    groups = [("source's best 12", best, figstyle.SERIES_COLORS[0], "o"), ("source's worst 3", worst, figstyle.SERIES_COLORS[1], "s"),
+              ("rotated surface", ["rotated_surface"], figstyle.SERIES_COLORS[2], "D"), ("XZZX", ["xzzx"], figstyle.SERIES_COLORS[3], "^")]
+    yticks = [4e-4, 6e-4, 1e-3, 1.5e-3]
+    fig, axes = plt.subplots(1, 2, figsize=(figstyle.WIDTH, figstyle.HEIGHT_SINGLE))
+    ax = axes[0]
+    key10 = "depol_idle_eta_10"
+    for label, members, color, marker in groups:
+        xs = [codes[c]["source_ler"]["10.0"] for c in members]
+        ys = [rate(c, key10) for c in members]
+        ax.plot(xs, ys, marker, color=color, label=label, alpha=0.85, linestyle="none")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(0.008, 0.25)
+    ax.set_xticks([0.01, 0.02, 0.05, 0.1, 0.2])
+    ax.set_xticklabels(["0.01", "0.02", "0.05", "0.1", "0.2"])
+    ax.set_xticks([], minor=True)
+    ax.set_yticks(yticks)
+    ax.set_yticklabels([f"{v:g}" for v in yticks])
+    ax.set_yticks([], minor=True)
+    ax.set_xlabel("source code-capacity LER, bias 10")
+    ax.set_ylabel(f"circuit-level p_round ({tier} tier)")
+    ax.set_title("idle bias 10, three rounds")
+    ax.legend(loc="upper center")
+    figstyle.panel_label(ax, "a")
+    ax = axes[1]
+    offsets = {"source's best 12": -0.18, "source's worst 3": 0.18, "rotated surface": 0.0, "XZZX": 0.0}
+    for label, members, color, marker in groups:
+        for i, (key, _) in enumerate(cases):
+            ys = [rate(c, key) for c in members]
+            ax.plot([i + offsets[label]] * len(ys), ys, marker, color=color, alpha=0.85, linestyle="none", label=label if i == 0 else None)
+        if len(members) == 1:
+            ax.plot(range(len(cases)), [rate(members[0], key) for key, _ in cases], "-", color=color, linewidth=figstyle.THIN)
+    ax.set_xticks(range(len(cases)))
+    ax.set_xticklabels([label.replace("idle ", "") for _, label in cases])
+    ax.set_yscale("log")
+    ax.set_yticks(yticks)
+    ax.set_yticklabels([f"{v:g}" for v in yticks])
+    ax.set_yticks([], minor=True)
+    ax.set_ylabel(f"circuit-level p_round ({tier} tier)")
+    ax.set_title("every code, per noise case")
+    figstyle.panel_label(ax, "b")
+    fig.tight_layout()
+    return figstyle.save(fig, out_stem)
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -174,8 +238,14 @@ def main(argv=None):
     r.add_argument("--quiet", action="store_true")
     p = sub.add_parser("report")
     p.add_argument("--out", default=str(DEFAULT_OUT))
+    f = sub.add_parser("figure")
+    f.add_argument("--out", default=str(DEFAULT_OUT))
+    f.add_argument("--stem", default="docs/assets/figures/sat_codes")
     a = ap.parse_args(argv)
     out = Path(a.out)
+    if a.cmd == "figure":
+        print("wrote", *make_figure(out, a.stem))
+        return
     if a.cmd == "run":
         run(out, Path(a.selection), a.rounds, a.tiers, a.shots, a.min_failures, a.max_shots, a.seed, not a.quiet)
     print("wrote", write_report(out))

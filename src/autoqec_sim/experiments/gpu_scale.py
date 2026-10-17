@@ -19,7 +19,7 @@ permutation-equivariant network of :mod:`autoqec_sim.agents.policies` at
     the training profile plus the LDPC term), the same three profiles
     (``board``, ``ion``, ``heron``) at the same calibrated scales, three
     seeds, 1024 parallel episodes and 20M env steps by default. In
-    ``experiments/noise_aware/runs/REPORT.md`` every 4x4 cell failed with the flat
+    ``experiments/noise_aware/REPORT.md`` every 4x4 cell failed with the flat
     MLP at 256 episodes and 16M steps. Everything the reward and the code
     analysis need is imported from ``noise_aware``; only the training loop
     and the device plumbing are here. The output keeps the field names of
@@ -1318,7 +1318,7 @@ def noise_sections(recs: list[dict], baselines: dict | None) -> list[str]:
         "absolute probability), mean over seeds with [min, max]. Smaller is better. Seeds that did not reach d = 4 are excluded "
         "from the rows and counted in the runs table. The last rows are the known codes at n = 16 from "
         "`experiments/noise_aware/runs/baselines_4x4.json` (polished standard-form encoder per profile, the same numbers as the 4x4 table of "
-        "`experiments/noise_aware/runs/REPORT.md`).\n"
+        "`experiments/noise_aware/REPORT.md`).\n"
     )
     L.append("| trained on \\ evaluated on | " + " | ".join(PROFILES) + " | seeds with d = 4 | gates (mean) |")
     L.append("|---|" + "---|" * (len(PROFILES) + 2))
@@ -1544,7 +1544,7 @@ def write_report(out_dir: Path, baselines_path: Path = DEFAULT_BASELINES, extra_
         "`uv run --extra rl python -m autoqec_sim.experiments.gpu_scale report`. Code:",
         "`src/autoqec_sim/experiments/gpu_scale.py`; pod commands in `docs/gpu_run.md`.",
         "",
-        "This report extends, and does not replace, `experiments/noise_aware/runs/REPORT.md` (the 45-run",
+        "This report extends, and does not replace, `experiments/noise_aware/REPORT.md` (the 45-run",
         "noise-aware experiment, whose 4x4 cells all failed with the flat MLP at 256 episodes) and",
         "`experiments/scaling/REPORT.md` (the equivariant policy reaching [[16,1,4]] at batch 256).",
         "The 4x4 numbers here are the same reward, profiles, calibration, and code analysis with",
@@ -1578,7 +1578,7 @@ def write_report(out_dir: Path, baselines_path: Path = DEFAULT_BASELINES, extra_
         "- Three seeds per cell; env-step counts and masses are three samples, not a distribution.",
         "- The noise4x4 cross-evaluation is only over seeds whose best code reached d = 4; a profile with fewer",
         "  such seeds has a smaller sample. The known-code rows are polished encoders optimized per profile",
-        "  (see the 4x4 section of `experiments/noise_aware/runs/REPORT.md` for how much the polishing did).",
+        "  (see the 4x4 section of `experiments/noise_aware/REPORT.md` for how much the polishing did).",
         "- The surface5x5 and surface5x5_sparse runs stop at their first success, so success rate after training",
         f"  and code diversity are not measured; `w*` is exact up to {EXACT_W_STAR_MAX} (syndrome collisions) and the greedy",
         "  bound of `autoqec_sim.ldpc` above that (marked `bound`).",

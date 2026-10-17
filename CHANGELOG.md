@@ -33,6 +33,21 @@
   structural features of each code's extraction circuit
   (`experiments/sat_population/REPORT.md`).
 
+- Documentation: the experiments page is split into an overview and one
+  page per experiment (`docs/experiments/`), each with the question, a
+  figure, a compact table, the findings, and the commands that reproduce
+  a run. New `figure` commands draw the figures from the runs for
+  `noise_aware`, `scaling`, `topologies`, `topologies_ea`, `qdx_targets`,
+  and `sat_codes`; the noise-aware, topology, and evolutionary-search
+  reports move from the untracked `runs/` directories to
+  `experiments/<name>/REPORT.md`.
+- Fixed: `experiments.topologies_ea` built its environment with automatic
+  resets, so the evolutionary search read a reset state's reward in place
+  of the successful one and never registered a success; its report
+  claimed 0 of 18 successes. Rerun after the fix: 17 of 18, with PPO 1.4x
+  to 6x more step-efficient and the evolutionary search far cheaper in
+  wall time (`experiments/topologies_ea/REPORT.md`).
+
 ## 0.2.0 (2026-10-16)
 
 - Repository layout: `tools/` (release and reproduce scripts), `benchmarks/`
@@ -147,7 +162,7 @@ agent with its own rediscovery regression.
   rotated surface, XZZX, Hadamard-deformed surface, Shor, transposed Shor
   at `n = 9` and `n = 16`) with standard-form encoders routed onto the
   lattice and polished per profile; training-curve CSVs and figures
-  (`experiments.figstyle`, one style); `experiments/noise_aware/runs/REPORT.md`.
+  (`experiments.figstyle`, one style); `experiments/noise_aware/REPORT.md`.
 - RL scaling probe (`experiments.scaling`, run as `python -m`; report in
   `experiments/scaling/REPORT.md`, runs in `experiments/scaling/runs/`). Diagnosis
   of the 4x4 failure of the noise-aware experiment (`[[16, 1, 4]]`, H and
@@ -430,7 +445,7 @@ agent with its own rediscovery regression.
   A code is scored by the logical error rate per round of an `R`-round
   syndrome-extraction memory experiment instead of by its encoder's
   single-fault mass, which cannot see a local-Clifford deformation of the
-  code (`experiments/noise_aware/runs/REPORT.md`). `build_memory_circuit` builds
+  code (`experiments/noise_aware/REPORT.md`). `build_memory_circuit` builds
   the circuit for arbitrary (non-CSS) generators: one ancilla per
   generator with controlled-X/Y/Z gates, hook-aware gate orders
   (`hook_orders`, the ion-search suffix and segment criterion, exact

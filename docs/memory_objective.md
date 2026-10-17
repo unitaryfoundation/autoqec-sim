@@ -13,7 +13,7 @@ tested with the Knill-Laflamme [@knill1997] kernel. A Hadamard on a data qubit a
 end of the encoder relabels the weight-1 faults of the last layer, all of
 which the code detects, so the objective cannot distinguish a code from its
 local-Clifford deformations (the rotated surface code, XZZX [@bonillaataides2021], and the
-outer-column deformation tie exactly in `experiments/noise_aware/runs/REPORT.md`,
+outer-column deformation tie exactly in `experiments/noise_aware/REPORT.md`,
 verdict items 3, 4, and 6). Bias tailoring is a statement about how the
 code's stabilizers align with the dominant fault type during repeated
 syndrome extraction, so the reward has to be a memory experiment.
@@ -287,7 +287,7 @@ is 1e-5 per gate slot at this scale while its readout flips 2.25e-3 per
 ancilla dominate, consistent with the ion-search finding that the chain
 set makes measurement error dominant. The encoder objective could not
 separate the two codes under any profile (exact tie,
-`experiments/noise_aware/runs/REPORT.md` item 4).
+`experiments/noise_aware/REPORT.md` item 4).
 
 ## Lattice layout
 

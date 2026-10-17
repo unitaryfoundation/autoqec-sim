@@ -41,7 +41,7 @@ flat MLP and the permutation-equivariant actor-critic. `regress` and
 verifies every distinct code a run produces by exact distance and weight
 enumerators.
 
-[Experiments](experiments.md) records the noise-aware discovery runs, the
+[Experiments](experiments/index.md) records the noise-aware discovery runs, the
 memory-objective runs, the RL scaling probe, and the three-topology run
 matrix, with what each found and where the agent stops.
 
