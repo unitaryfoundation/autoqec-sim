@@ -29,7 +29,8 @@ memory experiment (``research/circuit_autogen.build_memory``), the canonical
 noise recipe is applied, stim derives the detector error model, and the
 fault distance is read either exactly up to weight ``exact_wmax``
 (:func:`autoqec_sim.memory_objective.exact_dcirc`, the right tier when the
-code distance is at most 4 or 5) or by the board's own randomized
+code distance is at most ``exact_wmax``, which can go to 6) or by the
+board's own randomized
 information-set search (``circuit_tools.ris_dem``, an upper bound). The
 reward is ``min_basis d_circ / d`` minus ``depth_penalty`` per CX layer
 beyond the lower bound, so a schedule that reaches the code distance in the

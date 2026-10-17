@@ -8,6 +8,21 @@
   undetectable fault sets explained to circuit locations
   (`docs/evaluate.md`). `memory_objective` gains a `tesseract` tier
   (Tesseract sampling, `tesseract` extra) and `undetectable_sets`.
+- The proxy tier works at circuit distance 5 and 6. When no undetectable
+  logical fault set of weight at most 4 exists, `pfail_low_weight` and the
+  memory objective escalate to the weight-3 maximum-likelihood form built
+  from the weight-5 and weight-6 undetectable sets, which
+  `memory_objective.undetectable_logicals` enumerates by a canonical
+  cluster search over the detector hypergraph (exact, no triple table;
+  about 20 s per basis for the 5x5 surface code at five rounds, where it
+  agrees with Tesseract sampling within the sampling error). `exact_dcirc`
+  and `undetectable_sets` take `wmax` up to 6 through the same search,
+  `evaluate_code` reports `d_circ` and dominant faults up to weight 6, and
+  `MemoryObjective` defaults `proxy_max_weight` to `None` (adaptive). The
+  hook-order search and `evaluate_code` accept codes beyond 20 qubits
+  (`code_distance`, the randomized upper bound), and the hook search's
+  completion-cost table stops at the weight its criteria need (the 5x5
+  surface code from 12 s to under a second).
 - `experiments.qdx_targets`: QDX's published all-to-all target set
   through this package's PPO at matched settings, verified by exact
   distance (`experiments/qdx_targets/REPORT.md`). `experiments.sat_codes`:
@@ -159,7 +174,7 @@ agent with its own rediscovery regression.
   stabilizer groups of distance 1, because the normalized Knill-Laflamme term
   pays 1/630 to 1/1128 per detected error against 0.25 per unit of w* excess.
 - Three-topology run matrix (`experiments.topologies`, run as `python -m`;
-  report in `experiments/topologies/runs/REPORT.md`). The PPO agent alone, not the
+  report in `experiments/topologies/REPORT.md`). The PPO agent alone, not the
   LLM meta-agent of milestone M2, on square, triangular, and heavy-hex
   lattices at two tiers (`3x3` and `4x4`; heavy-hex `1x1` with 12 qubits and
   `2x1` with 18, the nearest sizes the honeycomb construction allows), one

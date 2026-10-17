@@ -90,7 +90,22 @@ rounds `R` (default the target distance), a layout, and a tier.
      circuit-level distance up to weight 4 with the count and summed
      probability product of the minimum-weight undetectable logical fault
      sets (ported from `ion-search/lib.py`; signatures wider than 64
-     detectors go through integer ids). Weight-3 sets are added when the
+     detectors go through integer ids). When no undetectable logical set
+     of weight at most 4 exists (a circuit distance of 5 or 6) the
+     weight-2 form is zero, and the proxy escalates to weight 3 without a
+     triple table: `undetectable_logicals` lists every weight-5 and
+     weight-6 undetectable logical set by a cluster search over the
+     detector hypergraph (a set is grown from its smallest member by
+     resolving the lowest flipped detector with one of its incident
+     mechanisms, the last two members come from the pair table, and a
+     canonical rule gives each set one derivation), and their 3-subsets
+     are the only triples the decoder can get wrong. The search visits
+     about `M (c / 2)^3` states for `M` mechanisms and detector degree
+     `c`: about a second for the 5x5 surface code at one round (475
+     mechanisms) and 20 s per basis at five rounds (2,107 mechanisms,
+     2.3e7 states), where 20,000 Tesseract shots take 45 s.
+     `exact_dcirc(sig, wmax=6)` and `undetectable_sets(sig, wmax=6)` use
+     the same search. Weight-3 sets are also enumerated directly when the
      number of triples is small (`proxy_max_weight=3`).
    - `sampled`: when `D + O <= 20` (detectors plus observables) the exact
      maximum-likelihood decoder by dynamic program over the joint

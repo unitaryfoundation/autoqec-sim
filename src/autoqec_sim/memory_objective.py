@@ -23,7 +23,13 @@ logical error rate per round with one of four fidelity tiers:
     mechanisms, exact to ``O(p^3)``), plus the exact circuit-level
     distance ``d_circ`` up to weight 4 and the mass of its minimum-weight
     undetectable logical fault sets (:func:`exact_dcirc`, ported from
-    ``ion-search/lib.py``). No sampling, no decoder dependency.
+    ``ion-search/lib.py``). When no undetectable logical fault set of
+    weight at most 4 exists (a circuit distance of 5 or 6) the weight-2
+    form is zero and the proxy escalates to weight 3:
+    :func:`undetectable_logicals` lists every weight-5 and weight-6
+    undetectable logical fault set by a canonical cluster search over the
+    detector hypergraph, and their 3-subsets are the only weight-3 fault
+    sets the decoder can get wrong. No sampling, no decoder dependency.
 ``sampled``
     small-shot Monte Carlo from the DEM with an exact maximum-likelihood
     decoder when ``detectors + observables <= exact_ml_bits`` (dynamic
@@ -40,8 +46,9 @@ logical error rate per round with one of four fidelity tiers:
     it is, without decomposition; distinct syndromes are decoded once.
 
 :func:`undetectable_sets` lists the minimum-weight undetectable logical
-fault sets of a DEM up to weight 3 by probability, for the fault report
-of :func:`autoqec_sim.evaluate_code`.
+fault sets of a DEM by probability (pair tables up to weight 3, the
+cluster search beyond), for the fault report of
+:func:`autoqec_sim.evaluate_code`.
 
 Circuits (:func:`build_memory_circuit`). Every generator ``g_j`` gets an
 ancilla prepared in ``|+>``, controlled-``P`` gates (``CX``, ``CY``,
@@ -92,9 +99,11 @@ the encoding circuit that produced it.
 
 from __future__ import annotations
 
+import hashlib
 import itertools
 import math
 import time
+from collections import OrderedDict
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -104,7 +113,7 @@ import stim
 from autoqec_sim import noise as nm
 from autoqec_sim.noise import Profile
 
-from .code import StabilizerCode
+from .code import EXACT_MAX_N, StabilizerCode
 from .graphs import Graph
 from .reward import batched_distance, low_weight_stabilizer_penalty
 from .symplectic import rref
@@ -119,6 +128,7 @@ __all__ = [
     "MemoryReward",
     "all_to_all_layout",
     "build_memory_circuit",
+    "code_distance",
     "code_key",
     "dem_signature",
     "exact_dcirc",
@@ -130,6 +140,7 @@ __all__ = [
     "pfail_low_weight",
     "sample_failures",
     "square_layout",
+    "undetectable_logicals",
     "undetectable_sets",
 ]
 
@@ -377,13 +388,23 @@ def _hook_order(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, targe
     return best
 
 
+def code_distance(code: StabilizerCode) -> int:
+    """The code's exact distance up to ``EXACT_MAX_N`` qubits, else the
+    randomized upper bound of :meth:`StabilizerCode.distance_upper_bound`."""
+    if code.n <= EXACT_MAX_N:
+        return code.distance_exact()
+    return int(code.distance_upper_bound()[0])
+
+
 def hook_orders(code: StabilizerCode, target: int | None = None, seed: int = 0) -> list[list[tuple[int, str]]]:
     """Hook-aware gate orders of every generator (:func:`_hook_order`);
-    ``target`` defaults to the code's exact distance."""
+    ``target`` defaults to :func:`code_distance`."""
     n = code.n
     if target is None:
-        target = code.distance_exact()
-    cost = _CompletionCost(code, max(1, target - 1))
+        target = code_distance(code)
+    # the criteria of _hook_order compare 1 + cost and 2 + cost with the
+    # target, so costs of target - 1 and above need not be told apart
+    cost = _CompletionCost(code, max(1, target - 2))
     rng = np.random.default_rng(seed)
     return [_hook_order(_support(code.stabilizers[j], n, "sorted", rng), n, cost, target, rng) for j in range(code.stabilizers.shape[0])]
 
@@ -834,7 +855,7 @@ def _ml_failure_from_sets(sid: np.ndarray, obs: np.ndarray, weight: np.ndarray) 
     return float(fail.sum())
 
 
-def pfail_low_weight(sig: Signature, max_weight: int = 2, max_triples: int = 2_000_000, exclusive: bool = False) -> float:
+def pfail_low_weight(sig: Signature, max_weight: int | None = 2, max_triples: int = 2_000_000, exclusive: bool = False) -> float:
     """Leading-order failure probability of the maximum-likelihood decoder
     restricted to fault sets of weight at most ``max_weight``.
 
@@ -849,9 +870,14 @@ def pfail_low_weight(sig: Signature, max_weight: int = 2, max_triples: int = 2_0
     sig
         :class:`Signature` of the detector error model.
     max_weight
-        2, or 3 when the number of triples is at most ``max_triples``.
+        2; 3 by enumeration of every triple when their number is at most
+        ``max_triples``, else through :func:`undetectable_logicals` when no
+        undetectable logical fault set of weight at most 4 exists (the
+        3-subsets of the weight-5 and weight-6 sets are then the only
+        triples the decoder can get wrong), else 2; or ``None`` for 2 with
+        that escalation to 3 whenever the weight-2 form is zero.
     max_triples
-        Cap on the weight-3 enumeration.
+        Cap on the enumeration of every triple.
     exclusive
         Weight a set by the exact probability of that set alone,
         ``prod p_i prod_{j not in set} (1 - p_j)``, instead of the low-``p``
@@ -861,9 +887,17 @@ def pfail_low_weight(sig: Signature, max_weight: int = 2, max_triples: int = 2_0
     -------
     float
     """
+    return _proxy_failure(sig, max_weight, max_triples, exclusive)["p_fail"]
+
+
+def _proxy_failure(sig: Signature, max_weight: int | None, max_triples: int, exclusive: bool) -> dict:
+    """:func:`pfail_low_weight` with its bookkeeping: ``p_fail``, the
+    ``weight`` used, and ``d_circ`` (the :func:`exact_dcirc` dictionary) when
+    the cluster search ran, else ``None``."""
     m = len(sig)
+    out = {"p_fail": 0.0, "weight": 2, "d_circ": None}
     if m == 0:
-        return 0.0
+        return out
     p = np.clip(sig.probs, 0.0, 1.0 - 1e-15)
     if exclusive:
         p0 = float(np.prod(1.0 - p))
@@ -879,15 +913,30 @@ def pfail_low_weight(sig: Signature, max_weight: int = 2, max_triples: int = 2_0
         words.append(sig.det[i] ^ sig.det[j])
         obs.append(sig.obs[i] ^ sig.obs[j])
         wgt.append(q[i] * q[j] * p0)
-        if max_weight >= 3 and m >= 3 and m * (m - 1) * (m - 2) // 6 <= max_triples:
+        if max_weight is not None and max_weight >= 3 and m >= 3 and m * (m - 1) * (m - 2) // 6 <= max_triples:
             cnt = m * (m - 1) * (m - 2) // 6
             flat = np.fromiter(itertools.chain.from_iterable(itertools.combinations(range(m), 3)), dtype=np.int64, count=3 * cnt)
             t = flat.reshape(cnt, 3)
             words.append(sig.det[t[:, 0]] ^ sig.det[t[:, 1]] ^ sig.det[t[:, 2]])
             obs.append(sig.obs[t[:, 0]] ^ sig.obs[t[:, 1]] ^ sig.obs[t[:, 2]])
             wgt.append(q[t[:, 0]] * q[t[:, 1]] * q[t[:, 2]] * p0)
+            out["weight"] = 3
     ids = _joint_ids(*words)
-    return _ml_failure_from_sets(np.concatenate(ids), np.concatenate(obs), np.concatenate(wgt))
+    out["p_fail"] = _ml_failure_from_sets(np.concatenate(ids), np.concatenate(obs), np.concatenate(wgt))
+    if out["weight"] == 3 or max_weight == 2 or m < 5:
+        return out
+    # weight 3 without the triple table: exact when no undetectable logical
+    # fault set of weight at most 4 exists (a nonzero weight-2 form proves
+    # one does; a zero one with such a set means zero-probability mechanisms)
+    if out["p_fail"] > 0.0:
+        return out
+    found = undetectable_logicals(sig, 6)
+    out["d_circ"] = _dcirc_from_logicals(found)
+    if any(w <= 4 for w in found):
+        return out
+    out["weight"] = 3
+    out["p_fail"] = _pfail_weight3(_cluster_search(sig), found, q, p0)
+    return out
 
 
 def _group_hits(dsorted, bsorted, psorted, idx_sorted, weight):
@@ -964,6 +1013,334 @@ def _cross_hits(dA, bA, pA, idxA, dB, bB, pB, idxB, weight):
     return {"d_circ": weight, "count": count // splits, "mass": mass / splits, "witness": witness}
 
 
+# --------------------------------------------------------------------------
+# undetectable fault sets beyond weight 4: canonical cluster search
+# --------------------------------------------------------------------------
+_POP8 = np.array([bin(i).count("1") for i in range(256)], dtype=np.uint8)
+
+
+def _popcount_rows(words: np.ndarray) -> np.ndarray:
+    """Set bits in each row of an ``(N, W)`` uint64 array."""
+    if hasattr(np, "bitwise_count"):
+        return np.bitwise_count(words).sum(axis=1, dtype=np.int32)
+    b = np.ascontiguousarray(words).view(np.uint8).reshape(words.shape[0], -1)
+    return _POP8[b].sum(axis=1, dtype=np.int32)
+
+
+def _lowest_set_bit(words: np.ndarray) -> np.ndarray:
+    """Index of the lowest set bit in each (nonzero) row of an ``(N, W)``
+    uint64 array."""
+    first = (words != 0).argmax(axis=1)
+    w = words[np.arange(words.shape[0]), first]
+    low = w & (~w + np.uint64(1))
+    return first * 64 + _popcount_rows((low - np.uint64(1))[:, None])
+
+
+def _expand(counts: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """For blocks of sizes ``counts``: the block index and the offset within
+    its block of every element of the concatenated blocks."""
+    rows = np.repeat(np.arange(counts.shape[0]), counts)
+    offsets = np.arange(int(counts.sum())) - np.repeat(np.cumsum(counts) - counts, counts)
+    return rows, offsets
+
+
+def _unique_rows(sets: np.ndarray, m: int) -> np.ndarray:
+    """Distinct rows of an ``(N, w)`` array of sorted mechanism indices below
+    ``m < 2**21``, in lexicographic order (three indices per 64-bit key)."""
+    if sets.shape[0] == 0:
+        return sets
+    keys = []
+    for c0 in range(0, sets.shape[1], 3):
+        key = np.zeros(sets.shape[0], dtype=np.int64)
+        for c in range(c0, min(c0 + 3, sets.shape[1])):
+            key = key * m + sets[:, c]
+        keys.append(key)
+    order = np.lexsort(keys[::-1])
+    srt = [k[order] for k in keys]
+    change = np.ones(sets.shape[0], dtype=bool)
+    change[1:] = np.logical_or.reduce([k[1:] != k[:-1] for k in srt])
+    return sets[order][change]
+
+
+class _ClusterSearch:
+    """Tables of one DEM for the search of its undetectable fault sets.
+
+    Detectors are relabeled by increasing degree (the search resolves the
+    lowest flipped detector first, so the one with the fewest incident
+    mechanisms), the incidence lists are stored in compressed form, every
+    detector gets a random 64-bit key so that the hash of a set of
+    mechanisms is the XOR of its members' hashes, and the hashes of all
+    pairs are sorted for lookup. ``found`` caches :meth:`search` results
+    by ``wmax``.
+    """
+
+    def __init__(self, sig: Signature, seed: int = 0x5EED):
+        m, nd = len(sig), sig.num_detectors
+        if m >= 1 << 21:
+            raise ValueError("the cluster search supports fewer than 2**21 mechanisms")
+        self.m, self.obs, self.probs = m, sig.obs, sig.probs
+        self.words = max(1, (nd + 63) // 64)
+        bits = np.unpackbits(np.ascontiguousarray(sig.det).view(np.uint8), axis=1, bitorder="little")[:, :nd].astype(bool)
+        bits = bits[:, np.argsort(bits.sum(axis=0), kind="stable")]
+        padded = np.zeros((m, 64 * self.words), dtype=np.uint8)
+        padded[:, :nd] = bits
+        self.det = np.packbits(padded, axis=1, bitorder="little").view(np.uint64).reshape(m, self.words)
+        self.bits = bits
+        self.cmax = int(bits.sum(axis=1).max()) if m else 0
+        degree = bits.sum(axis=0)
+        self.inc_ptr = np.concatenate([[0], np.cumsum(degree)]).astype(np.int64)
+        self.inc_idx = (np.flatnonzero(bits.T.ravel()) % max(m, 1)).astype(np.int32)
+        rng = np.random.default_rng(seed)
+        keys = rng.integers(0, np.iinfo(np.int64).max, nd, dtype=np.int64).astype(np.uint64)
+        self.hm = np.bitwise_xor.reduce(np.where(bits, keys[None, :], np.uint64(0)), axis=1) if nd else np.zeros(m, dtype=np.uint64)
+        o1 = np.argsort(self.hm, kind="stable")
+        self.h1, self.o1 = self.hm[o1], o1.astype(np.int32)
+        i, j = _pairs(m)
+        h2 = self.hm[i] ^ self.hm[j]
+        o2 = np.argsort(h2, kind="stable")
+        self.h2, self.pi, self.pj = h2[o2], i[o2].astype(np.int32), j[o2].astype(np.int32)
+        # a bitmap over the top bits of the pair hashes screens the lookups
+        # (most states match no pair; a set bit sends the state to the
+        # binary search)
+        self.screen_bits = 28
+        self.screen = np.zeros(1 << (self.screen_bits - 3), dtype=np.uint8)
+        top = (self.h2 >> np.uint64(64 - self.screen_bits)).astype(np.int64)
+        np.bitwise_or.at(self.screen, top >> 3, (1 << (top & 7)).astype(np.uint8))
+        self.found: dict[int, dict] = {}
+        self.states: dict[int, int] = {}
+
+    def _lookup(self, table: np.ndarray, hashes: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Rows of ``hashes`` with a match in the sorted ``table`` (repeated
+        per match) and the matching positions."""
+        if table is self.h2:
+            top = (hashes >> np.uint64(64 - self.screen_bits)).astype(np.int64)
+            cand = np.flatnonzero((self.screen[top >> 3] >> (top & 7).astype(np.uint8)) & 1)
+        else:
+            cand = np.arange(hashes.shape[0])
+        lo = np.searchsorted(table, hashes[cand], side="left")
+        ok = (lo < table.shape[0]) & (table[np.minimum(lo, table.shape[0] - 1)] == hashes[cand])
+        hit, lo = cand[ok], lo[ok]
+        hi = np.searchsorted(table, hashes[hit], side="right")
+        rows, offsets = _expand(hi - lo)
+        return hit[rows], lo[rows] + offsets
+
+    def _irreducible(self, sets: np.ndarray) -> np.ndarray:
+        """Rows of the sorted ``(N, w)`` sets with no proper nonempty
+        undetectable subset (subsets of at most ``w // 2`` members have a
+        nonzero hash; the complement of a larger one is smaller)."""
+        n, w = sets.shape
+        ok = np.ones(n, dtype=bool)
+        for size in range(1, w // 2 + 1):
+            for combo in itertools.combinations(range(w), size):
+                h = self.hm[sets[:, combo[0]]].copy()
+                for c in combo[1:]:
+                    h ^= self.hm[sets[:, c]]
+                ok &= h != 0
+        return ok
+
+    def search(self, wmax: int, chunk: int = 64) -> dict[int, tuple[np.ndarray, np.ndarray]]:
+        """Every irreducible undetectable fault set with a nonzero
+        observable flip and at most ``wmax`` mechanisms, as
+        ``{weight: (sets, probability products)}`` with the sets as sorted
+        ``(N, weight)`` index rows.
+
+        A set is grown from its smallest member: each step resolves the
+        lowest flipped detector of the current syndrome by one of its
+        incident mechanisms, and the last two members come from the pair
+        table in one lookup. Every undetectable set with no undetectable
+        proper subset has exactly one derivation in which each step adds
+        the smallest of the set's remaining members touching the detector
+        resolved, so a member that touches an earlier resolved detector
+        and is smaller than the member that resolved it is rejected, and
+        each set is produced once. States whose syndrome has more flipped
+        detectors than the remaining members can clear are dropped.
+        ``chunk`` starts are processed together.
+        """
+        m = self.m
+        det, hm, obs, bits = self.det, self.hm, self.obs, self.bits
+        found: dict[int, list] = {w: [] for w in range(1, wmax + 1)}
+        self.states = dict.fromkeys(range(1, max(2, wmax - 1)), 0)
+        for c0 in range(0, m, chunk):
+            start = np.arange(c0, min(m, c0 + chunk), dtype=np.int32)
+            mem = start[:, None]  # members, the start first
+            res = np.zeros((start.shape[0], 0), dtype=np.int32)  # res[:, t] was resolved by mem[:, t + 1]
+            syn, hsh, ob = det[start], hm[start], obs[start]
+            k = 1
+            while True:
+                zero = ~syn.any(axis=1)
+                if zero.any():
+                    if k == 1:
+                        found[1].append(mem[zero & (ob != 0)])
+                    keep = ~zero
+                    mem, res, syn, hsh, ob = mem[keep], res[keep], syn[keep], hsh[keep], ob[keep]
+                if mem.shape[0] == 0:
+                    break
+                self.states[k] += mem.shape[0]
+                start = mem[:, 0]
+                if k == 1 and wmax >= 2:
+                    # one more mechanism with the start's detector signature
+                    rows, pos = self._lookup(self.h1, hsh)
+                    x = self.o1[pos]
+                    keep = (x > start[rows]) & ((ob[rows] ^ obs[x]) != 0) & (syn[rows] == det[x]).all(axis=1)
+                    found[2].append(np.concatenate([mem[rows[keep]], x[keep, None]], axis=1))
+                if k + 2 <= wmax:
+                    # a pair whose combined signature equals the current syndrome
+                    rows, pos = self._lookup(self.h2, hsh)
+                    a, b = self.pi[pos], self.pj[pos]
+                    keep = (a > start[rows]) & (b > start[rows]) & ((ob[rows] ^ obs[a] ^ obs[b]) != 0)
+                    for c in range(1, k):
+                        prev, hit = mem[rows, c], res[rows, c - 1]
+                        keep &= (a != prev) & (b != prev)
+                        keep &= ~(bits[a, hit] & (a < prev)) & ~(bits[b, hit] & (b < prev))
+                    rows, a, b = rows[keep], a[keep], b[keep]
+                    ok = (syn[rows] == (det[a] ^ det[b])).all(axis=1)
+                    found[k + 2].append(np.concatenate([mem[rows[ok]], a[ok, None], b[ok, None]], axis=1))
+                if k + 1 > wmax - 2:
+                    break
+                # branch: resolve the lowest flipped detector
+                delta = _lowest_set_bit(syn)
+                rows, offsets = _expand(self.inc_ptr[delta + 1] - self.inc_ptr[delta])
+                cand = self.inc_idx[self.inc_ptr[delta[rows]] + offsets]
+                keep = cand > start[rows]
+                for c in range(1, k):
+                    prev, hit = mem[rows, c], res[rows, c - 1]
+                    keep &= (cand != prev) & ~(bits[cand, hit] & (cand < prev))
+                rows, cand = rows[keep], cand[keep]
+                mem = np.concatenate([mem[rows], cand[:, None]], axis=1)
+                res = np.concatenate([res[rows], delta[rows, None]], axis=1)
+                syn, hsh, ob = syn[rows] ^ det[cand], hsh[rows] ^ hm[cand], ob[rows] ^ obs[cand]
+                k += 1
+                budget = self.cmax * (wmax - k)
+                if budget < 64 * self.words:
+                    keep = _popcount_rows(syn) <= budget
+                    mem, res, syn, hsh, ob = mem[keep], res[keep], syn[keep], hsh[keep], ob[keep]
+        out = {}
+        for w, parts in found.items():
+            if not parts:
+                continue
+            sets = np.concatenate(parts, axis=0)
+            if sets.shape[0] == 0:
+                continue
+            sets = _unique_rows(np.sort(sets, axis=1), m)
+            sets = sets[self._irreducible(sets)].astype(np.int64)
+            if sets.shape[0]:
+                out[w] = (sets, np.prod(self.probs[sets], axis=1))
+        return out
+
+
+_CLUSTER_CACHE: OrderedDict[bytes, _ClusterSearch] = OrderedDict()
+_CLUSTER_CACHE_SIZE = 2
+
+
+def _signature_digest(sig: Signature) -> bytes:
+    h = hashlib.blake2b(digest_size=16)
+    for a in (sig.det, sig.obs, sig.probs):
+        h.update(np.ascontiguousarray(a).tobytes())
+    h.update(f"{sig.det.shape} {sig.num_detectors} {sig.num_observables}".encode())
+    return h.digest()
+
+
+def _cluster_search(sig: Signature) -> _ClusterSearch:
+    """The :class:`_ClusterSearch` of ``sig``, kept for the last
+    ``_CLUSTER_CACHE_SIZE`` signatures so that the proxy, ``exact_dcirc``,
+    and ``undetectable_sets`` of one DEM share one search."""
+    key = _signature_digest(sig)
+    cs = _CLUSTER_CACHE.get(key)
+    if cs is None:
+        cs = _ClusterSearch(sig)
+        _CLUSTER_CACHE[key] = cs
+        while len(_CLUSTER_CACHE) > _CLUSTER_CACHE_SIZE:
+            _CLUSTER_CACHE.popitem(last=False)
+    else:
+        _CLUSTER_CACHE.move_to_end(key)
+    return cs
+
+
+def undetectable_logicals(sig: Signature, wmax: int, chunk: int = 64) -> dict[int, tuple[np.ndarray, np.ndarray]]:
+    """Every irreducible undetectable logical fault set of a DEM with at
+    most ``wmax`` mechanisms.
+
+    A set of mechanisms is undetectable when their combined effect flips no
+    detector, logical when it flips some observable, and irreducible when
+    no proper nonempty subset is undetectable. The minimum-weight logical
+    sets are irreducible, and so is every logical set lighter than
+    ``min(d_circ + 3, 2 d_circ)``; in particular, at a circuit distance of
+    5 or 6, every weight-5 and weight-6 logical set.
+
+    Parameters
+    ----------
+    sig
+        :class:`Signature` of the detector error model (fewer than ``2**21``
+        mechanisms).
+    wmax
+        Largest weight listed. The search visits about ``M (c / 2)^(wmax -
+        3)`` states for ``M`` mechanisms and a typical detector degree
+        ``c``: the 2,107-mechanism DEM of the 5x5 surface code at five
+        rounds takes about two seconds at ``wmax = 5`` and ten to twenty
+        seconds at ``wmax = 6`` (2.3e7 states).
+    chunk
+        Starting mechanisms processed together (memory against speed).
+
+    Returns
+    -------
+    dict
+        ``{weight: (sets, probabilities)}`` for every weight present, the
+        sets as sorted ``(N, weight)`` arrays of mechanism indices and the
+        probabilities their products of mechanism probabilities. Results
+        are cached per DEM for the last few signatures.
+    """
+    if wmax < 1:
+        raise ValueError("wmax must be at least 1")
+    if len(sig) == 0:
+        return {}
+    cs = _cluster_search(sig)
+    cached = [w for w in cs.found if w >= wmax]
+    if cached:
+        return {w: v for w, v in cs.found[min(cached)].items() if w <= wmax}
+    res = cs.search(wmax, chunk)
+    cs.found[wmax] = res
+    return res
+
+
+def _pfail_weight3(cs: _ClusterSearch, found: dict, q: np.ndarray, p0: float) -> float:
+    """Failure of the maximum-likelihood decoder over fault sets of weight
+    at most 3 when no undetectable logical set of weight at most 4 exists:
+    a triple is misdecoded only when it shares its syndrome with a set of
+    weight at most 3 of another observable pattern, and the two then form
+    an irreducible weight-5 or weight-6 logical set, so the 3-subsets of
+    ``found[5]`` and ``found[6]`` are the only candidates; they are grouped
+    with the singles and pairs of the same syndromes (every other syndrome
+    carries one observable pattern and fails nowhere)."""
+    parts = []
+    for w in (5, 6):
+        if w in found:
+            combos = np.array(list(itertools.combinations(range(w), 3)), dtype=np.int64)
+            parts.append(found[w][0][:, combos].reshape(-1, 3))
+    if not parts:
+        return 0.0
+    t = _unique_rows(np.concatenate(parts, axis=0), cs.m)
+    hm, obs, det = cs.hm, cs.obs, cs.det
+    h3 = hm[t[:, 0]] ^ hm[t[:, 1]] ^ hm[t[:, 2]]
+    s3 = det[t[:, 0]] ^ det[t[:, 1]] ^ det[t[:, 2]]
+    ids = [h3]
+    ob = [obs[t[:, 0]] ^ obs[t[:, 1]] ^ obs[t[:, 2]]]
+    wt = [q[t[:, 0]] * q[t[:, 1]] * q[t[:, 2]] * p0]
+    rows, pos = cs._lookup(cs.h1, h3)
+    x = cs.o1[pos]
+    x = np.unique(x[(det[x] == s3[rows]).all(axis=1)])
+    ids.append(hm[x])
+    ob.append(obs[x])
+    wt.append(q[x] * p0)
+    rows, pos = cs._lookup(cs.h2, h3)
+    a, b = cs.pi[pos], cs.pj[pos]
+    pos = np.unique(pos[((det[a] ^ det[b]) == s3[rows]).all(axis=1)])
+    a, b = cs.pi[pos], cs.pj[pos]
+    ids.append(cs.h2[pos])
+    ob.append(obs[a] ^ obs[b])
+    wt.append(q[a] * q[b] * p0)
+    return _ml_failure_from_sets(np.concatenate(ids).view(np.int64), np.concatenate(ob), np.concatenate(wt))
+
+
 def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
     """Exact circuit-level distance of a DEM up to ``wmax``.
 
@@ -973,7 +1350,10 @@ def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
         :class:`Signature` of the detector error model; detector signatures
         wider than 64 bits are mapped to integer ids first.
     wmax
-        Largest fault-set weight searched, 4 or 5.
+        Largest fault-set weight searched. Weights up to 4 come from the
+        pair table; beyond, :func:`undetectable_logicals` searches weight
+        by weight, at a cost that grows about twentyfold per weight (6 is
+        practical for a few thousand mechanisms).
 
     Returns
     -------
@@ -982,7 +1362,7 @@ def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
         flips no detector and some observable, ``None`` when no such set of
         weight ``<= wmax`` exists), ``count`` of such minimum-weight sets,
         ``mass`` (their summed probability product), and ``witness`` (one set
-        as mechanism indices).
+        as mechanism indices; the most probable beyond weight 4).
     """
     m = len(sig)
     det1 = sig.det
@@ -1019,18 +1399,21 @@ def exact_dcirc(sig: Signature, wmax: int = 4) -> dict:
         return res
     if wmax < 5 or m < 3:
         return {"d_circ": None, "count": 0, "mass": 0.0, "witness": None}
-    cnt = m * (m - 1) * (m - 2) // 6
-    flat = np.fromiter(itertools.chain.from_iterable(itertools.combinations(range(m), 3)), dtype=np.int64, count=cnt * 3)
-    t = flat.reshape(cnt, 3)
-    det3w = det1[t[:, 0]] ^ det1[t[:, 1]] ^ det1[t[:, 2]]
-    d2b, d3 = _joint_ids(det2w, det3w)
-    o2 = np.argsort(d2b, kind="stable")
-    b3 = obs[t[:, 0]] ^ obs[t[:, 1]] ^ obs[t[:, 2]]
-    p3 = probs[t[:, 0]] * probs[t[:, 1]] * probs[t[:, 2]]
-    res = _cross_hits(d2b[o2], b2[o2], p2[o2], idx2[o2], d3, b3, p3, t, 5)
-    if res is not None:
-        return res
+    for w in range(5, wmax + 1):
+        found = undetectable_logicals(sig, w)
+        if found:
+            return _dcirc_from_logicals(found)
     return {"d_circ": None, "count": 0, "mass": 0.0, "witness": None}
+
+
+def _dcirc_from_logicals(found: dict) -> dict:
+    """The :func:`exact_dcirc` dictionary of the minimum weight present in
+    a result of :func:`undetectable_logicals`."""
+    if not found:
+        return {"d_circ": None, "count": 0, "mass": 0.0, "witness": None}
+    w = min(found)
+    sets, probs = found[w]
+    return {"d_circ": w, "count": int(sets.shape[0]), "mass": float(probs.sum()), "witness": [int(v) for v in sets[int(np.argmax(probs))]]}
 
 
 def _top_sets(sets: list[tuple[np.ndarray, np.ndarray]], limit: int) -> list[tuple[tuple[int, ...], float]]:
@@ -1042,17 +1425,16 @@ def _top_sets(sets: list[tuple[np.ndarray, np.ndarray]], limit: int) -> list[tup
 
 def undetectable_sets(sig: Signature, wmax: int = 3, limit: int = 10, chunk: int = 1_000_000) -> dict:
     """The minimum-weight undetectable logical fault sets of a DEM up to
-    weight ``wmax`` (at most 3), listed by probability: the smallest ``w``
-    such that some ``w`` mechanisms together flip no detector and some
-    observable, the number of such sets, and the ``limit`` most probable
-    of them as ``(mechanism indices, probability product)`` pairs in
-    decreasing probability. ``weight`` is ``None`` and the list empty when
-    no set of weight ``<= wmax`` exists. The weight is the ``d_circ`` of
+    weight ``wmax``, listed by probability: the smallest ``w`` such that
+    some ``w`` mechanisms together flip no detector and some observable,
+    the number of such sets, and the ``limit`` most probable of them as
+    ``(mechanism indices, probability product)`` pairs in decreasing
+    probability. ``weight`` is ``None`` and the list empty when no set of
+    weight ``<= wmax`` exists. The weight is the ``d_circ`` of
     :func:`exact_dcirc` whenever that is at most ``wmax``; the count agrees
     with it. Triples are found as a pair plus a single with the pair's
-    detector signature, scanned ``chunk`` pairs at a time."""
-    if wmax > 3:
-        raise ValueError("undetectable_sets enumerates up to weight 3")
+    detector signature, scanned ``chunk`` pairs at a time; heavier sets
+    come from :func:`undetectable_logicals`, weight by weight."""
     m = len(sig)
     none = {"weight": None, "count": 0, "sets": []}
     if m == 0:
@@ -1118,6 +1500,11 @@ def undetectable_sets(sig: Signature, wmax: int = 3, limit: int = 10, chunk: int
         best_idx, best_prob = best_idx[order], best_prob[order]
     if count:
         return {"weight": 3, "count": count, "sets": _top_sets([(best_idx, best_prob)], limit)}
+    for w in range(4, wmax + 1):
+        found = undetectable_logicals(sig, w)
+        if found:
+            sets, p = found[min(found)]
+            return {"weight": min(found), "count": int(sets.shape[0]), "sets": _top_sets([(sets, p)], limit)}
     return none
 
 
@@ -1426,9 +1813,13 @@ class MemoryObjective:
     bases
         Memory bases evaluated and summed (default both).
     proxy_max_weight
-        2 or 3 for :func:`pfail_low_weight`.
+        Fault-set weight of :func:`pfail_low_weight`: 2, 3, or ``None``
+        (default) for 2 with the escalation to 3 when no undetectable
+        logical fault set of weight at most 4 exists (a circuit distance
+        of 5 or 6, where the weight-2 form is zero).
     with_dcirc
-        Also compute :func:`exact_dcirc` (up to weight 4) in the proxy tier.
+        Also compute :func:`exact_dcirc` (up to weight 4) in the proxy
+        tier; the escalation reports ``d_circ`` (5 or 6) in any case.
     exact_ml_bits
         Largest ``D + O`` for the exact ML decoder of the sampled tier.
     shots, min_failures, max_shots
@@ -1450,7 +1841,7 @@ class MemoryObjective:
         order: str = "hook",
         seed: int = 0,
         bases=BASES,
-        proxy_max_weight: int = 2,
+        proxy_max_weight: int | None = None,
         with_dcirc: bool = False,
         exact_ml_bits: int = 20,
         shots: int = 2000,
@@ -1469,7 +1860,7 @@ class MemoryObjective:
         self.order = order
         self.seed = int(seed)
         self.bases = tuple(bases)
-        self.proxy_max_weight = int(proxy_max_weight)
+        self.proxy_max_weight = None if proxy_max_weight is None else int(proxy_max_weight)
         self.with_dcirc = bool(with_dcirc)
         self.exact_ml_bits = int(exact_ml_bits)
         self.shots = int(shots)
@@ -1517,10 +1908,11 @@ class MemoryObjective:
             "expected_faults": float(sig.probs.sum()),
         }
         if tier == "proxy":
-            out["p_fail"] = pfail_low_weight(sig, self.proxy_max_weight)
-            out["proxy_weight"] = self.proxy_max_weight
-            if self.with_dcirc:
-                dc = exact_dcirc(sig, wmax=4)
+            pr = _proxy_failure(sig, self.proxy_max_weight, 2_000_000, False)
+            out["p_fail"] = pr["p_fail"]
+            out["proxy_weight"] = pr["weight"]
+            if self.with_dcirc or pr["d_circ"] is not None:
+                dc = pr["d_circ"] if pr["d_circ"] is not None else exact_dcirc(sig, wmax=4)
                 out["d_circ"] = dc["d_circ"]
                 out["d_circ_count"] = dc["count"]
                 out["d_circ_mass"] = dc["mass"]
@@ -1551,7 +1943,7 @@ class MemoryObjective:
         tier = self.tier if tier is None else tier
         rounds = self.rounds
         if rounds is None:
-            rounds = target_distance if target_distance is not None else code.distance_exact()
+            rounds = target_distance if target_distance is not None else code_distance(code)
         key = (code_key(code), tier, rounds)
         if use_cache and key in self.cache:
             self.cache_hits += 1

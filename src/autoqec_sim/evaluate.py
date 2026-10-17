@@ -30,6 +30,7 @@ from .memory_objective import (
     BASES,
     TIERS,
     MemoryObjective,
+    code_distance,
     dem_signature,
     exact_dcirc,
     hook_orders,
@@ -77,11 +78,11 @@ class CodeEvaluation:
     bases; ``per_basis`` maps each basis to the dictionary of
     :meth:`MemoryObjective.score_basis` with ``d_circ``, ``d_circ_count``,
     and ``d_circ_mass`` added; ``d_circ`` and ``d_circ_mass`` repeat the
-    exact circuit-level distance (``None`` above 4) and the summed
+    exact circuit-level distance (``None`` above 6) and the summed
     probability product of its minimum-weight undetectable fault sets per
-    basis; ``dominant_faults`` holds the most probable such sets of weight
-    at most 3 over both bases, most probable first (empty for a basis whose
-    ``d_circ`` is 4 or more).
+    basis; ``dominant_faults`` holds the most probable such sets over both
+    bases, most probable first (empty for a basis whose ``d_circ`` is 7 or
+    more).
     """
 
     p_round: float
@@ -170,7 +171,8 @@ def evaluate_code(
     profile
         ``autoqec_sim.noise.Profile``; every rate is multiplied by ``scale``.
     rounds
-        Noisy syndrome-extraction rounds; default the code's exact distance.
+        Noisy syndrome-extraction rounds; default the code's distance
+        (exact up to 20 qubits, the randomized upper bound beyond).
     tier
         ``"proxy"`` (closed form, no decoder), ``"sampled"`` (exact
         maximum likelihood or the lookup decoder), ``"bposd"`` (``ldpc``),
@@ -190,7 +192,7 @@ def evaluate_code(
         code = StabilizerCode.from_stabilizers(code)
     if tier not in TIERS:
         raise ValueError(f"tier must be one of {TIERS}")
-    rounds = code.distance_exact() if rounds is None else int(rounds)
+    rounds = code_distance(code) if rounds is None else int(rounds)
     objective = MemoryObjective(
         profile, scale, rounds, tier, connectivity, seed=seed, shots=shots, min_failures=min_failures, max_shots=max_shots,
     )
@@ -202,10 +204,10 @@ def evaluate_code(
         dem = nm.dem(noisy)
         out = objective.score_basis(mc, dem, tier)
         sig = dem_signature(dem)
-        dc = exact_dcirc(sig, wmax=4)
+        dc = exact_dcirc(sig, wmax=6)
         out["d_circ"], out["d_circ_count"], out["d_circ_mass"] = dc["d_circ"], dc["count"], dc["mass"]
         d_circ[basis], d_circ_mass[basis] = dc["d_circ"], dc["mass"]
-        sets = undetectable_sets(sig, wmax=3, limit=max_faults)
+        sets = undetectable_sets(sig, wmax=6, limit=max_faults)
         if sets["sets"]:
             where = explain_mechanisms(noisy, dem, {i for s, _ in sets["sets"] for i in s})
             faults.extend(DominantFault(basis, s, p, tuple(where[i] for i in s)) for s, p in sets["sets"])
