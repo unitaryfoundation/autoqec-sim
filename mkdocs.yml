@@ -114,6 +114,7 @@ nav:
               - QDX's targets: experiments/qdx_targets.md
               - SAT-designed codes: experiments/sat_codes.md
               - SAT population: experiments/sat_population.md
+              - Proxy against Tesseract: experiments/proxy_tesseract.md
       - Execution:
           - GPU backend: gpu.md
           - CPU profile: profile.md

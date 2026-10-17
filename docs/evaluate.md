@@ -204,9 +204,13 @@ commuting gauge generators.
   chain, board, and Heron profiles
   ([memory objective runs](experiments/memory_objective.md)), within 25
   percent of the exact maximum-likelihood tier on every benchmark code
-  below one expected fault per shot, and within 8 percent of Tesseract on
+  below one expected fault per shot, within 8 percent of Tesseract on
   the 5x5 surface code at five rounds, where 50,000 shots per basis leave
-  Tesseract itself a 30 percent standard error (above).
+  Tesseract itself a 30 percent standard error (above), and at Spearman
+  0.89 and 0.93 against Tesseract over 21 distance-5 codes under the
+  Forte preset at three and five rounds (1.7 and 2.8 expected faults per
+  shot), where it runs about 30 percent low in level
+  ([proxy against Tesseract](experiments/proxy_tesseract.md)).
 - The proxy is a leading-order estimate. It holds while `expected_faults`
   per shot stays below about one and underestimates above that; the
   sampled tiers take over there.

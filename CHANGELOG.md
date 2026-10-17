@@ -41,6 +41,11 @@
   and `sat_codes`; the noise-aware, topology, and evolutionary-search
   reports move from the untracked `runs/` directories to
   `experiments/<name>/REPORT.md`.
+- A tracked validation experiment of the evaluator: `experiments/
+  proxy_tesseract` scores the 5x5 rotated surface code, its XZZX
+  deformation, and 19 random Clifford deformations of distance 5 with the
+  proxy tier and with 50,000 Tesseract shots per basis, at three and five
+  rounds, and reports the rank agreement, the ratio, and the cost.
 - Subsystem codes: `SubsystemCode.from_gauge` derives the center, the
   bare logicals, and a gauge fixing from independent gauge generators;
   the memory circuit measures the gauge generators in batches and reads
