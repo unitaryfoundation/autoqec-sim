@@ -2166,30 +2166,22 @@ not, applies a noise model with sourced device parameters, and returns the
 logical error per round, the exact circuit-level distance, and the
 dominant fault sets explained back to gates and qubits, without sampling
 or a decoder.</p>
-<p>The evaluator builds an <code>R</code>-round memory circuit with one ancilla per
-generator in a hook-aware gate order, derives stim's detector error model
-<sup id="fnref:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">1</a></sup>, and scores it at one of four tiers: a closed-form
-maximum-likelihood proxy over low-weight fault sets, exact maximum
-likelihood or a lookup decoder, BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">2</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">3</a></sup>, or
-Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">4</a></sup>. The proxy is exact to leading order at circuit
-distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
-0.90) and like 50,000 Tesseract shots over 21 distance-5 codes (Spearman
-0.89 to 0.93), and runs about 30 percent low in level at 1.7 to 2.8
-expected faults per shot. The
-<a href="evaluate/">Evaluate a code</a> page has the fields, the tiers, the
-validation, and the limits.</p>
-<p>Candidates can come from anywhere. The package ships three proposers and
-the tools that verify what they find: a SAT-population pipeline over the
-codes of <sup id="fnref:dalfavero2026"><a class="footnote-ref" href="#fn:dalfavero2026">5</a></sup>, an evolutionary search, and a PPO agent in the
-gate-by-gate formulation of <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">6</a></sup>, all on a batched
-Aaronson-Gottesman tableau with a bit-identical torch and CUDA path. The
-<a href="experiments/">experiments</a> record what each has found: over 2,145
-SAT-designed codes the code-capacity ranking carries almost no information
-about the circuit-level rate (Spearman 0.00 to 0.18), the gate-by-gate
-agents rediscover the small codes and reach distance 3 on every lattice
-tried but do not get past 12 qubits under a sparsity constraint, and a
-schedule synthesizer raised the
-fault distance of the qldpc-challenge [[49,13,4]] circuit from 2 to 3.</p>
+<ul>
+<li><strong>Four scoring tiers</strong> on stim's detector error model <sup id="fnref:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">1</a></sup>: a
+  closed-form maximum-likelihood proxy over low-weight fault sets (no
+  shots, no decoder), exact maximum likelihood or a lookup decoder, BP+OSD
+  <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">2</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">3</a></sup>, and Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">4</a></sup>. The proxy ranks
+  codes the way the sampled decoders do and holds below about one expected
+  fault per shot; <a href="evaluate/">Evaluate a code</a> has the validation and
+  the limits.</li>
+<li><strong>Three proposers</strong> and the tools that verify what they find: a
+  SAT-population pipeline over the codes of <sup id="fnref:dalfavero2026"><a class="footnote-ref" href="#fn:dalfavero2026">5</a></sup>, an
+  evolutionary search, and a PPO agent in the gate-by-gate formulation of
+  <sup id="fnref:olle2024"><a class="footnote-ref" href="#fn:olle2024">6</a></sup>, on a batched Aaronson-Gottesman tableau with a torch and
+  CUDA path.</li>
+<li><strong>Tracked experiments</strong>: the <a href="experiments/">experiments</a> hold
+  what each has found, with a figure and the commands that reproduce it.</li>
+</ul>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
 <p>Install with <code>pip install git+https://github.com/unitaryfoundation/autoqec-sim</code>,
 then evaluate the rotated surface code under three rounds of depolarizing
