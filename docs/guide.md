@@ -58,7 +58,7 @@ enumerators.
 the evolutionary search matches PPO on the three-topology matrix at a
 fraction of the wall time, PPO is the more step-efficient of the two and
 needs the permutation-equivariant policy from 12 qubits, and neither
-scales past about 16 qubits under a sparsity constraint.
+gets past 12 qubits under a sparsity constraint.
 
 ## 4. Choose where the kernels run
 

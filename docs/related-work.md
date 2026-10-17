@@ -125,6 +125,56 @@ detector-error-model work; Clifft [@chase2026] is the Unitary Foundation's
 near-Clifford sampler; [@fur2026] reports hardware error-detection
 experiments from the same group.
 
+## Evaluating codes under circuit-level noise
+
+The evaluator's proxy is a leading-order count of the minimum-weight
+undetectable fault sets of the extraction circuit, decoded by maximum
+likelihood over those sets alone, and its ingredients are standard.
+Counting malignant pairs of fault locations bounded circuit-level failure
+to leading order in the threshold proofs of [@aliferis2006];
+[@fowler2013] enumerated the minimum-weight fault configurations of a
+periodic surface-code circuit to give its low-rate logical error
+analytically for arbitrary per-gate Pauli noise; and [@beverland2019]
+showed that the number of minimum-weight failing configurations, the
+entropy term, sets the low-rate logical error alongside the distance,
+which is what separates codes of equal distance on the same footprint
+here. Where the leading order ends, sampling takes over; the rare-event
+splitting method of [@bravyi2013] reaches rates below what direct
+sampling gives, and this package raises the noise scale instead of
+implementing it. The reference decoders are minimum-weight matching in
+its sparse-blossom implementation [@higgott2025], BP+OSD [@roffe2020;
+@panteleev2021], and the Tesseract most-likely-error search [@beni2025].
+Which of 39 Clifford deformations of the distance-3 surface code is best
+depends on the decoder, with PyMatching against BP+OSD at Pearson 0.88
+under one circuit-level noise model and 0.30 under another
+[@bonnelykke2026], which is why the validation here
+(`experiments/proxy_tesseract/REPORT.md`) is against a near-maximum-
+likelihood decoder. Circuit noise models built from device parameters go
+back to the superconducting-inspired SI1000 model of [@gidney2021b]; the
+presets here are the same kind of object, assembled from public
+specifications. Flag-qubit extraction with two extra qubits for
+distance-3 codes [@chao2018] and with flag ancillas for arbitrary
+distance [@chamberland2018] is what the one-flag option (one flag on each
+generator of weight three or more) approximates. Subsystem codes are
+measured through their gauge generators in the stabilizer formalism of
+[@poulin2005], with the bare logical operators of [@bravyi2011]; the
+Bacon-Shor code [@bacon2006] and the heavy-hexagon code [@chamberland2020]
+are the two shipped. The published memory experiments the evaluator is
+compared against (`experiments/hardware_comparison/REPORT.md`) are the
+distance-3 surface codes of [@acharya2023; @acharya2025], the Steane code
+on a trapped-ion processor [@ryananderson2021], the toric and bivariate
+bicycle [@bravyi2024] codes on a 40-ion chain [@tham2026], and the
+heavy-hexagon subsystem code [@sundaresan2023]; that comparison is of the
+package's model on its own circuit against each paper's reported number,
+not a prediction of the devices.
+
+Where this package stands: the leading-order estimator applies the
+counting of [@fowler2013] and [@beverland2019] to the extraction circuit
+of an arbitrary stabilizer code through stim's detector error model
+[@gidney2021], with the enumeration carried to weight-3 fault sets at
+circuit distance 5 and 6; the decoders, noise models, and experiments it
+is checked against are prior work.
+
 ## Reviews
 
 AI for quantum error correction [@wang2024], reinforcement learning for

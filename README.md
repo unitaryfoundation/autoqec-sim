@@ -2,7 +2,6 @@
   <img src="docs/assets/logos/autoqec-sim.svg" alt="autoqec-sim" width="420">
 </p>
 
-[![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)
 [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://unitaryfoundation.github.io/autoqec-sim/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![CI](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml)
@@ -33,9 +32,9 @@ sets (no shots, no decoder), exact maximum likelihood or a lookup decoder,
 BP+OSD, or Tesseract. The proxy is exact to leading order at circuit
 distance up to 6 and agrees with the sampled decoders where they overlap:
 Spearman 0.78 to 0.90 against BP+OSD over 32 random [[9,1,3]] codes, and
-within the sampling error of 50,000 Tesseract shots on the 5x5 surface
-code at five rounds (8 percent apart, where the shots leave Tesseract a 30
-percent standard error). Beside the rate it returns
+Spearman 0.89 to 0.93 against 50,000 Tesseract shots over 21 distance-5
+codes under the Forte preset, where it runs about 30 percent low in level
+at 1.7 to 2.8 expected faults per shot. Beside the rate it returns
 the exact circuit-level distance up to weight 6, the probability mass of
 the minimum-weight undetectable fault sets, and the most probable of them
 as circuit locations.
@@ -53,28 +52,34 @@ from public specifications, not device measurements.
 
 ## What the proposers have found
 
-The evaluator exists because two cheaper rankings fail. Over 2,150
-SAT-designed nine-qubit codes, the code-capacity logical error rate has
-rank correlation 0.00 to 0.21 with the circuit-level rate and none of the
-twenty best codes by one score is among the twenty best by the other,
-while the best codes of the population sit 30 to 40 percent below XZZX
-under biased noise. The gate-by-gate search of Olle, Zen, Puviani, and
+The evaluator exists because two cheaper rankings fail. Over a
+population of 2,145 SAT-designed nine-qubit codes, the code-capacity
+logical error rate has rank correlation 0.00 to 0.18 with the sampled
+circuit-level rate, none of the twenty best codes by one score is among
+the twenty best by the other, and the best codes of the population sit 30
+to 40 percent below XZZX at bias 10 and under the Forte preset. The
+proposers' own encoder-level objective, the undetected single-fault mass
+of the encoding circuit, cannot tell a code from its local-Clifford
+deformations, because a Hadamard at the end of the encoder only relabels
+detected weight-1 faults. The gate-by-gate search of Olle, Zen, Puviani, and
 Marquardt
 ([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
 reimplemented here with PPO and an evolutionary search, rediscovers
-[[5,1,3]], Steane, Shor, and the rotated surface code, reaches distance 3
+[[5,1,3]], Steane, and the rotated surface code, reaches distance 3
 on square, triangular, and heavy-hex lattices at 9 to 18 qubits in 18 of
 18 PPO runs and 17 of 18 evolutionary runs, matched 24 of the 45 published
 QDX targets it ran within 10 minutes each, and found a [[25,1,5]] code on
-the 5x5 lattice. It does not scale past about 16 qubits under a sparsity
-constraint, and the SAT formulation of DalFavero et al.
-([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs codes with
-up to 100 qubits in minutes; such codes go into the evaluator as they are.
+the 5x5 lattice. Under a sparsity constraint (generator weight at most 4)
+it does not get past 12 qubits, and the SAT formulation of DalFavero et al.
+([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs
+physics-inspired codes with up to 100 qubits in minutes; such codes go
+into the evaluator as they are.
 A schedule synthesizer assigns the CX layers of a fixed code's extraction
 circuit against the exact circuit-level fault distance and raised that
 distance from 2 to 3 for the qldpc-challenge [[49,13,4]] circuit. The
 [experiments pages](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
-hold each result with its figure and the commands that reproduce it.
+and the reports under `experiments/` hold each result with the commands
+that reproduce it.
 
 ## Why autoqec-sim?
 

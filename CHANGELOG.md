@@ -56,6 +56,16 @@
   checked against the paper's text, the assumptions are listed per row,
   and the page states that the comparison is model against reported
   number, not a device prediction.
+- README and docs-home claims checked against the tracked reports: the
+  SAT population is 2,145 codes with Spearman 0.00 to 0.18 at the sampled
+  tier (not "over 2,150" and 0.21, which spliced two tiers), Shor's code is
+  not among the rediscovered codes, the sparsity-constrained search stops
+  at 12 qubits (not 16), the DalFavero et al. result is for
+  physics-inspired codes, and the Tesseract agreement now cites the tracked
+  distance-5 experiment. The GPU-scale report behind the [[25,1,5]] result
+  moves from the untracked runs directory to `experiments/gpu_scale/
+  REPORT.md`. The related-work page gets a section on evaluating codes
+  under circuit-level noise with twelve verified references.
 - Subsystem codes: `SubsystemCode.from_gauge` derives the center, the
   bare logicals, and a gauge fixing from independent gauge generators;
   the memory circuit measures the gauge generators in batches and reads

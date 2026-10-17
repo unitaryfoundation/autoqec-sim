@@ -48,7 +48,7 @@ experiment with its question, result, and commands.
 | `memory_ppo` | The 4x4 protocol with the memory objective as the noise term, a second run without the LDPC term, and `score` for the discovered and reference codes under every profile and tier. |
 | `qdx_targets` | QDX's published all-to-all target set through this package's PPO at matched settings. |
 | `sat_codes` | Fifteen SAT-designed biased-noise codes under the circuit-level memory objective against the rotated surface and XZZX codes. |
-| `sat_population` | The same question over 2,150 SAT-sampled codes, with the structural features of each code's extraction circuit. |
+| `sat_population` | The same question over 2,145 SAT-sampled codes, with the structural features of each code's extraction circuit. |
 
 ## Layout
 

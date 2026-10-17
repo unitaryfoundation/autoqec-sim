@@ -17,7 +17,6 @@ call and without sampling, for codes from any source.
 
 </div>
 
-[![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)
 [![CI](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/unitaryfoundation/autoqec-sim/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/unitaryfoundation/autoqec-sim/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](getting-started/installation.md)
@@ -40,8 +39,9 @@ maximum-likelihood proxy over low-weight fault sets, exact maximum
 likelihood or a lookup decoder, BP+OSD [@roffe2020; @panteleev2021], or
 Tesseract [@beni2025]. The proxy is exact to leading order at circuit
 distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
-0.90), and lands within the sampling error of 50,000 Tesseract shots on
-the 5x5 surface code at five rounds. The
+0.90) and like 50,000 Tesseract shots over 21 distance-5 codes (Spearman
+0.89 to 0.93), and runs about 30 percent low in level at 1.7 to 2.8
+expected faults per shot. The
 [Evaluate a code](evaluate.md) page has the fields, the tiers, the
 validation, and the limits.
 
@@ -50,11 +50,12 @@ the tools that verify what they find: a SAT-population pipeline over the
 codes of [@dalfavero2026], an evolutionary search, and a PPO agent in the
 gate-by-gate formulation of [@olle2024], all on a batched
 Aaronson-Gottesman tableau with a bit-identical torch and CUDA path. The
-[experiments](experiments/index.md) record what each has found: over 2,150
-SAT-designed codes the code-capacity ranking carries no information about
-the circuit-level rate, the gate-by-gate agents rediscover the small codes
-and reach distance 3 on every lattice tried but do not scale past about 16
-qubits under a sparsity constraint, and a schedule synthesizer raised the
+[experiments](experiments/index.md) record what each has found: over 2,145
+SAT-designed codes the code-capacity ranking carries almost no information
+about the circuit-level rate (Spearman 0.00 to 0.18), the gate-by-gate
+agents rediscover the small codes and reach distance 3 on every lattice
+tried but do not get past 12 qubits under a sparsity constraint, and a
+schedule synthesizer raised the
 fault distance of the qldpc-challenge [[49,13,4]] circuit from 2 to 3.
 
 ## Quick Example

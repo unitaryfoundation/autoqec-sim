@@ -102,8 +102,8 @@ with the equivariant policy and a larger batch.
 
 Files. Every run writes ``experiments/gpu_scale/runs/run_<target>[_<profile>]_seed
 <k>.json`` and a log under ``experiments/gpu_scale/runs/logs/``; ``report`` writes
-``experiments/gpu_scale/runs/REPORT.md`` from the JSON files. ``python -m
-experiments.gpu_scale.run --help``; ``docs/gpu_run.md`` has the
+``experiments/gpu_scale/REPORT.md`` from the JSON files. ``python -m
+experiments.gpu_scale.run --help``; ``docs/gpu.md`` has the
 pod commands.
 """
 
@@ -155,6 +155,7 @@ from ..noise_aware.run import _fmt, _json_default, _mean_range
 
 DEFAULT_OUT = Path("experiments/gpu_scale/runs")
 DEFAULT_BASELINES = Path("experiments/noise_aware/runs/baselines_4x4.json")
+REPORT = Path("experiments/gpu_scale/REPORT.md")
 PROFILES = na.PROFILES
 SEEDS = (0, 1, 2)
 THREADS = 6
@@ -1550,7 +1551,7 @@ def write_report(out_dir: Path, baselines_path: Path = DEFAULT_BASELINES, extra_
         f"`{out_dir}/` or one of its extra directories (named in the last column of each table, relative to `{out_dir}/`;",
         f"by default the subdirectories {list(EXTRA_DIRS)} hold a second mode of a target run with its own `--out-dir`); the tables regenerate with",
         "`uv run --extra rl python -m experiments.gpu_scale.run report`. Code:",
-        "`experiments/gpu_scale/run.py`; pod commands in `docs/gpu_run.md`.",
+        "`experiments/gpu_scale/run.py`; pod commands in `docs/gpu.md`.",
         "",
         "This report extends, and does not replace, `experiments/noise_aware/REPORT.md` (the 45-run",
         "noise-aware experiment, whose 4x4 cells all failed with the flat MLP at 256 episodes) and",
@@ -1614,7 +1615,7 @@ def write_report(out_dir: Path, baselines_path: Path = DEFAULT_BASELINES, extra_
         "```",
         "",
     ]
-    path = out_dir / "REPORT.md"
+    path = REPORT
     out_dir.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(L))
     return path
