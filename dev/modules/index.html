@@ -733,9 +733,25 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../experiments/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -749,7 +765,275 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Experiments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/noise_aware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise-aware discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/memory_objective/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory objective runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/scaling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RL scaling probe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/topologies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Three-topology matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/topologies_ea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evolutionary search against PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/qdx_targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QDX's targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/sat_codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAT-designed codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/sat_population/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAT population
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1834,7 +2118,7 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.memory_objective</code></td>
-<td>Multi-round memory objective: an <code>R</code>-round syndrome-extraction circuit for arbitrary (non-CSS) stabilizer generators with one ancilla per generator, hook-aware gate orders, commutation-respecting batches, optional one-flag ancillas, all-to-all or square-lattice layouts with routed long-range gates; the <code>autoqec_sim.noise</code> profile with its timing model, stim's detector error model, and four fidelity tiers for the logical error rate per round (closed-form low-weight maximum-likelihood proxy with exact <code>d_circ</code>, exact ML or lookup-decoder sampling, pinned BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">14</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">15</a></sup> sampling, Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">16</a></sup> sampling); <code>undetectable_sets</code> lists the minimum-weight undetectable fault sets by probability. <code>MemoryReward</code> is the environment reward; see docs/experiments.md and <code>docs/memory_objective.md</code>.</td>
+<td>Multi-round memory objective: an <code>R</code>-round syndrome-extraction circuit for arbitrary (non-CSS) stabilizer generators with one ancilla per generator, hook-aware gate orders, commutation-respecting batches, optional one-flag ancillas, all-to-all or square-lattice layouts with routed long-range gates; the <code>autoqec_sim.noise</code> profile with its timing model, stim's detector error model, and four fidelity tiers for the logical error rate per round (closed-form low-weight maximum-likelihood proxy with exact <code>d_circ</code>, exact ML or lookup-decoder sampling, pinned BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">14</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">15</a></sup> sampling, Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">16</a></sup> sampling); <code>undetectable_sets</code> lists the minimum-weight undetectable fault sets by probability, and <code>undetectable_logicals</code> enumerates every irreducible one up to weight 6 by a cluster search, which carries the proxy to circuit distance 5 and 6. <code>MemoryReward</code> is the environment reward; see docs/experiments/index.md and <code>docs/memory_objective.md</code>.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.evaluate</code></td>
@@ -1862,11 +2146,11 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.experiments.noise_aware</code></td>
-<td>The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines, report and figures); see docs/experiments.md.</td>
+<td>The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines, report and figures); see docs/experiments/index.md.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.experiments.scaling</code></td>
-<td>The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on <code>[[16, 1, 4]]</code> (curriculum, macro actions, equivariant policy, batch and entropy, episode cap), and LDPC-constrained <code>[[n, k, 3]]</code> targets at <code>n = 12</code> to <code>16</code>; see docs/experiments.md.</td>
+<td>The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on <code>[[16, 1, 4]]</code> (curriculum, macro actions, equivariant policy, batch and entropy, episode cap), and LDPC-constrained <code>[[n, k, 3]]</code> targets at <code>n = 12</code> to <code>16</code>; see docs/experiments/index.md.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.experiments.ldpc_scaling</code></td>
@@ -1882,7 +2166,7 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.experiments.topologies</code></td>
-<td>The three-topology run matrix: the PPO agent alone on square, triangular, and heavy-hex lattices at two qubit-count tiers, one objective (<code>[[n, 1, 3]]</code>, no idle qubit, H and CNOT on lattice edges, 50-gate cap), common metrics per cell (steps to success, exact <code>d</code>, <code>w*</code>, qubit degree, weight enumerators, Heron and board fault masses, rotated surface baseline); see docs/experiments.md.</td>
+<td>The three-topology run matrix: the PPO agent alone on square, triangular, and heavy-hex lattices at two qubit-count tiers, one objective (<code>[[n, 1, 3]]</code>, no idle qubit, H and CNOT on lattice edges, 50-gate cap), common metrics per cell (steps to success, exact <code>d</code>, <code>w*</code>, qubit degree, weight enumerators, Heron and board fault masses, rotated surface baseline); see docs/experiments/index.md.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.experiments.memory_objective</code></td>

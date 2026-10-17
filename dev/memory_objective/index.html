@@ -741,9 +741,25 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../experiments/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -757,7 +773,275 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Experiments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/noise_aware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise-aware discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/memory_objective/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory objective runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/scaling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RL scaling probe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/topologies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Three-topology matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/topologies_ea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evolutionary search against PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/qdx_targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QDX's targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/sat_codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAT-designed codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/sat_population/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAT population
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2026,7 +2310,7 @@ tested with the Knill-Laflamme <sup id="fnref:knill1997"><a class="footnote-ref"
 end of the encoder relabels the weight-1 faults of the last layer, all of
 which the code detects, so the objective cannot distinguish a code from its
 local-Clifford deformations (the rotated surface code, XZZX <sup id="fnref:bonillaataides2021"><a class="footnote-ref" href="#fn:bonillaataides2021">2</a></sup>, and the
-outer-column deformation tie exactly in <code>experiments/noise_aware/runs/REPORT.md</code>,
+outer-column deformation tie exactly in <code>experiments/noise_aware/REPORT.md</code>,
 verdict items 3, 4, and 6). Bias tailoring is a statement about how the
 code's stabilizers align with the dominant fault type during repeated
 syndrome extraction, so the reward has to be a memory experiment.</p>
@@ -2101,7 +2385,22 @@ rounds <code>R</code> (default the target distance), a layout, and a tier.</p>
      circuit-level distance up to weight 4 with the count and summed
      probability product of the minimum-weight undetectable logical fault
      sets (ported from <code>ion-search/lib.py</code>; signatures wider than 64
-     detectors go through integer ids). Weight-3 sets are added when the
+     detectors go through integer ids). When no undetectable logical set
+     of weight at most 4 exists (a circuit distance of 5 or 6) the
+     weight-2 form is zero, and the proxy escalates to weight 3 without a
+     triple table: <code>undetectable_logicals</code> lists every weight-5 and
+     weight-6 undetectable logical set by a cluster search over the
+     detector hypergraph (a set is grown from its smallest member by
+     resolving the lowest flipped detector with one of its incident
+     mechanisms, the last two members come from the pair table, and a
+     canonical rule gives each set one derivation), and their 3-subsets
+     are the only triples the decoder can get wrong. The search visits
+     about <code>M (c / 2)^3</code> states for <code>M</code> mechanisms and detector degree
+     <code>c</code>: about a second for the 5x5 surface code at one round (475
+     mechanisms) and 20 s per basis at five rounds (2,107 mechanisms,
+     2.3e7 states), where 20,000 Tesseract shots take 45 s.
+     <code>exact_dcirc(sig, wmax=6)</code> and <code>undetectable_sets(sig, wmax=6)</code> use
+     the same search. Weight-3 sets are also enumerated directly when the
      number of triples is small (<code>proxy_max_weight=3</code>).</li>
 <li><code>sampled</code>: when <code>D + O &lt;= 20</code> (detectors plus observables) the exact
      maximum-likelihood decoder by dynamic program over the joint
@@ -2408,7 +2707,7 @@ is 1e-5 per gate slot at this scale while its readout flips 2.25e-3 per
 ancilla dominate, consistent with the ion-search finding that the chain
 set makes measurement error dominant. The encoder objective could not
 separate the two codes under any profile (exact tie,
-<code>experiments/noise_aware/runs/REPORT.md</code> item 4).</p>
+<code>experiments/noise_aware/REPORT.md</code> item 4).</p>
 <h2 id="lattice-layout">Lattice layout<a class="headerlink" href="#lattice-layout" title="Permanent link">&para;</a></h2>
 <p><code>lattice.json</code>, <code>R = 3</code>, proxy, Z-basis circuit statistics over three
 rounds:</p>

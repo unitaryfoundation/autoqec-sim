@@ -2,110 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/evaluate/</loc>
-         <lastmod>2026-10-16</lastmod>
-    </url>
-    <url>
-         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/gpu/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/guide/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/ldpc/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/memory_objective/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/modules/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/noise/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/noise_presets/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/profile/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/regression/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/related-work/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/reproduce/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/autoqec_sim/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/backends/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/code/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/env/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/noise/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/api/schedule/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/development/changelog/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/development/contributing/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/development/releasing/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/memory_objective/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/noise_aware/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/qdx_targets/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/sat_codes/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/sat_population/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/scaling/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/topologies/</loc>
+         <lastmod>2026-10-17</lastmod>
+    </url>
+    <url>
+         <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/experiments/topologies_ea/</loc>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/choosing-a-workflow/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/installation/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/getting-started/quickstart/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
     <url>
          <loc>https://unitaryfoundation.github.io/autoqec-sim/dev/reference/commands/</loc>
-         <lastmod>2026-10-16</lastmod>
+         <lastmod>2026-10-17</lastmod>
     </url>
 </urlset>

@@ -1,7 +1,7 @@
 """Evaluate a code under a device profile: a code given as stabilizer strings,
-the proxy tier, then the Tesseract tier. The documentation page
-docs/evaluate.md includes the two marked sections; tests/test_evaluate_code.py
-runs the first."""
+the proxy tier, the Tesseract tier, then a distance-5 code. The documentation
+page docs/evaluate.md includes the three marked sections;
+tests/test_evaluate_code.py runs the first; the third takes about a minute."""
 
 # --8<-- [start:proxy]
 from autoqec_sim import evaluate_code
@@ -34,3 +34,20 @@ for basis in ("Z", "X"):
     s = sampled.per_basis[basis]["sampling"]
     print(f"  {basis}: {s['failures']} failures in {s['shots']} shots, {s['distinct_syndromes']} distinct syndromes")
 # --8<-- [end:tesseract]
+
+# --8<-- [start:distance5]
+# A distance-5 code: the 5x5 rotated surface code at five rounds. No fault
+# set of weight at most 4 is undetectable, so the weight-2 proxy is zero and
+# the proxy tier escalates to weight 3 through the weight-5 and weight-6
+# undetectable sets (a cluster search over the detector hypergraph, about
+# 20 s per basis for this 2,100-mechanism model).
+from autoqec_sim.known_codes import rotated_surface
+
+d5 = evaluate_code(rotated_surface(5), presets.depolarizing(1e-3), rounds=5)
+print(f"error per round {d5.p_round:.2e}  d_circ {d5.d_circ}  proxy weight {d5.per_basis['Z']['proxy_weight']}")
+for basis in ("Z", "X"):
+    s = d5.per_basis[basis]
+    print(f"  {basis}: {s['d_circ_count']} weight-5 undetectable sets, mass {s['d_circ_mass']:.1e}, p_fail {s['p_fail']:.2e}")
+top = d5.dominant_faults[0]
+print(f"{top.basis} basis, probability {top.probability:.1e}, {len(top.mechanisms)} mechanisms")
+# --8<-- [end:distance5]
