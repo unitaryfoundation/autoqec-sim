@@ -2561,6 +2561,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#autoqec_sim.memory_objective.interleaved_slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;interleaved_slots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.memory_objective.interleavable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;interleavable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#autoqec_sim.memory_objective.code_distance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3988,6 +4010,28 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;layout_for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.memory_objective.interleaved_slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;interleaved_slots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.memory_objective.interleavable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;interleavable
       
     </span>
   </a>
@@ -7764,14 +7808,21 @@ cluster search beyond), for the fault report of
 <p>Circuits (<code>build_memory_circuit</code>). Every generator <code>g_j</code> gets an
 ancilla prepared in <code>|+&gt;</code>, controlled-<code>P</code> gates (<code>CX</code>, <code>CY</code>,
 <code>CZ</code>) onto its support in a fixed order, then <code>H</code> and a <code>Z</code>-basis
-measurement. Generators that share a qubit with different Pauli letters
-cannot be interleaved (their controlled gates on that qubit do not
-commute), so the generators are colored into batches of mutually
-interleavable generators (for a CSS code: the X block and the Z block)
-which run one after another; inside a batch the gates are packed into
-layers as soon as possible with one gate per qubit per layer. Under the
-sequential timing of the ion presets every two-qubit gate is its own time
-slot anyway, so the batch structure costs nothing there. Preparation and
+measurement. By default every generator runs in one interleaved block with
+one measurement per round: the gate orders are chosen jointly among the
+hook-safe ones (<code>hook_orders</code>) and each generator's gates take layers
+inside a round as short as the longest generator allows, such that no
+qubit sees two gates in one layer and, for every pair of generators that
+share qubits with different Pauli letters, an even number of those qubits
+sees one generator first (otherwise an ancilla would measure its generator
+times <code>Z</code> of another ancilla, a random outcome). The standard four-layer
+surface-code cycle is one such schedule. When no schedule exists within
+the search cap (the Steane code), the generators fall back to batches of
+mutually interleavable ones, one block after another with their own
+measurements (<code>extraction="batched"</code> forces this). A
+<code>autoqec_sim.code.SubsystemCode</code> is measured through its gauge
+generators, in batches, and each stabilizer's detector compares the parity
+of the gauge outcomes whose product it is. Preparation and
 final readout are noiseless <code>MPP</code> measurements of every generator and of
 the logical operators of the chosen basis (<code>Z</code> or <code>X</code> memory);
 detectors compare consecutive measurements of each generator, and the
@@ -8444,6 +8495,24 @@ every basis); the best summed <code>p_round</code> is kept.</p>
                   <code>1</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extraction</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"auto"</code> (one interleaved block with one measurement per round
+when the hook-safe orders allow it, else batches), <code>"interleaved"</code>,
+or <code>"batched"</code>; see <code>build_memory_circuit</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;auto&#39;</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -8757,18 +8826,74 @@ corner data qubits and to nothing else.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="autoqec_sim.memory_objective.interleaved_slots" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">interleaved_slots</span>
+
+
+<a href="#autoqec_sim.memory_objective.interleaved_slots" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">interleaved_slots</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">supports</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">flags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"none"</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">skip</span><span class="o">=</span><span class="p">(),</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">node_cap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The layer of every data gate of every generator in one interleaved
+block, for fixed gate orders <code>supports</code>: the round is as short as the
+longest generator allows (plus up to two layers of slack), each
+generator takes one of its <code>_slot_options</code>, and every pair passes
+<code>_pair_ok</code>. <code>None</code> when no assignment exists within the search
+cap. Generators in <code>skip</code> (routed ones) get an empty tuple.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="autoqec_sim.memory_objective.interleavable" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">interleavable</span>
+
+
+<a href="#autoqec_sim.memory_objective.interleavable" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">interleavable</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">supports</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">flags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"none"</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">skip</span><span class="o">=</span><span class="p">(),</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Whether the gate orders <code>supports</code> can run as one interleaved block
+(<code>interleaved_slots</code> finds a layer assignment).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="autoqec_sim.memory_objective.code_distance" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">code_distance</span>
 
 
 <a href="#autoqec_sim.memory_objective.code_distance" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_distance</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_distance</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>The code's exact distance up to <code>EXACT_MAX_N</code> qubits, else the
-randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
+randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>;
+a subsystem code answers with its gauge-fixed stabilizer code.</p>
 
 
     </div>
@@ -8784,16 +8909,26 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 
 <a href="#autoqec_sim.memory_objective.hook_orders" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">hook_orders</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">target</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">interleave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">flags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"none"</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Hook-aware gate orders of every generator (<code>_hook_order</code>);
-<code>target</code> defaults to <code>code_distance</code>.</p>
+        <p>Hook-aware gate orders of every measured generator (<code>_hook_order</code>);
+<code>target</code> defaults to <code>code_distance</code>. With <code>interleave</code> the
+orders are chosen jointly, among the hook-safe ones, so that every
+generator can run in one interleaved block with one measurement per
+round (<code>interleavable</code>); when no such choice exists within the
+search cap, each generator gets its first hook-safe order and the
+circuit falls back to batches. <code>flags</code> is the flag variant the circuit
+will use, which shifts the gate layers of the flagged generators. A
+subsystem code's measured generators are its gauge generators, ordered
+against its gauge-fixed stabilizer code and never interleaved.</p>
 
 
     </div>
@@ -8809,7 +8944,7 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 
 <a href="#autoqec_sim.memory_objective.build_memory_circuit" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">build_memory_circuit</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Z"</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">connectivity</span><span class="o">=</span><span class="s2">"all_to_all"</span><span class="p">,</span>
@@ -8818,7 +8953,8 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">hook_target</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">orders</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemoryCircuit</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">extraction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemoryCircuit</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8847,11 +8983,19 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 
   
       dataclass
-   (autoqec_sim.code.StabilizerCode)" href="../code/#autoqec_sim.code.StabilizerCode">StabilizerCode</a></code>
+   (autoqec_sim.code.StabilizerCode)" href="../code/#autoqec_sim.code.StabilizerCode">StabilizerCode</a> | <a class="autorefs autorefs-internal" title="            SubsystemCode
+
+
+  
+      dataclass
+   (autoqec_sim.code.SubsystemCode)" href="../code/#autoqec_sim.code.SubsystemCode">SubsystemCode</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Stabilizer code.</p>
+                <p>Stabilizer code, or a <code>SubsystemCode</code>, whose gauge generators
+are measured (one ancilla each, in batches of mutually interleavable
+generators, never one interleaved block) and whose stabilizers are
+read as parities of the gauge outcomes.</p>
               </div>
             </td>
             <td>
@@ -8987,6 +9131,27 @@ generator, as <code>hook_orders</code> returns them).</p>
             </td>
             <td>
                   <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extraction</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"auto"</code>: every unrouted generator runs in one interleaved block
+with one measurement per round when the orders allow it
+(<code>interleavable</code>), else the generators run in batches of
+mutually interleavable ones, one block after another, each with its
+own measurement; <code>"interleaved"</code> requires the block (<code>ValueError</code>
+otherwise); <code>"batched"</code> always batches.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;auto&#39;</code>
             </td>
           </tr>
       </tbody>
@@ -9736,12 +9901,13 @@ at one half. Agrees with <code>1 - (1 - p)^(1/R)</code> to first order in <code>
 
 
 <a href="#autoqec_sim.memory_objective.code_key" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_key</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_key</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Canonical key of the stabilizer group (reduced row echelon form).</p>
+        <p>Canonical key of the stabilizer group (reduced row echelon form); of
+the gauge group for a subsystem code.</p>
 
 
     </div>
@@ -10064,8 +10230,10 @@ memory experiment in both bases.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A <code>StabilizerCode</code>, or its stabilizer generators as Pauli
-strings for <code>StabilizerCode.from_stabilizers</code>.</p>
+                <p>A <code>StabilizerCode</code>, its stabilizer generators as Pauli
+strings for <code>StabilizerCode.from_stabilizers</code>, or a
+<code>SubsystemCode</code>, whose gauge generators are measured and whose
+stabilizers are read as parities of the gauge outcomes.</p>
               </div>
             </td>
             <td>

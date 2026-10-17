@@ -2115,10 +2115,10 @@ information about circuit-level rates, and what does?</p>
 <li>A SAT-constrained local search with the proxy as objective (<code>experiments/sat_population/local_search.py</code>: SAT keeps every candidate a valid distance-3 code on the footprint, CMSGen samples completions with all but two generators fixed) reaches 0.000331 to 0.000365 in 129 to 159 evaluations, against 0.000344 for the best of the 2,000 random draws. It reaches the random-sampling floor in about a fifteenth of the evaluations and does not pass it.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m autoqec_sim.experiments.sat_population prepare --source &lt;satisfying-codes&gt;/experiments/surface
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m autoqec_sim.experiments.sat_population run --workers 4
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m autoqec_sim.experiments.sat_population confirm
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run python -m autoqec_sim.experiments.sat_population report
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m experiments.sat_population.run prepare --source &lt;satisfying-codes&gt;/experiments/surface
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m experiments.sat_population.run run --workers 4
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m experiments.sat_population.run confirm
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run python -m experiments.sat_population.run report
 </code></pre></div>
 <p>The write-up is
 <a href="https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/sat_population/REPORT.md"><code>experiments/sat_population/REPORT.md</code></a>;

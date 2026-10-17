@@ -2091,6 +2091,26 @@
   reports move from the untracked <code>runs/</code> directories to
   <code>experiments/&lt;name&gt;/REPORT.md</code>.</p>
 </li>
+<li>Subsystem codes: <code>SubsystemCode.from_gauge</code> derives the center, the
+  bare logicals, and a gauge fixing from independent gauge generators;
+  the memory circuit measures the gauge generators in batches and reads
+  each stabilizer as the parity of the gauge outcomes whose product it is,
+  with the product's sign in the reference measurements, so <code>evaluate_code</code>
+  and <code>MemoryObjective</code> take subsystem codes. <code>known_codes</code> gains the
+  Bacon-Shor [[9,1,3]] and distance-3 heavy-hexagon gauge generators
+  (<code>get_subsystem</code>).</li>
+<li>The memory circuit interleaves every generator into one block with one
+  measurement per round when a hook-safe schedule exists: <code>hook_orders</code>
+  chooses the orders jointly so that no qubit sees two gates in one layer
+  and every pair of generators sharing qubits with different letters has
+  an even number of those qubits visited in each order (the condition for
+  each ancilla to measure its own generator), with gate layers inside a
+  round as short as the longest generator allows. Every surface code tried
+  gets the standard four-layer cycle; the Steane code falls back to the
+  batched blocks, which <code>extraction="batched"</code> forces
+  (<code>build_memory_circuit</code>, <code>MemoryObjective</code>; <code>per_basis</code> reports
+  <code>extraction</code>). CSS codes lose the second measurement window per round
+  that made their absolute rates pessimistic.</li>
 <li>The package is positioned around <code>evaluate_code</code>. README, documentation
   home, user guide, quick start, navigation, and project metadata lead
   with the circuit-level evaluator and present the SAT-population
@@ -2104,6 +2124,15 @@
   claimed 0 of 18 successes. Rerun after the fix: 17 of 18, with PPO 1.4x
   to 6x more step-efficient and the evolutionary search far cheaper in
   wall time (<code>experiments/topologies_ea/REPORT.md</code>).</li>
+<li>The experiment code moves out of the installed package, from
+  <code>src/autoqec_sim/experiments/&lt;name&gt;.py</code> to <code>experiments/&lt;name&gt;/run.py</code>
+  next to each experiment's <code>REPORT.md</code> and <code>figures/</code>, with the shared
+  figure style in <code>experiments/common/figstyle.py</code> and the experiment
+  tests in <code>experiments/tests/</code>. A pip install of <code>autoqec-sim</code> no longer
+  carries the experiments; a clone runs them from the repository root as
+  <code>uv run python -m experiments.&lt;name&gt;.run &lt;subcommand&gt;</code> in place of
+  <code>python -m autoqec_sim.experiments.&lt;name&gt; &lt;subcommand&gt;</code>
+  (<code>experiments/README.md</code>).</li>
 </ul>
 <h2 id="020-2026-10-16">0.2.0 (2026-10-16)<a class="headerlink" href="#020-2026-10-16" title="Permanent link">&para;</a></h2>
 <ul>

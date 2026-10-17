@@ -2118,8 +2118,8 @@ maximum-likelihood proxy over low-weight fault sets, exact maximum
 likelihood or a lookup decoder, BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">2</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">3</a></sup>, or
 Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">4</a></sup>. The proxy is exact to leading order at circuit
 distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
-0.90), and lands within 8 percent of Tesseract on the 5x5 surface code at
-five rounds in about a twentieth of the time of 50,000 shots. The
+0.90), and lands within the sampling error of 50,000 Tesseract shots on
+the 5x5 surface code at five rounds. The
 <a href="evaluate/">Evaluate a code</a> page has the fields, the tiers, the
 validation, and the limits.</p>
 <p>Candidates can come from anywhere. The package ships three proposers and
@@ -2157,11 +2157,11 @@ noise:</p>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">top</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">pauli</span><span class="si">:</span><span class="s2">7s</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">gate</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">qubits</span><span class="si">}</span><span class="s2"> at tick </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">tick</span><span class="si">}</span><span class="s2">  -&gt;  </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">targets</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Z basis, probability 1.4e-06, 3 mechanisms:
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  X4      after DEPOLARIZE2 on (14, 4) at tick 16  -&gt;  D12 D13
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  X1      after DEPOLARIZE2 on (13, 1) at tick 14  -&gt;  D12 L0
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  X6      after DEPOLARIZE2 on (14, 6) at tick 15  -&gt;  D13
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>error per round 1.15e-03  d_circ {'Z': 3, 'X': 3}
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Z basis, probability 3.6e-08, 3 mechanisms:
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  X4      after DEPOLARIZE2 on (14, 4) at tick 4  -&gt;  D12 D13
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  X1      after DEPOLARIZE2 on (13, 1) at tick 2  -&gt;  D12 L0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  X6      after DEPOLARIZE2 on (14, 6) at tick 3  -&gt;  D13
 </code></pre></div>
 <p>The <a href="getting-started/quickstart/">Quick Start</a> compares codes under a
 device preset, proposes a code with the evolutionary search, and verifies

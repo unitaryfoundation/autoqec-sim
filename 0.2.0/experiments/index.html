@@ -1952,11 +1952,13 @@
 
 <h1 id="experiments">Experiments<a class="headerlink" href="#experiments" title="Permanent link">&para;</a></h1>
 <p>Each experiment asks one question about code discovery or code
-evaluation, runs from one module under <code>autoqec_sim.experiments</code>, and
-keeps its write-up in <code>experiments/&lt;name&gt;/REPORT.md</code> in the repository
-(raw runs under <code>experiments/&lt;name&gt;/runs/</code> are not tracked). Each page
-gives the question, the result with its figure, and the commands that
-reproduce one run.</p>
+evaluation, runs from <code>experiments/&lt;name&gt;/run.py</code> in the repository
+(<code>uv run python -m experiments.&lt;name&gt;.run</code> from the repository root;
+the code is not part of the installed package), and keeps its write-up
+in <code>experiments/&lt;name&gt;/REPORT.md</code> next to it (raw runs under
+<code>experiments/&lt;name&gt;/runs/</code> are not tracked). Each page gives the
+question, the result with its figure, and the commands that reproduce
+one run.</p>
 <table>
 <thead>
 <tr>
@@ -2011,7 +2013,9 @@ reproduce one run.</p>
 <p>Every number on these pages is copied from the experiment's report, which
 regenerates from the runs with the module's <code>report</code> command; the figures
 regenerate with its <code>figure</code> command (or <code>report</code>, for the older
-experiments). Where a case is named Forte, it is the package's Forte
+experiments). The memory-objective runs recorded here used the batched
+extraction schedule, the only one before the interleaved schedule became
+the default; <code>extraction="batched"</code> reproduces them. Where a case is named Forte, it is the package's Forte
 preset, a noise model assembled from public specifications, not a
 measurement on a device.</p>
 

@@ -2106,9 +2106,9 @@ survive circuit-level noise?</p>
 <li>Two structural reasons. The source's channel is a single biased code-capacity channel with an exact decoder, while here only the idle channel carries the bias and gate, reset, and measurement errors stay unbiased, so a code sees a weaker effective bias over a round. And a circuit-level rate counts the space-time realizations of each logical operator in the extraction circuit, which differ between codes with the same code-capacity rate. The <a href="../sat_population/">population experiment</a> measures both effects on 2,150 codes.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m autoqec_sim.experiments.sat_codes run
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m autoqec_sim.experiments.sat_codes report
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m autoqec_sim.experiments.sat_codes figure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m experiments.sat_codes.run run
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m experiments.sat_codes.run report
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m experiments.sat_codes.run figure
 </code></pre></div>
 <p>The selection is <code>experiments/sat_codes/selection.json</code>; the write-up is
 <a href="https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/sat_codes/REPORT.md"><code>experiments/sat_codes/REPORT.md</code></a>.</p>

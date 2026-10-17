@@ -2118,10 +2118,10 @@ cannot do for a local-Clifford deformation.</p>
 <li>PPO smoke run (3x3 lattice, chain profile, <code>R = 3</code>, 400k env steps): distance 3 at 83k steps, 92 distinct target-distance codes evaluated at 0.47 s each, best <code>p_round</code> 0.0016 against 0.00077 for the rotated surface code.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m autoqec_sim.experiments.memory_objective benchmark
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m autoqec_sim.experiments.memory_objective random
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m autoqec_sim.experiments.memory_objective bias
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run python -m autoqec_sim.experiments.memory_objective report
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run python -m experiments.memory_objective.run benchmark
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run python -m experiments.memory_objective.run random
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run python -m experiments.memory_objective.run bias
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run python -m experiments.memory_objective.run report
 </code></pre></div>
 <p>The other subcommands are <code>random-check</code>, <code>lattice</code>, and <code>ppo</code>; <code>bposd</code>
 needs <code>uv run --with ldpc</code>. The write-up is
