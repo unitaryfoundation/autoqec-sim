@@ -31,7 +31,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - run: uv run mike deploy --push dev
+      - name: Deploy dev (refetch and retry when another deploy pushed gh-pages first)
+        run: |
+          for attempt in 1 2 3; do
+            git fetch origin gh-pages && git branch -f gh-pages origin/gh-pages || true
+            if uv run mike deploy --push dev; then
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1
       - name: Point the site root at dev until the first release publishes stable
         run: |
           if ! uv run mike list | grep -qw stable; then
