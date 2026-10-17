@@ -30,11 +30,11 @@ in half a second.
 ```
 
 ```
-error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
-Z basis, probability 1.4e-06, 3 mechanisms:
-  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
-  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
-  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+error per round 1.15e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 3.6e-08, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 4  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 2  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 3  ->  D13
 ```
 
 The three data-qubit `X` faults, each the data half of a two-qubit
@@ -80,7 +80,7 @@ types for JSON.
 
 | `tier` | Estimate | Cost | Needs |
 |---|---|---|---|
-| `proxy` | failure probability of the maximum-likelihood decoder restricted to fault sets of weight at most two, closed form from the DEM, exact to `O(p^3)`; at circuit distance 5 or 6, where that form is zero, weight at most three through the weight-5 and weight-6 undetectable sets, exact to `O(p^4)` | `O(M^2)` in the `M` mechanisms; 0.1 to 0.5 s per code at `n = 9`; about 20 s per basis for the 5x5 surface code at five rounds | stim |
+| `proxy` | failure probability of the maximum-likelihood decoder restricted to fault sets of weight at most two, closed form from the DEM, exact to `O(p^3)`; at circuit distance 5 or 6, where that form is zero, weight at most three through the weight-5 and weight-6 undetectable sets, exact to `O(p^4)` | `O(M^2)` in the `M` mechanisms; 0.1 to 0.5 s per code at `n = 9`; 25 to 50 s per basis for the 5x5 surface code at five rounds | stim |
 | `sampled` | exact maximum-likelihood decoder when `detectors + observables <= 20`, else a lookup decoder over the same weight-2 sets; Monte Carlo | `shots` per basis, distinct syndromes decoded once | stim |
 | `bposd` | the board's pinned BP+OSD decoder [@roffe2020; @panteleev2021]; Monte Carlo | as `sampled`, slower per syndrome | `ldpc` (`uv run --with ldpc`) |
 | `tesseract` | Tesseract most-likely-error search [@beni2025] on the full DEM; Monte Carlo | 1 to 2 ms per distinct syndrome on the surface-code DEM | `tesseract` extra |
@@ -152,19 +152,19 @@ five rounds under depolarizing noise at 1e-3:
 ```
 
 ```
-error per round 9.73e-03  d_circ {'Z': 5, 'X': 5}  proxy weight 3
-  Z: 13485 weight-5 undetectable sets, mass 7.3e-08, p_fail 2.36e-02
-  X: 13522 weight-5 undetectable sets, mass 7.1e-08, p_fail 2.41e-02
-Z basis, probability 1.2e-09, 5 mechanisms
+error per round 9.11e-05  d_circ {'Z': 5, 'X': 5}  proxy weight 3
+  Z: 12906 weight-5 undetectable sets, mass 1.4e-11, p_fail 2.28e-04
+  X: 12221 weight-5 undetectable sets, mass 1.4e-11, p_fail 2.28e-04
+Z basis, probability 1.2e-13, 5 mechanisms
 ```
 
-The search visits 2.3e7 states per basis on this 2,107-mechanism model
-and takes about 25 s per basis; the hook-order search for the 25-qubit
-code adds a second. Tesseract with 50,000 shots per basis gives 1.05e-02
-per round (1282 and 1286 failures) in 16 minutes, 8 percent above the
-proxy, at 6.0 expected faults per shot, outside the regime where a
-leading-order estimate is guaranteed to hold. Beyond distance 6 the proxy
-is zero again; the search cost grows about twentyfold per unit of weight.
+The search on this 2,107-mechanism model takes 25 to 50 s per basis
+depending on machine load; the hook-order search for the 25-qubit code
+adds a few seconds. Tesseract with 50,000 shots per basis gives 8.4e-05
+per round from 12 and 9 failures (a standard error of about 30 percent)
+in three and a half minutes, 8 percent below the proxy, at 1.4 expected
+faults per shot. Beyond distance 6 the proxy is zero again; the search
+cost grows about twentyfold per unit of weight.
 
 
 ## Validation and limits
@@ -178,20 +178,24 @@ is zero again; the search cost grows about twentyfold per unit of weight.
   ([memory objective runs](experiments/memory_objective.md)), within 25
   percent of the exact maximum-likelihood tier on every benchmark code
   below one expected fault per shot, and within 8 percent of Tesseract on
-  the 5x5 surface code at five rounds (above).
+  the 5x5 surface code at five rounds, where 50,000 shots per basis leave
+  Tesseract itself a 30 percent standard error (above).
 - The proxy is a leading-order estimate. It holds while `expected_faults`
   per shot stays below about one and underestimates above that; the
   sampled tiers take over there.
 - The circuit-distance search stops at weight 6, about twentyfold more
   work per unit of weight, so a basis with `d_circ` of 7 or more reports
   `None` and a zero proxy.
-- The memory circuit runs generators that share a qubit with different
-  Pauli letters in separate blocks, each with its own ancilla measurement.
-  For a CSS code that is the X block and then the Z block, two measurement
-  windows per round where hardware interleaves the two in four layers with
-  one measurement, so absolute rates for CSS codes carry the extra idle
-  time. Flags beyond one per generator, gauge measurements, and transport
-  are not expressible.
+- The memory circuit interleaves every generator into one block with one
+  measurement per round when a hook-safe schedule exists, which it does
+  for every surface code tried (the standard four-layer cycle), the Shor
+  code, and the [[5,1,3]] code. When none exists within the search cap
+  (the Steane code), generators that share a qubit with different Pauli
+  letters run in separate blocks with their own measurements, and the
+  extra idle time makes such a code's absolute rate pessimistic
+  (`per_basis[b]["extraction"]` says which schedule was used). Flags
+  beyond one per generator, gauge measurements, and transport are not
+  expressible.
 - The presets are noise models assembled from public specifications, not
   device measurements, and `evaluate_code` builds its own circuit. A rate
   it reports is for that circuit under that model.

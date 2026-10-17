@@ -196,3 +196,42 @@ def test_evaluate_code_at_distance_five():
     # the hook-aware order built by evaluate_code reproduces the standard one
     _, _, sig = _surface5("X")
     assert ev.per_basis["X"]["d_circ_count"] == mo.exact_dcirc(sig, 6)["count"]
+
+
+def test_interleaved_schedule_on_surface_codes():
+    """One block, one measurement per round, four gate layers, a clean
+    noiseless detector model, and the full circuit distance."""
+    for name, d in (("rotated_surface_9", 3), ("rotated_surface_16", 4)):
+        code = known_codes.get(name)
+        for basis in "ZX":
+            mc = mo.build_memory_circuit(code, 2, basis)
+            assert mc.extraction == "interleaved" and len(mc.batches) == 1
+            assert mc.layers == 2 * 8  # R, H, four gate layers, H, M per round
+            assert sum(1 for inst in mc.body if inst.name == "M") == 2
+            assert mc.circuit().detector_error_model().num_errors == 0
+            sig = mo.dem_signature(mo.memory_dem(mc, presets.chain(), 0.25))
+            assert mo.exact_dcirc(sig, 6)["d_circ"] == d
+        batched = mo.build_memory_circuit(code, 2, "X", extraction="batched")
+        assert batched.extraction == "batched" and len(batched.batches) == 2 and batched.layers > mc.layers
+    # the standard surface-code pattern schedules; seven generators on one
+    # qubit need seven layers, more than a round of a weight-4 code allows
+    assert mo.interleavable(_surface5_orders("col"))
+    assert not mo.interleavable([[(0, "X"), (1, "X"), (2, "X"), (3, "X")]] * 7)
+    # the Steane code's six weight-4 checks share every qubit six ways and
+    # fall back to batches
+    steane = known_codes.get("steane")
+    assert mo.build_memory_circuit(steane, 1, "Z").extraction == "batched"
+    with pytest.raises(ValueError):
+        mo.build_memory_circuit(steane, 1, "Z", extraction="interleaved")
+
+
+def test_interleaved_schedule_with_flags_and_evaluate_code():
+    code = known_codes.get("rotated_surface_9")
+    flagged = mo.build_memory_circuit(code, 2, "Z", flags="one")
+    assert flagged.extraction == "interleaved"
+    c = flagged.circuit()
+    assert c.detector_error_model().num_errors == 0
+    assert c.num_detectors == mo.build_memory_circuit(code, 2, "Z").circuit().num_detectors + 2 * 4  # four weight-4 generators carry a flag
+    ev = evaluate_code(code, presets.chain(), scale=0.25, rounds=2)
+    assert all(ev.per_basis[b]["extraction"] == "interleaved" and ev.per_basis[b]["batches"] == 1 for b in "ZX")
+    assert ev.d_circ == {"Z": 3, "X": 3}

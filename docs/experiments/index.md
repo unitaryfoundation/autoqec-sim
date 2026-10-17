@@ -21,6 +21,8 @@ reproduce one run.
 Every number on these pages is copied from the experiment's report, which
 regenerates from the runs with the module's `report` command; the figures
 regenerate with its `figure` command (or `report`, for the older
-experiments). Where a case is named Forte, it is the package's Forte
+experiments). The memory-objective runs recorded here used the batched
+extraction schedule, the only one before the interleaved schedule became
+the default; `extraction="batched"` reproduces them. Where a case is named Forte, it is the package's Forte
 preset, a noise model assembled from public specifications, not a
 measurement on a device.

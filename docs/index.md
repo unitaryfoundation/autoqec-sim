@@ -40,8 +40,8 @@ maximum-likelihood proxy over low-weight fault sets, exact maximum
 likelihood or a lookup decoder, BP+OSD [@roffe2020; @panteleev2021], or
 Tesseract [@beni2025]. The proxy is exact to leading order at circuit
 distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
-0.90), and lands within 8 percent of Tesseract on the 5x5 surface code at
-five rounds in about a twentieth of the time of 50,000 shots. The
+0.90), and lands within the sampling error of 50,000 Tesseract shots on
+the 5x5 surface code at five rounds. The
 [Evaluate a code](evaluate.md) page has the fields, the tiers, the
 validation, and the limits.
 
@@ -68,11 +68,11 @@ noise:
 ```
 
 ```
-error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
-Z basis, probability 1.4e-06, 3 mechanisms:
-  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
-  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
-  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+error per round 1.15e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 3.6e-08, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 4  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 2  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 3  ->  D13
 ```
 
 The [Quick Start](getting-started/quickstart.md) compares codes under a

@@ -14,11 +14,11 @@ second.
 ```
 
 ```
-error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
-Z basis, probability 1.4e-06, 3 mechanisms:
-  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
-  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
-  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+error per round 1.15e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 3.6e-08, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 4  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 2  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 3  ->  D13
 ```
 
 The three mechanisms are two-qubit depolarizing faults on three data
@@ -41,9 +41,9 @@ use.
 ```
 
 ```
-five_qubit (5, 1, 3) error per round 4.27e-03
+five_qubit (5, 1, 3) error per round 4.38e-03
 steane (7, 1, 3) error per round 2.10e-03
-rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+rotated_surface_9 (9, 1, 3) error per round 5.96e-04
 ```
 
 ## Propose a code

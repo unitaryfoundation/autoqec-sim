@@ -46,10 +46,12 @@ def test_noiseless_circuit_is_deterministic(name, basis):
 
 def test_batches_follow_commutation():
     codes = _codes()
-    # CSS: X block then Z block; the [[5,1,3]] generators pairwise conflict
-    assert mo.build_memory_circuit(codes["steane"], 1).batches == [[0, 1, 2], [3, 4, 5]]
-    assert mo.build_memory_circuit(codes["five"], 1).batches == [[0], [1], [2], [3]]
-    mc = mo.build_memory_circuit(codes["noncss"], 1)
+    # batched: CSS X block then Z block; the [[5,1,3]] generators pairwise conflict
+    assert mo.build_memory_circuit(codes["steane"], 1, extraction="batched").batches == [[0, 1, 2], [3, 4, 5]]
+    assert mo.build_memory_circuit(codes["five"], 1, extraction="batched").batches == [[0], [1], [2], [3]]
+    # the default schedule interleaves the [[5,1,3]] generators into one block
+    assert mo.build_memory_circuit(codes["five"], 1).batches == [[0, 1, 2, 3]]
+    mc = mo.build_memory_circuit(codes["noncss"], 1, extraction="batched")
     letters = [dict(s) for s in mc.supports]
     for batch in mc.batches:
         for a in batch:

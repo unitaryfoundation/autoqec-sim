@@ -33,8 +33,9 @@ sets (no shots, no decoder), exact maximum likelihood or a lookup decoder,
 BP+OSD, or Tesseract. The proxy is exact to leading order at circuit
 distance up to 6 and agrees with the sampled decoders where they overlap:
 Spearman 0.78 to 0.90 against BP+OSD over 32 random [[9,1,3]] codes, and
-within 8 percent of Tesseract on the 5x5 surface code at five rounds in
-about a twentieth of the time of 50,000 shots. Beside the rate it returns
+within the sampling error of 50,000 Tesseract shots on the 5x5 surface
+code at five rounds (8 percent apart, where the shots leave Tesseract a 30
+percent standard error). Beside the rate it returns
 the exact circuit-level distance up to weight 6, the probability mass of
 the minimum-weight undetectable fault sets, and the most probable of them
 as circuit locations.
@@ -42,11 +43,12 @@ as circuit locations.
 Its limits: the proxy is a leading-order estimate and holds while the
 expected number of faults per shot stays below about one, where the
 sampled tiers take over; the circuit-distance search stops at weight 6;
-the memory circuit runs the X and Z checks of a CSS code one block after
-the other, each with its own measurement, where hardware interleaves them
-with one; flag and gauge extraction beyond one flag per generator are not
-expressible; and the presets are noise models assembled from public
-specifications, not device measurements.
+the memory circuit interleaves all checks into one block with one
+measurement per round where a hook-safe schedule exists (every surface
+code tried) and falls back to separate blocks with their own measurements
+where none does (the Steane code); flag and gauge extraction beyond one
+flag per generator are not expressible; and the presets are noise models
+assembled from public specifications, not device measurements.
 
 ## What the proposers have found
 
@@ -132,11 +134,11 @@ for loc in top.locations:
 ```
 
 ```
-error per round 9.09e-03  d_circ {'Z': 3, 'X': 3}
-Z basis, probability 1.4e-06, 3 mechanisms:
-  X4      after DEPOLARIZE2 on (14, 4) at tick 16  ->  D12 D13
-  X1      after DEPOLARIZE2 on (13, 1) at tick 14  ->  D12 L0
-  X6      after DEPOLARIZE2 on (14, 6) at tick 15  ->  D13
+error per round 1.15e-03  d_circ {'Z': 3, 'X': 3}
+Z basis, probability 3.6e-08, 3 mechanisms:
+  X4      after DEPOLARIZE2 on (14, 4) at tick 4  ->  D12 D13
+  X1      after DEPOLARIZE2 on (13, 1) at tick 2  ->  D12 L0
+  X6      after DEPOLARIZE2 on (14, 6) at tick 3  ->  D13
 ```
 
 Compare codes under a device preset: three known codes in a three-round
@@ -156,9 +158,9 @@ for name in ("five_qubit", "steane", "rotated_surface_9"):
 ```
 
 ```
-five_qubit (5, 1, 3) error per round 4.27e-03
+five_qubit (5, 1, 3) error per round 4.38e-03
 steane (7, 1, 3) error per round 2.10e-03
-rotated_surface_9 (9, 1, 3) error per round 5.89e-04
+rotated_surface_9 (9, 1, 3) error per round 5.96e-04
 ```
 
 Propose a code: the evolutionary search on five qubits, and the code read

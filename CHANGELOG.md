@@ -41,6 +41,18 @@
   and `sat_codes`; the noise-aware, topology, and evolutionary-search
   reports move from the untracked `runs/` directories to
   `experiments/<name>/REPORT.md`.
+- The memory circuit interleaves every generator into one block with one
+  measurement per round when a hook-safe schedule exists: `hook_orders`
+  chooses the orders jointly so that no qubit sees two gates in one layer
+  and every pair of generators sharing qubits with different letters has
+  an even number of those qubits visited in each order (the condition for
+  each ancilla to measure its own generator), with gate layers inside a
+  round as short as the longest generator allows. Every surface code tried
+  gets the standard four-layer cycle; the Steane code falls back to the
+  batched blocks, which `extraction="batched"` forces
+  (`build_memory_circuit`, `MemoryObjective`; `per_basis` reports
+  `extraction`). CSS codes lose the second measurement window per round
+  that made their absolute rates pessimistic.
 - The package is positioned around `evaluate_code`. README, documentation
   home, user guide, quick start, navigation, and project metadata lead
   with the circuit-level evaluator and present the SAT-population

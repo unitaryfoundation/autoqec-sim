@@ -53,14 +53,18 @@ cluster search beyond), for the fault report of
 Circuits (:func:`build_memory_circuit`). Every generator ``g_j`` gets an
 ancilla prepared in ``|+>``, controlled-``P`` gates (``CX``, ``CY``,
 ``CZ``) onto its support in a fixed order, then ``H`` and a ``Z``-basis
-measurement. Generators that share a qubit with different Pauli letters
-cannot be interleaved (their controlled gates on that qubit do not
-commute), so the generators are colored into batches of mutually
-interleavable generators (for a CSS code: the X block and the Z block)
-which run one after another; inside a batch the gates are packed into
-layers as soon as possible with one gate per qubit per layer. Under the
-sequential timing of the ion presets every two-qubit gate is its own time
-slot anyway, so the batch structure costs nothing there. Preparation and
+measurement. By default every generator runs in one interleaved block with
+one measurement per round: the gate orders are chosen jointly among the
+hook-safe ones (:func:`hook_orders`) and each generator's gates take layers
+inside a round as short as the longest generator allows, such that no
+qubit sees two gates in one layer and, for every pair of generators that
+share qubits with different Pauli letters, an even number of those qubits
+sees one generator first (otherwise an ancilla would measure its generator
+times ``Z`` of another ancilla, a random outcome). The standard four-layer
+surface-code cycle is one such schedule. When no schedule exists within
+the search cap (the Steane code), the generators fall back to batches of
+mutually interleavable ones, one block after another with their own
+measurements (``extraction="batched"`` forces this). Preparation and
 final readout are noiseless ``MPP`` measurements of every generator and of
 the logical operators of the chosen basis (``Z`` or ``X`` memory);
 detectors compare consecutive measurements of each generator, and the
@@ -134,6 +138,8 @@ __all__ = [
     "exact_dcirc",
     "exact_ml_failure",
     "hook_orders",
+    "interleavable",
+    "interleaved_slots",
     "make_memory_reward",
     "memory_dem",
     "per_round",
@@ -340,18 +346,31 @@ class _CompletionCost:
         return c
 
 
-def _hook_order(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, target: int, rng, max_perms: int = 300) -> list[tuple[int, str]]:
-    """The gate order of one generator whose ancilla hook errors are
-    harmless at ``target``: for every proper suffix ``S`` of the order (the
-    data error of an ancilla fault after that gate) ``1 + cost(S) >=
-    target``, and for every contiguous segment ``S`` between two gates
-    (two ancilla faults) ``2 + cost(S) >= target`` (the criterion of the
-    ion-search schedule search). Permutations are enumerated for weight
-    ``<= 6`` and sampled otherwise; the first acceptable order wins, else
-    the one with the largest minimum criterion value."""
+def _order_value(order, cost: _CompletionCost, target: int, vec) -> int:
+    """The minimum criterion value of one gate order (see :func:`_hook_order`),
+    stopping early once it falls below ``target``."""
+    w = len(order)
+    val = 10**6
+    for t in range(1, w):
+        val = min(val, 1 + cost(vec(order[t:])))
+        if val < target:
+            return val
+    for i in range(1, w):
+        for j in range(i + 1, w):
+            val = min(val, 2 + cost(vec(order[i:j])))
+            if val < target:
+                return val
+    return val
+
+
+def _acceptable_orders(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, target: int, rng, max_perms: int = 300, limit: int = 48) -> list[list[tuple[int, str]]]:
+    """The hook-safe gate orders of one generator, up to ``limit`` of them
+    with the first acceptable one first; when no order is acceptable, the
+    single order with the largest minimum criterion value. Permutations are
+    enumerated for weight ``<= 6`` and sampled otherwise."""
     w = len(sup)
     if w <= 2:
-        return list(sup)
+        return [list(sup)]
 
     def vec(items):
         v = np.zeros(2 * n, dtype=np.uint8)
@@ -366,26 +385,153 @@ def _hook_order(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, targe
         candidates = itertools.permutations(sup)
     else:
         candidates = (tuple(sup[i] for i in rng.permutation(w)) for _ in range(max_perms))
+    good: list[list[tuple[int, str]]] = []
     best, best_val = list(sup), -1
     for order in candidates:
-        val = 10**6
-        for t in range(1, w):
-            val = min(val, 1 + cost(vec(order[t:])))
-            if val < target:
+        val = _order_value(order, cost, target, vec)
+        if val >= target:
+            good.append(list(order))
+            if len(good) >= limit:
                 break
-        if val >= target:
-            for i in range(1, w):
-                for j in range(i + 1, w):
-                    val = min(val, 2 + cost(vec(order[i:j])))
-                    if val < target:
-                        break
-                if val < target:
-                    break
-        if val > best_val:
+        elif val > best_val:
             best, best_val = list(order), val
-        if val >= target:
-            break
-    return best
+    return good or [best]
+
+
+def _hook_order(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, target: int, rng, max_perms: int = 300) -> list[tuple[int, str]]:
+    """The gate order of one generator whose ancilla hook errors are
+    harmless at ``target``: for every proper suffix ``S`` of the order (the
+    data error of an ancilla fault after that gate) ``1 + cost(S) >=
+    target``, and for every contiguous segment ``S`` between two gates
+    (two ancilla faults) ``2 + cost(S) >= target`` (the criterion of the
+    ion-search schedule search). Permutations are enumerated for weight
+    ``<= 6`` and sampled otherwise; the first acceptable order wins, else
+    the one with the largest minimum criterion value."""
+    return _acceptable_orders(sup, n, cost, target, rng, max_perms, limit=1)[0]
+
+
+def _gate_layers(w: int, flagged: bool) -> list[int]:
+    """Relative layer of each data gate of a generator whose gates run in
+    consecutive layers from 0: with a flag, the flag CX after the first
+    gate and the one before the last take layers of their own."""
+    if not flagged or w < 3:
+        return list(range(w))
+    return [i + (1 if i >= 1 else 0) + (1 if i >= w - 1 else 0) for i in range(w)]
+
+
+def _slot_options(w: int, window: int, flagged: bool) -> list[tuple[int, ...]]:
+    """The layer tuples a generator's data gates may take inside a round of
+    ``window`` layers: any increasing pair for an unflagged weight-2
+    generator (the boundary checks of a surface code sit on non-adjacent
+    layers), else the consecutive pattern of :func:`_gate_layers` at every
+    shift that fits."""
+    if w == 2 and not flagged:
+        return [(a, b) for a in range(window) for b in range(a + 1, window)]
+    pattern = _gate_layers(w, flagged)
+    span = pattern[-1] + 1
+    return [tuple(s + x for x in pattern) for s in range(window - span + 1)]
+
+
+def _time_map(order: list[tuple[int, str]], layers) -> dict[int, tuple[str, int]]:
+    """``qubit -> (letter, layer)`` of one generator's data gates."""
+    return {q: (p, layers[t]) for t, (q, p) in enumerate(order)}
+
+
+def _pair_ok(ta: dict[int, tuple[str, int]], tb: dict[int, tuple[str, int]]) -> bool:
+    """Two generators can run in the same interleaved block when no shared
+    qubit is hit in the same layer and, over the shared qubits where their
+    letters differ, an even number sees the first generator's gate first.
+    An odd number would leave the first ancilla's measured operator
+    multiplied by ``Z`` of the second ancilla, which starts in ``|+>``, and
+    the outcome would be random instead of the generator's eigenvalue."""
+    first = 0
+    for q, (pa, la) in ta.items():
+        if q in tb:
+            pb, lb = tb[q]
+            if la == lb:
+                return False
+            if pa != pb and la < lb:
+                first += 1
+    return first % 2 == 0
+
+
+def _search_block(candidates: list[list[tuple[list[tuple[int, str]], tuple[int, ...]]]], node_cap: int):
+    """Backtracking over the generators (most neighbors and largest weight
+    first) for one ``(order, layers)`` candidate each such that every pair
+    passes :func:`_pair_ok`; at most ``node_cap`` placements are tried.
+    Returns the chosen candidate index per generator, or ``None``."""
+    m = len(candidates)
+    qubits = [{q for q, _ in c[0][0]} for c in candidates]
+    neigh = [[j for j in range(m) if j != i and qubits[i] & qubits[j]] for i in range(m)]
+    order = sorted(range(m), key=lambda i: (-len(neigh[i]), -len(qubits[i]), i))
+    maps = [[_time_map(o, layers) for o, layers in c] for c in candidates]
+    assign: list[int | None] = [None] * m
+    nodes = 0
+
+    def rec(k: int) -> bool:
+        nonlocal nodes
+        if k == m:
+            return True
+        i = order[k]
+        for c, tm in enumerate(maps[i]):
+            nodes += 1
+            if nodes > node_cap:
+                return False
+            if all(assign[j] is None or _pair_ok(tm, maps[j][assign[j]]) for j in neigh[i]):
+                assign[i] = c
+                if rec(k + 1):
+                    return True
+                assign[i] = None
+                if nodes > node_cap:
+                    return False
+        return False
+
+    return assign if rec(0) else None
+
+
+def _windows(supports, flags: str, slack: int = 2):
+    spans = [_gate_layers(len(s), flags == "one" and len(s) >= 3)[-1] + 1 for s in supports]
+    base = max(spans) if spans else 0
+    return range(base, base + slack + 1)
+
+
+def interleaved_slots(supports: list[list[tuple[int, str]]], flags: str = "none", skip=(), node_cap: int = 20_000) -> list[tuple[int, ...]] | None:
+    """The layer of every data gate of every generator in one interleaved
+    block, for fixed gate orders ``supports``: the round is as short as the
+    longest generator allows (plus up to two layers of slack), each
+    generator takes one of its :func:`_slot_options`, and every pair passes
+    :func:`_pair_ok`. ``None`` when no assignment exists within the search
+    cap. Generators in ``skip`` (routed ones) get an empty tuple."""
+    active = [j for j in range(len(supports)) if j not in skip]
+    if not active:
+        return None
+    for window in _windows([supports[j] for j in active], flags):
+        cands = [[(supports[j], layers) for layers in _slot_options(len(supports[j]), window, flags == "one" and len(supports[j]) >= 3)] for j in active]
+        assign = _search_block(cands, node_cap)
+        if assign is not None:
+            out: list[tuple[int, ...]] = [()] * len(supports)
+            for j, c in zip(active, assign, strict=True):
+                out[j] = cands[active.index(j)][c][1]
+            return out
+    return None
+
+
+def interleavable(supports: list[list[tuple[int, str]]], flags: str = "none", skip=()) -> bool:
+    """Whether the gate orders ``supports`` can run as one interleaved block
+    (:func:`interleaved_slots` finds a layer assignment)."""
+    return interleaved_slots(supports, flags, skip) is not None
+
+
+def _interleave(domains: list[list[list[tuple[int, str]]]], flags: str, node_cap: int = 20_000) -> list[list[tuple[int, str]]] | None:
+    """One hook-safe order per generator, chosen from ``domains`` together
+    with a layer assignment, such that the generators run as one
+    interleaved block; ``None`` when none is found within the cap."""
+    for window in _windows([d[0] for d in domains], flags):
+        cands = [[(o, layers) for o in d for layers in _slot_options(len(o), window, flags == "one" and len(o) >= 3)] for d in domains]
+        assign = _search_block(cands, node_cap)
+        if assign is not None:
+            return [cands[i][c][0] for i, c in enumerate(assign)]
+    return None
 
 
 def code_distance(code: StabilizerCode) -> int:
@@ -396,9 +542,15 @@ def code_distance(code: StabilizerCode) -> int:
     return int(code.distance_upper_bound()[0])
 
 
-def hook_orders(code: StabilizerCode, target: int | None = None, seed: int = 0) -> list[list[tuple[int, str]]]:
+def hook_orders(code: StabilizerCode, target: int | None = None, seed: int = 0, interleave: bool = True, flags: str = "none") -> list[list[tuple[int, str]]]:
     """Hook-aware gate orders of every generator (:func:`_hook_order`);
-    ``target`` defaults to :func:`code_distance`."""
+    ``target`` defaults to :func:`code_distance`. With ``interleave`` the
+    orders are chosen jointly, among the hook-safe ones, so that every
+    generator can run in one interleaved block with one measurement per
+    round (:func:`interleavable`); when no such choice exists within the
+    search cap, each generator gets its first hook-safe order and the
+    circuit falls back to batches. ``flags`` is the flag variant the circuit
+    will use, which shifts the gate layers of the flagged generators."""
     n = code.n
     if target is None:
         target = code_distance(code)
@@ -406,7 +558,12 @@ def hook_orders(code: StabilizerCode, target: int | None = None, seed: int = 0) 
     # target, so costs of target - 1 and above need not be told apart
     cost = _CompletionCost(code, max(1, target - 2))
     rng = np.random.default_rng(seed)
-    return [_hook_order(_support(code.stabilizers[j], n, "sorted", rng), n, cost, target, rng) for j in range(code.stabilizers.shape[0])]
+    supports = [_support(code.stabilizers[j], n, "sorted", rng) for j in range(code.stabilizers.shape[0])]
+    if not interleave:
+        return [_hook_order(sup, n, cost, target, rng) for sup in supports]
+    domains = [_acceptable_orders(sup, n, cost, target, rng) for sup in supports]
+    chosen = _interleave(domains, flags)
+    return chosen if chosen is not None else [d[0] for d in domains]
 
 
 def _conflict(sa: dict, sb: dict) -> bool:
@@ -492,6 +649,7 @@ class MemoryCircuit:
     meas_index: dict = field(default_factory=dict)
     flag_index: dict = field(default_factory=dict)
     layout_name: str = ""
+    extraction: str = "batched"
 
     @property
     def num_generators(self) -> int:
@@ -553,6 +711,7 @@ def build_memory_circuit(
     seed: int = 0,
     hook_target: int | None = None,
     orders: list | None = None,
+    extraction: str = "auto",
 ) -> MemoryCircuit:
     """The memory circuit of ``code`` (see the module docstring).
 
@@ -580,6 +739,13 @@ def build_memory_circuit(
     orders
         Overrides the per-generator orders (``[(qubit, letter), ...]`` per
         generator, as :func:`hook_orders` returns them).
+    extraction
+        ``"auto"``: every unrouted generator runs in one interleaved block
+        with one measurement per round when the orders allow it
+        (:func:`interleavable`), else the generators run in batches of
+        mutually interleavable ones, one block after another, each with its
+        own measurement; ``"interleaved"`` requires the block (``ValueError``
+        otherwise); ``"batched"`` always batches.
 
     Returns
     -------
@@ -593,13 +759,15 @@ def build_memory_circuit(
         raise ValueError("rounds must be at least 1")
     if order not in ("hook", "sorted", "random"):
         raise ValueError("order must be hook, sorted, or random")
+    if extraction not in ("auto", "interleaved", "batched"):
+        raise ValueError("extraction must be auto, interleaved, or batched")
     n, k = code.n, code.k
     m = code.stabilizers.shape[0]
     rng = np.random.default_rng(seed)
     if orders is not None:
         supports = [list(o) for o in orders]
     elif order == "hook":
-        supports = hook_orders(code, hook_target, seed)
+        supports = hook_orders(code, hook_target, seed, interleave=extraction != "batched", flags=flags)
     else:
         supports = [_support(code.stabilizers[j], n, order, rng) for j in range(m)]
     flagged = [j for j in range(m) if flags == "one" and len(supports[j]) >= 3]
@@ -635,7 +803,12 @@ def build_memory_circuit(
             if j in flag_q and t in (0, w - 2):
                 seq.append(("CX", a, flag_q[j]))
         atoms.append(seq)
-    batches = _batches(supports, routed)
+    local = [j for j in range(m) if j not in routed]
+    slots = interleaved_slots(supports, flags, skip=routed) if extraction != "batched" and local else None
+    interleaved = slots is not None
+    if extraction == "interleaved" and not interleaved:
+        raise ValueError("these gate orders cannot run as one interleaved block; use extraction='auto' or 'batched'")
+    batches = [local] + [[j] for j in sorted(routed)] if interleaved else _batches(supports, routed)
 
     lines: list[str] = [f"QUBIT_COORDS({q}) {q}" for q in range(layout.num_qubits)]
     meas_index: dict = {}
@@ -652,25 +825,46 @@ def build_memory_circuit(
         layers += 1
 
     for r in range(rounds):
-        for batch in batches:
+        for b, batch in enumerate(batches):
             anc = [ancilla[j] for j in batch]
             fl = [flag_q[j] for j in batch if j in flag_q]
             emit(["R " + " ".join(map(str, anc + fl))])
             emit(["H " + " ".join(map(str, anc))])
-            # ASAP packing of the batch's atoms with one gate per qubit per layer
-            ready: dict[int, int] = {}
             packed: list[list[str]] = []
-            for j in batch:
-                for atom in atoms[j]:
-                    qs = atom[1:]
-                    layer = max((ready.get(q, 0) for q in qs), default=0)
-                    while len(packed) <= layer:
-                        packed.append([])
-                    packed[layer].append(atom[0] + " " + " ".join(map(str, qs)))
-                    for q in qs:
-                        ready[q] = layer + 1
-                    if len(qs) == 2:
-                        two_q += 1
+            if interleaved and b == 0:
+                # every generator's data gates take the layers of its slot (the
+                # slots collide nowhere and leave each ancilla measuring its own
+                # generator); a flag CX sits right after the first gate and
+                # right before the last
+                for j in batch:
+                    data_layers = list(slots[j])
+                    flag_layers = [data_layers[0] + 1, data_layers[-1] - 1]
+                    t = 0
+                    for atom in atoms[j]:
+                        if atom[0] == "CX" and j in flag_q and atom[2] == flag_q[j]:
+                            layer = flag_layers.pop(0)
+                        else:
+                            layer = data_layers[t]
+                            t += 1
+                        while len(packed) <= layer:
+                            packed.append([])
+                        packed[layer].append(atom[0] + " " + " ".join(map(str, atom[1:])))
+                        if len(atom) == 3:
+                            two_q += 1
+            else:
+                # ASAP packing of the batch's atoms with one gate per qubit per layer
+                ready: dict[int, int] = {}
+                for j in batch:
+                    for atom in atoms[j]:
+                        qs = atom[1:]
+                        layer = max((ready.get(q, 0) for q in qs), default=0)
+                        while len(packed) <= layer:
+                            packed.append([])
+                        packed[layer].append(atom[0] + " " + " ".join(map(str, qs)))
+                        for q in qs:
+                            ready[q] = layer + 1
+                        if len(qs) == 2:
+                            two_q += 1
             for layer in packed:
                 emit(layer)
             emit(["H " + " ".join(map(str, anc))])
@@ -698,6 +892,7 @@ def build_memory_circuit(
         num_qubits=layout.num_qubits, ancilla=ancilla, flag=[flag_q.get(j, -1) for j in range(m)],
         batches=batches, supports=supports, routed_gates=routed_gates, two_qubit_gates=two_q,
         layers=layers, meas_index=meas_index, flag_index=flag_index, layout_name=layout.name,
+        extraction="interleaved" if interleaved else "batched",
     )
 
 
@@ -1828,6 +2023,10 @@ class MemoryObjective:
         With ``order="random"``, the number of random gate orders tried
         per code (seeds ``seed .. seed + trials - 1``, the same order for
         every basis); the best summed ``p_round`` is kept.
+    extraction
+        ``"auto"`` (one interleaved block with one measurement per round
+        when the hook-safe orders allow it, else batches), ``"interleaved"``,
+        or ``"batched"``; see :func:`build_memory_circuit`.
     """
 
     def __init__(
@@ -1848,9 +2047,13 @@ class MemoryObjective:
         min_failures: int = 0,
         max_shots: int | None = None,
         schedule_trials: int = 1,
+        extraction: str = "auto",
     ):
         if tier not in TIERS:
             raise ValueError(f"tier must be one of {TIERS}")
+        if extraction not in ("auto", "interleaved", "batched"):
+            raise ValueError("extraction must be auto, interleaved, or batched")
+        self.extraction = extraction
         self.profile = profile
         self.scale = float(scale)
         self.rounds = rounds
@@ -1877,14 +2080,14 @@ class MemoryObjective:
             "tier": self.tier, "connectivity": self.connectivity if isinstance(self.connectivity, str) else self.connectivity.name,
             "flags": self.flags, "order": self.order, "bases": list(self.bases), "proxy_max_weight": self.proxy_max_weight,
             "exact_ml_bits": self.exact_ml_bits, "shots": self.shots, "min_failures": self.min_failures, "max_shots": self.max_shots,
-            "schedule_trials": self.schedule_trials,
+            "schedule_trials": self.schedule_trials, "extraction": self.extraction,
         }
 
     # ------------------------------------------------------------------
     def circuit(self, code: StabilizerCode, basis: str, rounds: int, seed: int | None = None, orders=None) -> MemoryCircuit:
         seed = self.seed if seed is None else seed
         # the hook-aware order protects the code's distance, whatever the number of rounds
-        return build_memory_circuit(code, rounds, basis, self.connectivity, self.flags, self.order, seed, hook_target=None, orders=orders)
+        return build_memory_circuit(code, rounds, basis, self.connectivity, self.flags, self.order, seed, hook_target=None, orders=orders, extraction=self.extraction)
 
     def dem(self, code: StabilizerCode, basis: str, rounds: int, seed: int | None = None, orders=None):
         mc = self.circuit(code, basis, rounds, seed, orders)
@@ -1904,7 +2107,7 @@ class MemoryObjective:
         out = {
             "basis": basis, "rounds": rounds, "mechanisms": len(sig), "detectors": sig.num_detectors,
             "observables": sig.num_observables, "two_qubit_gates": mc.two_qubit_gates, "routed_gates": mc.routed_gates,
-            "layers": mc.layers, "batches": len(mc.batches), "num_qubits": mc.num_qubits,
+            "layers": mc.layers, "batches": len(mc.batches), "num_qubits": mc.num_qubits, "extraction": mc.extraction,
             "expected_faults": float(sig.probs.sum()),
         }
         if tier == "proxy":
@@ -1953,7 +2156,7 @@ class MemoryObjective:
         per, p_round = None, None
         for s in range(self.seed, self.seed + trials):
             # the gate order is a property of the code, shared by the bases
-            orders = hook_orders(code, None, s) if self.order == "hook" else None
+            orders = hook_orders(code, None, s, interleave=self.extraction != "batched", flags=self.flags) if self.order == "hook" else None
             cand = {b: self.evaluate_basis(code, b, rounds, tier, s, orders) for b in self.bases}
             p = float(sum(cand[b]["p_round"] for b in self.bases))
             if p_round is None or p < p_round:
