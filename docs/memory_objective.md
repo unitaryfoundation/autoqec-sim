@@ -213,9 +213,10 @@ code, the non-CSS [[9,1,3]] of the noise-aware ion run), three profiles,
 | [[16,4,4]], `d_circ` 2 | 0.0074 / 0.0091 / 0.0148 (0.85) | 0.024 / 0.075 / 0.056 (2.13) | 0.0054 / 0.0080 / 0.0085 (0.90) |
 | non-CSS [[9,1,3]], `d_circ` 2 | 0.0024 / 0.0022 / 0.0028 (0.27) | 0.018 / 0.016 / 0.016 (0.80) | 0.0063 / 0.0063 / 0.0065 (0.49) |
 
-The proxy is within 25 percent of the sampled tier (exact ML for the
-[[5,1,3]] code, the lookup decoder otherwise) on every code below one
-expected fault per shot, and the two rank the codes the same way on every
+The proxy is within 30 percent of the sampled tier (exact ML for the
+[[5,1,3]] code, the lookup decoder otherwise) on 13 of the 14 rows below
+one expected fault per shot, the exception being the [[16,4,4]] code
+under Heron rates at 0.9 faults per shot (0.68), and the two rank the codes the same way on every
 profile (Spearman 0.9 on five codes; the [[5,1,3]] and Steane rows are
 within 1.15x of each other under Heron and swap). bposd deviates in two
 places: Steane, where it is 1.7 to 3.2 times worse than the ML tiers on

@@ -56,6 +56,16 @@
   checked against the paper's text, the assumptions are listed per row,
   and the page states that the comparison is model against reported
   number, not a device prediction.
+- The README is cut to the value proposition: what the evaluator does
+  in five bullets, the experiments in three with links, installation, and
+  the three examples; the validation numbers stay on the evaluate page
+  and the results on the experiments pages. The docs home follows.
+- The "within 25 percent of the exact maximum-likelihood tier on every
+  benchmark code" statement on the evaluate and memory-objective pages is
+  corrected from its own table: within 30 percent of the sampled tier
+  (exact maximum likelihood on the [[5,1,3]] code, a weight-2 lookup
+  decoder on the rest) on 13 of the 14 rows below one expected fault per
+  shot, with the [[16,4,4]] code under Heron rates at 0.68.
 - README and docs-home claims checked against the tracked reports: the
   SAT population is 2,145 codes with Spearman 0.00 to 0.18 at the sampled
   tier (not "over 2,150" and 0.21, which spliced two tiers), Shor's code is

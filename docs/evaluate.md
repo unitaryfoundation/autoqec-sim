@@ -202,9 +202,12 @@ commuting gauge generators.
 - It ranks like the sampled decoders where they overlap: Spearman 0.79,
   0.90, and 0.78 against BP+OSD over 32 random [[9,1,3]] codes under the
   chain, board, and Heron profiles
-  ([memory objective runs](experiments/memory_objective.md)), within 25
-  percent of the exact maximum-likelihood tier on every benchmark code
-  below one expected fault per shot, within 8 percent of Tesseract on
+  ([memory objective runs](experiments/memory_objective.md)), within 30
+  percent of the sampled tier (exact maximum likelihood on the [[5,1,3]]
+  code, a weight-2 lookup decoder on the rest) on 13 of the 14 benchmark
+  rows below one expected fault per shot, the fourteenth being the
+  [[16,4,4]] code under Heron rates at 0.9 faults per shot at 0.68, within
+  8 percent of Tesseract on
   the 5x5 surface code at five rounds, where 50,000 shots per basis leave
   Tesseract itself a 30 percent standard error (above), and at Spearman
   0.89 and 0.93 against Tesseract over 21 distance-5 codes under the

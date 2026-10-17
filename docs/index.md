@@ -32,31 +32,20 @@ logical error per round, the exact circuit-level distance, and the
 dominant fault sets explained back to gates and qubits, without sampling
 or a decoder.
 
-The evaluator builds an `R`-round memory circuit with one ancilla per
-generator in a hook-aware gate order, derives stim's detector error model
-[@gidney2021], and scores it at one of four tiers: a closed-form
-maximum-likelihood proxy over low-weight fault sets, exact maximum
-likelihood or a lookup decoder, BP+OSD [@roffe2020; @panteleev2021], or
-Tesseract [@beni2025]. The proxy is exact to leading order at circuit
-distance up to 6, ranks like BP+OSD over random codes (Spearman 0.78 to
-0.90) and like 50,000 Tesseract shots over 21 distance-5 codes (Spearman
-0.89 to 0.93), and runs about 30 percent low in level at 1.7 to 2.8
-expected faults per shot. The
-[Evaluate a code](evaluate.md) page has the fields, the tiers, the
-validation, and the limits.
-
-Candidates can come from anywhere. The package ships three proposers and
-the tools that verify what they find: a SAT-population pipeline over the
-codes of [@dalfavero2026], an evolutionary search, and a PPO agent in the
-gate-by-gate formulation of [@olle2024], all on a batched
-Aaronson-Gottesman tableau with a bit-identical torch and CUDA path. The
-[experiments](experiments/index.md) record what each has found: over 2,145
-SAT-designed codes the code-capacity ranking carries almost no information
-about the circuit-level rate (Spearman 0.00 to 0.18), the gate-by-gate
-agents rediscover the small codes and reach distance 3 on every lattice
-tried but do not get past 12 qubits under a sparsity constraint, and a
-schedule synthesizer raised the
-fault distance of the qldpc-challenge [[49,13,4]] circuit from 2 to 3.
+- **Four scoring tiers** on stim's detector error model [@gidney2021]: a
+  closed-form maximum-likelihood proxy over low-weight fault sets (no
+  shots, no decoder), exact maximum likelihood or a lookup decoder, BP+OSD
+  [@roffe2020; @panteleev2021], and Tesseract [@beni2025]. The proxy ranks
+  codes the way the sampled decoders do and holds below about one expected
+  fault per shot; [Evaluate a code](evaluate.md) has the validation and
+  the limits.
+- **Three proposers** and the tools that verify what they find: a
+  SAT-population pipeline over the codes of [@dalfavero2026], an
+  evolutionary search, and a PPO agent in the gate-by-gate formulation of
+  [@olle2024], on a batched Aaronson-Gottesman tableau with a torch and
+  CUDA path.
+- **Tracked experiments**: the [experiments](experiments/index.md) hold
+  what each has found, with a figure and the commands that reproduce it.
 
 ## Quick Example
 

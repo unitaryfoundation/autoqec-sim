@@ -23,7 +23,7 @@ cannot do for a local-Clifford deformation.
 | Spearman, bposd seed against bposd seed, same codes | 0.53 | 0.95 | 0.88 |
 | proxy cost per code, both bases, one thread | 0.08 to 0.22 s at n <= 9; 1.7 to 2.3 s at n = 16 | | |
 
-- On the chain profile the proxy is closer to one BP+OSD sample than two BP+OSD samples are to each other. Against the exact-ML sampled tier the proxy is within 25 percent on every benchmark code below one expected fault per shot.
+- On the chain profile the proxy is closer to one BP+OSD sample than two BP+OSD samples are to each other. Against the sampled tier (exact maximum likelihood on the [[5,1,3]] code, a weight-2 lookup decoder on the rest) the proxy is within 30 percent on 13 of the 14 benchmark rows below one expected fault per shot; the [[16,4,4]] code under Heron rates at 0.9 faults per shot sits at 0.68.
 - Steane is the outlier on every profile: BP+OSD decodes it 1.7 to 3.2 times worse than both maximum-likelihood tiers.
 
 ![Rotated surface code against XZZX as the idle bias grows, proxy and BP+OSD, sequential and parallel timing](../assets/figures/memory_objective_bias.png)

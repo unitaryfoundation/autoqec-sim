@@ -10,96 +10,66 @@
 
 **autoqec-sim** evaluates stabilizer codes under device noise. One call
 builds the syndrome-extraction memory experiment of any stabilizer code,
-CSS or not, applies a noise model with sourced device parameters, and
-returns the logical error per round, the exact circuit-level distance, and
-the dominant fault sets explained back to gates and qubits, without
-sampling or a decoder. Candidates can come from anywhere. The package also
-ships three proposers, a SAT-population pipeline, an evolutionary search,
-and a PPO agent, and the tools that verify what they find.
+applies a noise model built from public device specifications, and returns
+the logical error per round, the exact circuit-level distance, and the
+dominant fault sets explained back to gates and qubits, in seconds and
+without sampling or a decoder. Candidates can come from anywhere; the
+package also ships three code proposers and the tools that verify what
+they find.
 
 Developed with support from the U.S. Department of Energy Genesis Mission
 and hosted by the [Unitary Foundation](https://unitary.foundation).
 
-## What the evaluator does
+## What it does
 
-`evaluate_code(code, profile)` takes stabilizer generators as Pauli strings
-and a noise profile (IonQ Forte, IBM Heron, a long ion chain, the
-qldpc-challenge recipe, or uniform depolarizing noise). It builds an
-`R`-round memory circuit with one ancilla per generator in a hook-aware
-gate order, derives stim's detector error model, and scores it at one of
-four tiers: a closed-form maximum-likelihood proxy over low-weight fault
-sets (no shots, no decoder), exact maximum likelihood or a lookup decoder,
-BP+OSD, or Tesseract. The proxy is exact to leading order at circuit
-distance up to 6 and agrees with the sampled decoders where they overlap:
-Spearman 0.78 to 0.90 against BP+OSD over 32 random [[9,1,3]] codes, and
-Spearman 0.89 to 0.93 against 50,000 Tesseract shots over 21 distance-5
-codes under the Forte preset, where it runs about 30 percent low in level
-at 1.7 to 2.8 expected faults per shot. Beside the rate it returns
-the exact circuit-level distance up to weight 6, the probability mass of
-the minimum-weight undetectable fault sets, and the most probable of them
-as circuit locations.
+- **Evaluates any stabilizer code**, CSS or not, and subsystem codes
+  through their gauge generators. `evaluate_code(code, profile)` builds
+  the memory circuit with a hook-aware schedule, derives stim's detector
+  error model, and scores it.
+- **Four scoring tiers.** A closed-form maximum-likelihood proxy over
+  low-weight fault sets (no shots, no decoder), exact maximum likelihood
+  or a lookup decoder, BP+OSD, and Tesseract.
+- **Explains the answer.** The exact circuit-level distance up to weight
+  6, the probability mass of the minimum-weight undetectable fault sets,
+  and the most probable of them as circuit locations.
+- **Noise models with every parameter sourced.** IonQ Forte, IBM Heron, a
+  long ion chain, the qldpc-challenge recipe, and uniform depolarizing
+  noise, with biased, correlated, and leakage-aware channels, device
+  timing, and connectivity. They are models assembled from public
+  specifications, not device measurements.
+- **Three proposers and a schedule synthesizer.** A SAT-population
+  pipeline over the codes of DalFavero et al.
+  ([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)), an evolutionary
+  search, and a PPO agent on a batched tableau simulator with a torch and
+  CUDA path, plus PPO over the CX-layer schedule of a fixed code's
+  extraction circuit.
 
-Its limits: the proxy is a leading-order estimate and holds while the
-expected number of faults per shot stays below about one, where the
-sampled tiers take over; the circuit-distance search stops at weight 6;
-the memory circuit interleaves all checks into one block with one
-measurement per round where a hook-safe schedule exists (every surface
-code tried) and falls back to separate blocks with their own measurements
-where none does (the Steane code); subsystem codes are measured through
-their gauge generators, but flags beyond one per generator and adaptive
-protocols are not expressible; and the presets are noise models assembled
-from public specifications, not device measurements.
+The proxy ranks codes the way the sampled decoders do and holds below
+about one expected fault per shot; [Evaluate a code](https://unitaryfoundation.github.io/autoqec-sim/stable/evaluate/) has
+the validation numbers and the limits.
 
-## What the proposers have found
+## What the experiments show
 
-The evaluator exists because two cheaper rankings fail. Over a
-population of 2,145 SAT-designed nine-qubit codes, the code-capacity
-logical error rate has rank correlation 0.00 to 0.18 with the sampled
-circuit-level rate, none of the twenty best codes by one score is among
-the twenty best by the other, and the best codes of the population sit 30
-to 40 percent below XZZX at bias 10 and under the Forte preset. The
-proposers' own encoder-level objective, the undetected single-fault mass
-of the encoding circuit, cannot tell a code from its local-Clifford
-deformations, because a Hadamard at the end of the encoder only relabels
-detected weight-1 faults. The gate-by-gate search of Olle, Zen, Puviani, and
-Marquardt
-([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
-reimplemented here with PPO and an evolutionary search, rediscovers
-[[5,1,3]], Steane, and the rotated surface code, reaches distance 3
-on square, triangular, and heavy-hex lattices at 9 to 18 qubits in 18 of
-18 PPO runs and 17 of 18 evolutionary runs, matched 24 of the 45 published
-QDX targets it ran within 10 minutes each, and found a [[25,1,5]] code on
-the 5x5 lattice. Under a sparsity constraint (generator weight at most 4)
-it does not get past 12 qubits, and the SAT formulation of DalFavero et al.
-([arXiv:2608.23460](https://arxiv.org/abs/2608.23460)) designs
-physics-inspired codes with up to 100 qubits in minutes; such codes go
-into the evaluator as they are.
-A schedule synthesizer assigns the CX layers of a fixed code's extraction
-circuit against the exact circuit-level fault distance and raised that
-distance from 2 to 3 for the qldpc-challenge [[49,13,4]] circuit. The
-[experiments pages](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/)
-and the reports under `experiments/` hold each result with the commands
-that reproduce it.
+- Code-capacity rankings say little about circuit-level rates: Spearman
+  0.00 to 0.18 over 2,145 SAT-designed codes
+  ([SAT population](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/sat_population/)).
+- The gate-by-gate search of Olle, Zen, Puviani, and Marquardt
+  ([npj Quantum Information 10, 126 (2024)](https://doi.org/10.1038/s41534-024-00920-y)),
+  reimplemented here with PPO and an evolutionary search, rediscovers the
+  small codes and reaches distance 3 on three lattices at 9 to 18 qubits
+  ([topologies](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/topologies/)); it matches 24 of 45 QDX
+  targets within 10 minutes each
+  ([QDX targets](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/qdx_targets/)) and finds a [[25,1,5]]
+  code on the 5x5 lattice ([report](https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/gpu_scale/REPORT.md)).
+- Under a sparsity constraint (generator weight at most 4) the same
+  search does not get past 12 qubits
+  ([scaling](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/scaling/)).
+- The schedule synthesizer raised the circuit-level fault distance of the
+  qldpc-challenge [[49,13,4]] circuit from 2 to 3
+  ([report](https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/schedule/REPORT.md)).
 
-## Why autoqec-sim?
-
-- **One-call evaluation of any stabilizer code**: logical error per round,
-  exact circuit-level distance, and dominant faults explained to gates, for
-  CSS and non-CSS codes alike, without a matching decoder or shots.
-- **Noise models with every parameter sourced**: IonQ Forte, IBM Heron, a
-  long ion chain, and the qldpc-challenge recipe, with biased, correlated,
-  and leakage-aware channels, device timing, and connectivity; the same
-  models noisify a `stim.Circuit` of your own.
-- **Verification independent of the objective**: exact distance, weight
-  enumerators, and the sparsest generator basis for every code a run
-  reports.
-- **Three proposers**: a SAT-population pipeline over the codes of DalFavero
-  et al., an evolutionary search, and PPO with action masking and a
-  permutation-equivariant policy, on a batched tableau simulator with a
-  bit-identical torch and CUDA path.
-- **Schedule synthesis**: PPO over the CX-layer assignment of a
-  syndrome-extraction circuit with the exact circuit-level fault distance
-  as the reward.
+The [experiments pages](https://unitaryfoundation.github.io/autoqec-sim/stable/experiments/) hold each result with its
+figure and the commands that reproduce it.
 
 ## Installation
 

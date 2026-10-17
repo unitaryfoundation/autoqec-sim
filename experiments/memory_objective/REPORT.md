@@ -20,8 +20,9 @@ scale 1 exceed that on these circuits (chain 0.6 to 3.4, Heron 2.8 to
    weight-2 lookup decoder) 0.16 to 0.31 s and 5 s; `bposd` 0.2 to 1.5 s
    and 37 to 42 s at 200 failures per basis. Inside PPO the proxy
    evaluated 92 distinct target-distance codes at 0.47 s each.
-2. Rank agreement. Proxy against the sampled ML tier: within 25 percent
-   on every benchmark code below one expected fault per shot and Spearman
+2. Rank agreement. Proxy against the sampled ML tier: within 30 percent
+   on 13 of the 14 benchmark rows below one expected fault per shot (the
+   [[16,4,4]] code under Heron at 0.9 faults per shot is at 0.68) and Spearman
    0.9 on every profile over the five codes. Proxy against bposd: 0.9
    (ion), 0.8 (board), 0.3 (heron) on the five codes, the Heron outlier
    being Steane, for which bposd is 1.7 to 3.2 times worse than both ML
