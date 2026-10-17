@@ -2258,14 +2258,23 @@ rounds <code>R</code> (default the target distance), a layout, and a tier.</p>
 <ol>
 <li>Circuit (<code>build_memory_circuit</code>). One ancilla per generator, prepared
    in <code>|+&gt;</code>, controlled-X, -Y, or -Z from the ancilla onto each support
-   qubit in a chosen order, <code>H</code>, measurement in the Z basis. Generators
-   that share a qubit with different Pauli letters cannot be interleaved
-   (their controlled gates on that qubit do not commute), so the generators
-   are greedily colored into batches of mutually interleavable generators
-   (for a CSS code: the X block and the Z block) which run one after the
-   other with their own reset and measurement layers; inside a batch the
-   gates are packed into layers as soon as possible with one gate per
-   qubit per layer. Preparation and final readout are noiseless <code>MPP</code>
+   qubit in a chosen order, <code>H</code>, measurement in the Z basis. By default
+   every generator runs in one interleaved block with one measurement per
+   round (<code>extraction="auto"</code>): the orders are chosen jointly among the
+   hook-safe ones so that no qubit sees two gates in one layer and, for
+   every pair of generators sharing qubits with different letters, an even
+   number of those qubits sees one generator first, the condition for each
+   ancilla to measure its own generator (an odd number multiplies the
+   measured operator by <code>Z</code> of the other ancilla, which starts in <code>|+&gt;</code>).
+   The standard four-layer surface-code cycle is one such schedule, and
+   every surface code tried, the Shor code, and the [[5,1,3]] code
+   schedule; the Steane code does not within the search cap and falls back
+   to batches of mutually interleavable generators (for a CSS code the X
+   block and the Z block), one after the other with their own reset and
+   measurement layers, which <code>extraction="batched"</code> forces and which was
+   the only schedule before this option (the numbers of this page come
+   from it). Inside a batch the gates are packed into layers as soon as
+   possible with one gate per qubit per layer. Preparation and final readout are noiseless <code>MPP</code>
    measurements of every generator and of the logical operators of the
    memory basis (<code>Z</code> or <code>X</code>); detectors compare consecutive measurements of
    each generator (round 0 against the preparation, the final readout

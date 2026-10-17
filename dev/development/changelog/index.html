@@ -2091,6 +2091,18 @@
   reports move from the untracked <code>runs/</code> directories to
   <code>experiments/&lt;name&gt;/REPORT.md</code>.</p>
 </li>
+<li>The memory circuit interleaves every generator into one block with one
+  measurement per round when a hook-safe schedule exists: <code>hook_orders</code>
+  chooses the orders jointly so that no qubit sees two gates in one layer
+  and every pair of generators sharing qubits with different letters has
+  an even number of those qubits visited in each order (the condition for
+  each ancilla to measure its own generator), with gate layers inside a
+  round as short as the longest generator allows. Every surface code tried
+  gets the standard four-layer cycle; the Steane code falls back to the
+  batched blocks, which <code>extraction="batched"</code> forces
+  (<code>build_memory_circuit</code>, <code>MemoryObjective</code>; <code>per_basis</code> reports
+  <code>extraction</code>). CSS codes lose the second measurement window per round
+  that made their absolute rates pessimistic.</li>
 <li>The package is positioned around <code>evaluate_code</code>. README, documentation
   home, user guide, quick start, navigation, and project metadata lead
   with the circuit-level evaluator and present the SAT-population
