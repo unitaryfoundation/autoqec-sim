@@ -2104,9 +2104,9 @@ matched gate set, connectivity, and success criterion, with one run of
 <li>21 of the unsuccessful runs stopped at the 10-minute cap after 6 to 57 percent of the step budget, while sharing the machine with other jobs that cut the step rate by up to eightfold from n = 12 on. The misses at n &gt;= 12 are misses at this wall time, not at 3M steps.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m autoqec_sim.experiments.qdx_targets run --tier d3
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m autoqec_sim.experiments.qdx_targets report
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m autoqec_sim.experiments.qdx_targets figure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m experiments.qdx_targets.run run --tier d3
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m experiments.qdx_targets.run report
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m experiments.qdx_targets.run figure
 </code></pre></div>
 <p>The write-up, with the QDX columns read from its archive, is
 <a href="https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/qdx_targets/REPORT.md"><code>experiments/qdx_targets/REPORT.md</code></a>.</p>

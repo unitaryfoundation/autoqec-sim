@@ -2111,10 +2111,10 @@ LDPC penalty of the rediscovery regression carry to <code>n = 12</code> to <code
 <li>These are limits of gate-by-gate encoder search. A SAT formulation designs codes with up to 100 physical qubits in minutes <sup id="fnref:dalfavero2026"><a class="footnote-ref" href="#fn:dalfavero2026">1</a></sup>; the rewards here take such a code as input, which is the direction of the <a href="../sat_codes/">SAT experiments</a>.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling variant --variant equivariant --seed 0
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling ldpc --n 12 --k 2 --graph all_to_all:12 --seed 0
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling report
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m autoqec_sim.experiments.scaling figure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m experiments.scaling.run variant --variant equivariant --seed 0
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m experiments.scaling.run ldpc --n 12 --k 2 --graph all_to_all:12 --seed 0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m experiments.scaling.run report
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m experiments.scaling.run figure
 </code></pre></div>
 <p>The write-up is
 <a href="https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/scaling/REPORT.md"><code>experiments/scaling/REPORT.md</code></a>.</p>

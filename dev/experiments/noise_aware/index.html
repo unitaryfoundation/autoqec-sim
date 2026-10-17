@@ -2106,10 +2106,10 @@ the experiment the proposal cites <sup id="fnref:olle2024"><a class="footnote-re
 <li>The 4x4 setting did not fit the budget: none of its 15 runs (16M env steps each) produced a distance-4 state. The <a href="../scaling/">scaling probe</a> explains why.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware run --setting 3x3 --profile ion --seed 0
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware baselines --setting 3x3
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware report
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m autoqec_sim.experiments.noise_aware figure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m experiments.noise_aware.run run --setting 3x3 --profile ion --seed 0
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m experiments.noise_aware.run baselines --setting 3x3
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m experiments.noise_aware.run report
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m experiments.noise_aware.run figure
 </code></pre></div>
 <p><code>--threads N</code> caps torch and BLAS; the release numbers came from the
 3-worker, 6-thread queue <code>experiments/noise_aware/runs/run_sweep.sh</code>. The

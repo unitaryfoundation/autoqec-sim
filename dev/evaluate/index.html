@@ -803,6 +803,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#subsystem-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem codes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#validation-and-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2095,6 +2106,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#subsystem-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem codes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#validation-and-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2365,6 +2387,36 @@ per round from 12 and 9 failures (a standard error of about 30 percent)
 in three and a half minutes, 8 percent below the proxy, at 1.4 expected
 faults per shot. Beyond distance 6 the proxy is zero again; the search
 cost grows about twentyfold per unit of weight.</p>
+<h2 id="subsystem-codes">Subsystem codes<a class="headerlink" href="#subsystem-codes" title="Permanent link">&para;</a></h2>
+<p>A <code>SubsystemCode</code> is given by independent generators of its gauge group;
+the center (the stabilizer group), the bare logical operators, and one
+gauge fixing (a stabilizer code with the same bare logicals, used for the
+distance and the gate-order search) are computed from them. Its memory
+circuit measures every gauge generator with its own ancilla, in batches of
+mutually interleavable generators, and reads each stabilizer as the parity
+of the gauge outcomes whose product it is, with the sign of that product
+carried into the reference measurements. The gauge generators of the
+Bacon-Shor code <sup id="fnref:bacon2006"><a class="footnote-ref" href="#fn:bacon2006">4</a></sup> and of the distance-3 heavy-hexagon code
+<sup id="fnref:sundaresan2023"><a class="footnote-ref" href="#fn:sundaresan2023">5</a></sup> ship in <code>known_codes</code> (<code>get_subsystem</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># A subsystem code: the gauge generators are measured and each stabilizer is</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># read as the parity of the gauge outcomes whose product it is. The Bacon-Shor</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># [[9,1,3]] code has twelve weight-2 gauge generators and four weight-6</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># stabilizers; weight-2 measurements have no hook error, so the circuit keeps</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># the distance without any gate-order search.</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">autoqec_sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubsystemCode</span><span class="p">,</span> <span class="n">known_codes</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">bacon_shor</span> <span class="o">=</span> <span class="n">SubsystemCode</span><span class="o">.</span><span class="n">from_gauge</span><span class="p">(</span><span class="n">known_codes</span><span class="o">.</span><span class="n">BACON_SHOR_9_GAUGE</span><span class="p">)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">bacon_shor</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">bacon_shor</span><span class="o">.</span><span class="n">stabilizer_strings</span><span class="p">())</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">sub</span> <span class="o">=</span> <span class="n">evaluate_code</span><span class="p">(</span><span class="n">bacon_shor</span><span class="p">,</span> <span class="n">presets</span><span class="o">.</span><span class="n">depolarizing</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">),</span> <span class="n">rounds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"error per round </span><span class="si">{</span><span class="n">sub</span><span class="o">.</span><span class="n">p_round</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">  d_circ </span><span class="si">{</span><span class="n">sub</span><span class="o">.</span><span class="n">d_circ</span><span class="si">}</span><span class="s2">  gauge generators measured </span><span class="si">{</span><span class="n">bacon_shor</span><span class="o">.</span><span class="n">num_gauge</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(9, 1, 3) ['XXXXXXIII', 'IIIXXXXXX', 'ZZIZZIZZI', 'IZZIZZIZZ']
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>error per round 1.01e-02  d_circ {'Z': 3, 'X': 3}  gauge generators measured 12
+</code></pre></div>
+<p>A stabilizer whose factors do not all commute cannot be read in one round,
+and <code>stabilizer_factors</code> raises for it; the heavy-hexagon code's two
+weight-6 Z stabilizers and four X stabilizers are all products of
+commuting gauge generators.</p>
 <h2 id="validation-and-limits">Validation and limits<a class="headerlink" href="#validation-and-limits" title="Permanent link">&para;</a></h2>
 <ul>
 <li>The proxy is exact for what it computes. On the one-round 5x5 surface
@@ -2391,8 +2443,9 @@ cost grows about twentyfold per unit of weight.</p>
   (the Steane code), generators that share a qubit with different Pauli
   letters run in separate blocks with their own measurements, and the
   extra idle time makes such a code's absolute rate pessimistic
-  (<code>per_basis[b]["extraction"]</code> says which schedule was used). Flags
-  beyond one per generator, gauge measurements, and transport are not
+  (<code>per_basis[b]["extraction"]</code> says which schedule was used). Subsystem
+  codes are measured through their gauge generators (above); flags beyond
+  one per generator, adaptive protocols, and transport are not
   expressible.</li>
 <li>The presets are noise models assembled from public specifications, not
   device measurements, and <code>evaluate_code</code> builds its own circuit. A rate
@@ -2409,6 +2462,12 @@ cost grows about twentyfold per unit of weight.</p>
 </li>
 <li id="fn:panteleev2021">
 <p>Pavel Panteleev and Gleb Kalachev. Degenerate quantum LDPC codes with good finite length performance. <em>Quantum</em>, 5:585, 2021. <a href="https://arxiv.org/abs/1904.02703">arXiv:1904.02703</a>, <a href="https://doi.org/10.22331/q-2021-11-22-585">doi:10.22331/q-2021-11-22-585</a>.&#160;<a class="footnote-backref" href="#fnref:panteleev2021" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bacon2006">
+<p>Dave Bacon. Operator quantum error-correcting subsystems for self-correcting quantum memories. <em>Physical Review A</em>, 73:012340, 2006. <a href="https://arxiv.org/abs/quant-ph/0506023">arXiv:quant-ph/0506023</a>, <a href="https://doi.org/10.1103/PhysRevA.73.012340">doi:10.1103/PhysRevA.73.012340</a>.&#160;<a class="footnote-backref" href="#fnref:bacon2006" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sundaresan2023">
+<p>Neereja Sundaresan, Theodore J. Yoder, Youngseok Kim, Muyuan Li, Edward H. Chen, Grace Harper, Ted Thorbeck, Andrew W. Cross, Antonio D. Córcoles, and Maika Takita. Matching and maximum likelihood decoding of a multi-round subsystem quantum error correction experiment. <em>Nature Communications</em>, 14:2852, 2023. <a href="https://arxiv.org/abs/2203.07205">arXiv:2203.07205</a>, <a href="https://doi.org/10.1038/s41467-023-38247-5">doi:10.1038/s41467-023-38247-5</a>.&#160;<a class="footnote-backref" href="#fnref:sundaresan2023" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

@@ -51,3 +51,17 @@ for basis in ("Z", "X"):
 top = d5.dominant_faults[0]
 print(f"{top.basis} basis, probability {top.probability:.1e}, {len(top.mechanisms)} mechanisms")
 # --8<-- [end:distance5]
+
+# --8<-- [start:subsystem]
+# A subsystem code: the gauge generators are measured and each stabilizer is
+# read as the parity of the gauge outcomes whose product it is. The Bacon-Shor
+# [[9,1,3]] code has twelve weight-2 gauge generators and four weight-6
+# stabilizers; weight-2 measurements have no hook error, so the circuit keeps
+# the distance without any gate-order search.
+from autoqec_sim import SubsystemCode, known_codes
+
+bacon_shor = SubsystemCode.from_gauge(known_codes.BACON_SHOR_9_GAUGE)
+print(bacon_shor.parameters(), bacon_shor.stabilizer_strings())
+sub = evaluate_code(bacon_shor, presets.depolarizing(1e-3), rounds=3)
+print(f"error per round {sub.p_round:.2e}  d_circ {sub.d_circ}  gauge generators measured {bacon_shor.num_gauge}")
+# --8<-- [end:subsystem]

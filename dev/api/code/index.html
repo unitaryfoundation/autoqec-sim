@@ -2139,6 +2139,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SubsystemCode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SubsystemCode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.from_gauge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_gauge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.stabilizer_factors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stabilizer_factors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2161,6 +2211,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;rotated_surface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.known_codes.get_subsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_subsystem
       
     </span>
   </a>
@@ -3020,6 +3081,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SubsystemCode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SubsystemCode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.from_gauge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_gauge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.stabilizer_factors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stabilizer_factors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.code.SubsystemCode.parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3042,6 +3153,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;rotated_surface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoqec_sim.known_codes.get_subsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_subsystem
       
     </span>
   </a>
@@ -4453,6 +4575,235 @@ equal enumerators are a necessary condition for equivalence. Needs
 
 </div>
 
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="autoqec_sim.code.SubsystemCode" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SubsystemCode</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#autoqec_sim.code.SubsystemCode" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>A subsystem code given by independent generators of its gauge group.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.gauge">gauge</span></code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>(g, 2n)</code> binary symplectic rows, independent, every generator
+taken with sign <code>+1</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.stabilizers">stabilizers</span></code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>(s, 2n)</code> rows spanning the center of the gauge group, the
+stabilizer group of the code.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.logical_x, logical_z">logical_x, logical_z</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>(k, 2n)</code> bare logical operators: they commute with every gauge
+generator and are not in the gauge group.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.fixed">fixed</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            StabilizerCode
+
+
+  
+      dataclass
+   (autoqec_sim.code.StabilizerCode)" href="#autoqec_sim.code.StabilizerCode">StabilizerCode</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The stabilizer code with generators <code>stabilizers</code> plus a maximal
+commuting set of gauge generators (one gauge fixing). It carries
+the same bare logicals and stands in for the distance and the
+hook-order search of a memory circuit.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.The memory circuit of `autoqec_sim.memory_objective` measures the">The memory circuit of `autoqec_sim.memory_objective` measures the</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.gauge generators, each with its own ancilla, and forms each stabilizer">gauge generators, each with its own ancilla, and forms each stabilizer</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.as the parity of the gauge outcomes whose product it is">as the parity of the gauge outcomes whose product it is</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="autoqec_sim.code.SubsystemCode.(`stabilizer_factors`).">(`stabilizer_factors`).</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="autoqec_sim.code.SubsystemCode.from_gauge" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">from_gauge</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#autoqec_sim.code.SubsystemCode.from_gauge" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_gauge</span><span class="p">(</span><span class="n">gauge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemCode</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>From gauge generators as Pauli strings (a leading sign is
+ignored) or symplectic rows; dependent generators are dropped.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="autoqec_sim.code.SubsystemCode.stabilizer_factors" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stabilizer_factors</span>
+
+
+<a href="#autoqec_sim.code.SubsystemCode.stabilizer_factors" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stabilizer_factors</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>For each stabilizer, the indices of the gauge generators whose
+product it is (unique, the generators being independent) and the
+sign of that product, <code>+1</code> or <code>-1</code>, relative to the stabilizer
+as a positive Pauli. Raises <code>ValueError</code> when the factors of some
+stabilizer do not pairwise commute, since their outcomes measured in
+one round would not multiply to the stabilizer's eigenvalue.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="autoqec_sim.code.SubsystemCode.parameters" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">parameters</span>
+
+
+<a href="#autoqec_sim.code.SubsystemCode.parameters" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">parameters</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p><code>(n, k, d)</code> with <code>d</code> the exact distance of the gauge-fixed
+stabilizer code.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 
 
@@ -4578,6 +4929,26 @@ and is X-type iff <code>r + c</code> is even; the weight-2 boundary checks have
 the type opposite to the adjacent plaquette. <code>d = 3</code> reproduces
 <code>ROTATED_SURFACE_9</code> up to the order of the generators.</p>
 </details>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="autoqec_sim.known_codes.get_subsystem" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">get_subsystem</span>
+
+
+<a href="#autoqec_sim.known_codes.get_subsystem" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_subsystem</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemCode</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>A <code>SubsystemCode</code> from its gauge generators.</p>
+
 
     </div>
 

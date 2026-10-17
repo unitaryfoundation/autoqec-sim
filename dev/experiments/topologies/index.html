@@ -2127,10 +2127,10 @@ set, and how does the cost grow with the lattice?</p>
 <li>Total wall time 13 minutes over the 18 runs at two threads each; the longest run took 197 s, so no run reached its step budget or the wall cap.</li>
 </ul>
 <h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies matrix
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies run --topology heavy_hex --target-n 16 --seed 0
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies report
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m autoqec_sim.experiments.topologies figure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv run --extra rl python -m experiments.topologies.run matrix
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv run --extra rl python -m experiments.topologies.run run --topology heavy_hex --target-n 16 --seed 0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv run --extra rl python -m experiments.topologies.run report
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uv run --extra rl python -m experiments.topologies.run figure
 </code></pre></div>
 <p>The write-up is
 <a href="https://github.com/unitaryfoundation/autoqec-sim/blob/main/experiments/topologies/REPORT.md"><code>experiments/topologies/REPORT.md</code></a>.</p>

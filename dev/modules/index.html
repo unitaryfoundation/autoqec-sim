@@ -1494,6 +1494,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1977,6 +1988,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2034,15 +2056,15 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.code</code></td>
-<td><code>StabilizerCode</code> read off an encoding tableau or built from Pauli strings (general non-CSS, symplectic form). Exact distance for <code>n &lt;= 20</code> by enumerating N(S) or low-weight Paulis, whichever is cheaper; randomized information-set upper bound with a witness for larger <code>n</code> (the symplectic version of <code>research/kit/surrogate.py</code> in <sup id="fnref:qldpcchallenge"><a class="footnote-ref" href="#fn:qldpcchallenge">6</a></sup>); CSS test <sup id="fnref:calderbank1996"><a class="footnote-ref" href="#fn:calderbank1996">7</a></sup><sup id="fnref:steane1996"><a class="footnote-ref" href="#fn:steane1996">8</a></sup>; weight enumerators of S and N(S).</td>
+<td><code>StabilizerCode</code> read off an encoding tableau or built from Pauli strings (general non-CSS, symplectic form); <code>SubsystemCode</code> from gauge generators, with the center, the bare logicals, a gauge fixing, and the decomposition of each stabilizer into commuting gauge factors. Exact distance for <code>n &lt;= 20</code> by enumerating N(S) or low-weight Paulis, whichever is cheaper; randomized information-set upper bound with a witness for larger <code>n</code> (the symplectic version of <code>research/kit/surrogate.py</code> in <sup id="fnref:qldpcchallenge"><a class="footnote-ref" href="#fn:qldpcchallenge">6</a></sup>); CSS test <sup id="fnref:calderbank1996"><a class="footnote-ref" href="#fn:calderbank1996">7</a></sup><sup id="fnref:steane1996"><a class="footnote-ref" href="#fn:steane1996">8</a></sup>; weight enumerators of S and N(S).</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.known_codes</code></td>
-<td>[[5,1,3]] <sup id="fnref:laflamme1996"><a class="footnote-ref" href="#fn:laflamme1996">9</a></sup><sup id="fnref:bennett1996"><a class="footnote-ref" href="#fn:bennett1996">10</a></sup>, Steane [[7,1,3]] <sup id="fnref2:steane1996"><a class="footnote-ref" href="#fn:steane1996">8</a></sup>, Shor [[9,1,3]] <sup id="fnref:shor1995"><a class="footnote-ref" href="#fn:shor1995">11</a></sup>, rotated surface <sup id="fnref:tomita2014"><a class="footnote-ref" href="#fn:tomita2014">12</a></sup> [[9,1,3]] and [[16,1,4]] (<code>rotated_surface(d)</code> builds any distance), [[4,2,2]].</td>
+<td>[[5,1,3]] <sup id="fnref:laflamme1996"><a class="footnote-ref" href="#fn:laflamme1996">9</a></sup><sup id="fnref:bennett1996"><a class="footnote-ref" href="#fn:bennett1996">10</a></sup>, Steane [[7,1,3]] <sup id="fnref2:steane1996"><a class="footnote-ref" href="#fn:steane1996">8</a></sup>, Shor [[9,1,3]] <sup id="fnref:shor1995"><a class="footnote-ref" href="#fn:shor1995">11</a></sup>, rotated surface <sup id="fnref:tomita2014"><a class="footnote-ref" href="#fn:tomita2014">12</a></sup> [[9,1,3]] and [[16,1,4]] (<code>rotated_surface(d)</code> builds any distance), [[4,2,2]]; the gauge generators of the Bacon-Shor [[9,1,3]] code <sup id="fnref:bacon2006"><a class="footnote-ref" href="#fn:bacon2006">13</a></sup> and of the distance-3 heavy-hexagon code <sup id="fnref:sundaresan2023"><a class="footnote-ref" href="#fn:sundaresan2023">14</a></sup> as subsystem codes (<code>get_subsystem</code>).</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.graphs</code></td>
-<td>all-to-all, linear chain, square, triangular, heavy-hex <sup id="fnref:chamberland2020"><a class="footnote-ref" href="#fn:chamberland2020">13</a></sup> builders and a <code>kind:size</code> spec parser. Every builder delegates to <code>autoqec_sim.noise.topology</code>; <code>from_topology</code>, <code>Graph.to_topology</code>, and <code>as_graph</code> convert between the environment view (<code>n</code>, sorted edge tuple) and the noise module's graph, so the action space and the noise profile's placement check share one edge set.</td>
+<td>all-to-all, linear chain, square, triangular, heavy-hex <sup id="fnref:chamberland2020"><a class="footnote-ref" href="#fn:chamberland2020">15</a></sup> builders and a <code>kind:size</code> spec parser. Every builder delegates to <code>autoqec_sim.noise.topology</code>; <code>from_topology</code>, <code>Graph.to_topology</code>, and <code>as_graph</code> convert between the environment view (<code>n</code>, sorted edge tuple) and the noise module's graph, so the action space and the noise profile's placement check share one edge set.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.ldpc</code></td>
@@ -2058,7 +2080,7 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.memory_objective</code></td>
-<td>Multi-round memory objective: an <code>R</code>-round syndrome-extraction circuit for arbitrary (non-CSS) stabilizer generators with one ancilla per generator, hook-aware gate orders, commutation-respecting batches, optional one-flag ancillas, all-to-all or square-lattice layouts with routed long-range gates; the <code>autoqec_sim.noise</code> profile with its timing model, stim's detector error model, and four fidelity tiers for the logical error rate per round (closed-form low-weight maximum-likelihood proxy with exact <code>d_circ</code>, exact ML or lookup-decoder sampling, pinned BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">14</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">15</a></sup> sampling, Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">16</a></sup> sampling); <code>undetectable_sets</code> lists the minimum-weight undetectable fault sets by probability, and <code>undetectable_logicals</code> enumerates every irreducible one up to weight 6 by a cluster search, which carries the proxy to circuit distance 5 and 6. <code>MemoryReward</code> is the environment reward; see docs/experiments/index.md and <code>docs/memory_objective.md</code>.</td>
+<td>Multi-round memory objective: an <code>R</code>-round syndrome-extraction circuit for arbitrary (non-CSS) stabilizer generators with one ancilla per generator, hook-aware gate orders, commutation-respecting batches, optional one-flag ancillas, all-to-all or square-lattice layouts with routed long-range gates; the <code>autoqec_sim.noise</code> profile with its timing model, stim's detector error model, and four fidelity tiers for the logical error rate per round (closed-form low-weight maximum-likelihood proxy with exact <code>d_circ</code>, exact ML or lookup-decoder sampling, pinned BP+OSD <sup id="fnref:roffe2020"><a class="footnote-ref" href="#fn:roffe2020">16</a></sup><sup id="fnref:panteleev2021"><a class="footnote-ref" href="#fn:panteleev2021">17</a></sup> sampling, Tesseract <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">18</a></sup> sampling); <code>undetectable_sets</code> lists the minimum-weight undetectable fault sets by probability, and <code>undetectable_logicals</code> enumerates every irreducible one up to weight 6 by a cluster search, which carries the proxy to circuit distance 5 and 6. <code>MemoryReward</code> is the environment reward; see docs/experiments/index.md and <code>docs/memory_objective.md</code>.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.evaluate</code></td>
@@ -2078,65 +2100,105 @@
 </tr>
 <tr>
 <td><code>autoqec_sim.agents.ppo</code></td>
-<td>PPO <sup id="fnref:schulman2017"><a class="footnote-ref" href="#fn:schulman2017">17</a></sup> agent (PyTorch, CPU): clipped objective, GAE <sup id="fnref:schulman2015gae"><a class="footnote-ref" href="#fn:schulman2015gae">18</a></sup>, shared value head, entropy bonus, action masking, over the batched environment. torch is an optional dependency (<code>rl</code> extra) and is imported lazily.</td>
+<td>PPO <sup id="fnref:schulman2017"><a class="footnote-ref" href="#fn:schulman2017">19</a></sup> agent (PyTorch, CPU): clipped objective, GAE <sup id="fnref:schulman2015gae"><a class="footnote-ref" href="#fn:schulman2015gae">20</a></sup>, shared value head, entropy bonus, action masking, over the batched environment. torch is an optional dependency (<code>rl</code> extra) and is imported lazily.</td>
 </tr>
 <tr>
 <td><code>autoqec_sim.agents.ppo_regress</code></td>
 <td>The rediscovery regression run with PPO instead of evolutionary search, reusing the targets, reward, replay, and verification of <code>regress</code>, plus the PPO-only 4x4 rotated-surface target <code>[[16, 1, 4]]</code> (1M env steps, <code>full</code> budget only).</td>
 </tr>
-<tr>
-<td><code>autoqec_sim.experiments.noise_aware</code></td>
-<td>The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines, report and figures); see docs/experiments/index.md.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.scaling</code></td>
-<td>The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on <code>[[16, 1, 4]]</code> (curriculum, macro actions, equivariant policy, batch and entropy, episode cap), and LDPC-constrained <code>[[n, k, 3]]</code> targets at <code>n = 12</code> to <code>16</code>; see docs/experiments/index.md.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.ldpc_scaling</code></td>
-<td>The LDPC constraint forms above <code>n = 9</code>: <code>unnormalized</code>, <code>final</code>, and <code>schedule</code> against the regression's <code>penalty</code> form on <code>[[12, 2, 3]]</code> and <code>[[16, 4, 3]]</code> with <code>w_max = 4</code>, all-to-all and square graphs, three seeds, equivariant policy, fixed budget per run; see "LDPC constraint" and <code>experiments/ldpc_scaling/REPORT.md</code>.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.ldpc_sparsity</code></td>
-<td>Sparsity as a property of the trained policy: the <code>shaped</code> (dense per-step term in reward units), <code>terminal</code> (count-unit signal at any candidate), and <code>mask</code> (greedy <code>w*</code> action mask) variants against <code>unnormalized</code> at equal budget on <code>[[12, 2, 3]]</code> (all-to-all, <code>square:3x4</code>) and <code>[[16, 4, 3]]</code> (<code>square:4x4</code>), measured as the fraction of at-distance terminal states inside the bound; see <code>experiments/ldpc_sparsity/REPORT.md</code>.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.ion_chain</code></td>
-<td>The noise-aware 4x4 protocol of <code>gpu_scale</code> (equivariant PPO, batch 1024, three profiles, cross-evaluation) on all-to-all connectivity at <code>n = 16</code>, the connectivity of an ion chain, with and without S in the gate set; the report compares the all-to-all codes under the ion profile with the 4x4 lattice cells of <code>experiments/gpu_scale/runs/</code>, the rotated surface code's lattice and all-to-all encoders, and the <code>n = 16</code> known codes; see <code>experiments/ion_chain/runs/REPORT.md</code>.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.topologies</code></td>
-<td>The three-topology run matrix: the PPO agent alone on square, triangular, and heavy-hex lattices at two qubit-count tiers, one objective (<code>[[n, 1, 3]]</code>, no idle qubit, H and CNOT on lattice edges, 50-gate cap), common metrics per cell (steps to success, exact <code>d</code>, <code>w*</code>, qubit degree, weight enumerators, Heron and board fault masses, rotated surface baseline); see docs/experiments/index.md.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.memory_objective</code></td>
-<td>Benchmark of the memory objective's tiers on five codes and three profiles, rank correlation on random distance-3 codes, the XZZX <sup id="fnref:bonillaataides2021"><a class="footnote-ref" href="#fn:bonillaataides2021">19</a></sup> bias-sensitivity test, the lattice-routing comparison, and the PPO smoke run with the memory reward; see <code>experiments/memory_objective/REPORT.md</code>.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.memory_ppo</code></td>
-<td>The noise-aware 4x4 protocol of <code>gpu_scale</code> with the memory objective as the noise term (<code>R = 4</code> rounds, all-to-all layout, proxy tier in training) on four cells (chain 0.25 bare and one-flag, board 0.25, Heron 0.05), three seeds, and a second run without the LDPC term, with a gate-count term, the sampled tier outside the proxy's regime, and the sparsest generator basis; <code>score</code> re-evaluates the discovered codes, the encoder-objective 4x4 codes, and the rotated surface and XZZX codes under every profile at the proxy, sampled, and bposd tiers; see <code>experiments/memory_ppo/REPORT.md</code>.</td>
-</tr>
-<tr>
-<td><code>autoqec_sim.experiments.figstyle</code></td>
-<td>The one matplotlib style every figure of the package uses (6.5 in text width, standard heights, panel labels, profile colors).</td>
-</tr>
 </tbody>
 </table>
 <p>Not included: Clifft integration and cuQuantum kernels.</p>
+<h2 id="experiments">Experiments<a class="headerlink" href="#experiments" title="Permanent link">&para;</a></h2>
+<p>The experiments are not part of the installed package. Each lives in
+<code>experiments/&lt;name&gt;/run.py</code> in the repository, next to its <code>REPORT.md</code> and
+<code>figures/</code>, and runs from the repository root as
+<code>uv run python -m experiments.&lt;name&gt;.run &lt;subcommand&gt;</code> (<code>--extra rl</code> for the
+PPO-based ones); <code>experiments/common/figstyle.py</code> is the one matplotlib style
+every figure shares. <code>experiments/README.md</code> has the layout and the
+regeneration steps, and <a href="../experiments/">Experiments</a> has one page per
+experiment with its question, result, and commands.</p>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noise_aware</code></td>
+<td>The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines).</td>
+</tr>
+<tr>
+<td><code>scaling</code></td>
+<td>The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on <code>[[16, 1, 4]]</code>, and LDPC-constrained <code>[[n, k, 3]]</code> targets at <code>n = 12</code> to <code>16</code>.</td>
+</tr>
+<tr>
+<td><code>ldpc_scaling</code></td>
+<td>The LDPC constraint forms above <code>n = 9</code> (<code>unnormalized</code>, <code>final</code>, <code>schedule</code> against <code>penalty</code>) on <code>[[12, 2, 3]]</code> and <code>[[16, 4, 3]]</code> with <code>w_max = 4</code>.</td>
+</tr>
+<tr>
+<td><code>ldpc_sparsity</code></td>
+<td>Sparsity as a property of the trained policy: the <code>shaped</code>, <code>terminal</code>, and <code>mask</code> variants against <code>unnormalized</code> at equal budget.</td>
+</tr>
+<tr>
+<td><code>gpu_scale</code></td>
+<td>The noise-aware 4x4 protocol on the torch backend (equivariant PPO, batch 1024, three profiles, cross-evaluation) and the 5x5 targets.</td>
+</tr>
+<tr>
+<td><code>ion_chain</code></td>
+<td>The <code>gpu_scale</code> protocol on all-to-all connectivity at <code>n = 16</code>, with and without S in the gate set.</td>
+</tr>
+<tr>
+<td><code>topologies</code></td>
+<td>The three-topology PPO run matrix on square, triangular, and heavy-hex lattices at two qubit-count tiers, with common metrics per cell.</td>
+</tr>
+<tr>
+<td><code>topologies_ea</code></td>
+<td>The package's evolutionary search on the same matrix and budget as <code>topologies</code>.</td>
+</tr>
+<tr>
+<td><code>heavy_hex_overnight</code></td>
+<td>The heavy-hex column of <code>topologies</code> widened to six seeds and extended to <code>[[18, 1, d &gt;= 4]]</code>, driven unattended under a wall cap.</td>
+</tr>
+<tr>
+<td><code>memory_objective</code></td>
+<td>Benchmark of the memory objective's tiers on five codes and three profiles, rank correlation on random distance-3 codes, the XZZX bias-sensitivity test, the lattice-routing comparison, and the PPO smoke run.</td>
+</tr>
+<tr>
+<td><code>memory_ppo</code></td>
+<td>The 4x4 protocol with the memory objective as the noise term, a second run without the LDPC term, and <code>score</code> for the discovered and reference codes under every profile and tier.</td>
+</tr>
+<tr>
+<td><code>qdx_targets</code></td>
+<td>QDX's published all-to-all target set through this package's PPO at matched settings.</td>
+</tr>
+<tr>
+<td><code>sat_codes</code></td>
+<td>Fifteen SAT-designed biased-noise codes under the circuit-level memory objective against the rotated surface and XZZX codes.</td>
+</tr>
+<tr>
+<td><code>sat_population</code></td>
+<td>The same question over 2,150 SAT-sampled codes, with the structural features of each code's extraction circuit.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>src/autoqec_sim/         package
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>src/autoqec_sim/backends/  torch backend of the gate kernels and parity masks (opt-in; docs/gpu.md)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>src/autoqec_sim/agents/  PPO agent, its two policies (flat MLP, permutation-equivariant), and its regression
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>src/autoqec_sim/experiments/  noise-aware, scaling, LDPC-form, and topology experiments and the shared figure style
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, noise-aware experiment, torch backend vs numpy, the quick-start example)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>experiments/&lt;name&gt;/      one directory per experiment: REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>experiments/regression/  regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>experiments/regression/figure.py  the rediscovery-cost figure of the README and the regression page, from those files
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>benchmarks/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment (docs/profile.md, docs/gpu.md)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>benchmarks/bench_cuda_kernels.py  the fused CUDA kernels against the torch path (docs/gpu.md)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>tools/reproduce.sh       fresh venv, tests, both reduced regressions (docs/reproduce.md)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>tools/release.sh         the release procedure (docs/development/releasing.md)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>docs/examples/           the quick-start scripts, snippeted into the documentation and checked against the README
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, torch backend vs numpy, the quick-start example)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>experiments/&lt;name&gt;/      one directory per experiment: run.py (python -m experiments.&lt;name&gt;.run, not installed with the package), REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>experiments/common/      the matplotlib style every experiment figure shares
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>experiments/tests/       the experiment tests, collected with the suite by uv run pytest
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>experiments/regression/  regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>experiments/regression/figure.py  the rediscovery-cost figure of the README and the regression page, from those files
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>benchmarks/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment (docs/profile.md, docs/gpu.md)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>benchmarks/bench_cuda_kernels.py  the fused CUDA kernels against the torch path (docs/gpu.md)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>tools/reproduce.sh       fresh venv, tests, both reduced regressions (docs/reproduce.md)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>tools/release.sh         the release procedure (docs/development/releasing.md)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>docs/examples/           the quick-start scripts, snippeted into the documentation and checked against the README
 </code></pre></div>
 <div class="footnote">
 <hr />
@@ -2177,26 +2239,29 @@
 <li id="fn:tomita2014">
 <p>Yu Tomita and Krysta M. Svore. Low-distance surface codes under realistic quantum noise. <em>Physical Review A</em>, 90:062320, 2014. <a href="https://arxiv.org/abs/1404.3747">arXiv:1404.3747</a>, <a href="https://doi.org/10.1103/PhysRevA.90.062320">doi:10.1103/PhysRevA.90.062320</a>.&#160;<a class="footnote-backref" href="#fnref:tomita2014" title="Jump back to footnote 12 in the text">&#8617;</a></p>
 </li>
+<li id="fn:bacon2006">
+<p>Dave Bacon. Operator quantum error-correcting subsystems for self-correcting quantum memories. <em>Physical Review A</em>, 73:012340, 2006. <a href="https://arxiv.org/abs/quant-ph/0506023">arXiv:quant-ph/0506023</a>, <a href="https://doi.org/10.1103/PhysRevA.73.012340">doi:10.1103/PhysRevA.73.012340</a>.&#160;<a class="footnote-backref" href="#fnref:bacon2006" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sundaresan2023">
+<p>Neereja Sundaresan, Theodore J. Yoder, Youngseok Kim, Muyuan Li, Edward H. Chen, Grace Harper, Ted Thorbeck, Andrew W. Cross, Antonio D. Córcoles, and Maika Takita. Matching and maximum likelihood decoding of a multi-round subsystem quantum error correction experiment. <em>Nature Communications</em>, 14:2852, 2023. <a href="https://arxiv.org/abs/2203.07205">arXiv:2203.07205</a>, <a href="https://doi.org/10.1038/s41467-023-38247-5">doi:10.1038/s41467-023-38247-5</a>.&#160;<a class="footnote-backref" href="#fnref:sundaresan2023" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
 <li id="fn:chamberland2020">
-<p>Christopher Chamberland, Guanyu Zhu, Theodore J. Yoder, Jared B. Hertzberg, and Andrew W. Cross. Topological and subsystem codes on low-degree graphs with flag qubits. <em>Physical Review X</em>, 10:011022, 2020. <a href="https://arxiv.org/abs/1907.09528">arXiv:1907.09528</a>, <a href="https://doi.org/10.1103/PhysRevX.10.011022">doi:10.1103/PhysRevX.10.011022</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2020" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+<p>Christopher Chamberland, Guanyu Zhu, Theodore J. Yoder, Jared B. Hertzberg, and Andrew W. Cross. Topological and subsystem codes on low-degree graphs with flag qubits. <em>Physical Review X</em>, 10:011022, 2020. <a href="https://arxiv.org/abs/1907.09528">arXiv:1907.09528</a>, <a href="https://doi.org/10.1103/PhysRevX.10.011022">doi:10.1103/PhysRevX.10.011022</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2020" title="Jump back to footnote 15 in the text">&#8617;</a></p>
 </li>
 <li id="fn:roffe2020">
-<p>Joschka Roffe, David R. White, Simon Burton, and Earl T. Campbell. Decoding across the quantum LDPC code landscape. <em>Physical Review Research</em>, 2:043423, 2020. <a href="https://arxiv.org/abs/2005.07016">arXiv:2005.07016</a>, <a href="https://doi.org/10.1103/PhysRevResearch.2.043423">doi:10.1103/PhysRevResearch.2.043423</a>.&#160;<a class="footnote-backref" href="#fnref:roffe2020" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+<p>Joschka Roffe, David R. White, Simon Burton, and Earl T. Campbell. Decoding across the quantum LDPC code landscape. <em>Physical Review Research</em>, 2:043423, 2020. <a href="https://arxiv.org/abs/2005.07016">arXiv:2005.07016</a>, <a href="https://doi.org/10.1103/PhysRevResearch.2.043423">doi:10.1103/PhysRevResearch.2.043423</a>.&#160;<a class="footnote-backref" href="#fnref:roffe2020" title="Jump back to footnote 16 in the text">&#8617;</a></p>
 </li>
 <li id="fn:panteleev2021">
-<p>Pavel Panteleev and Gleb Kalachev. Degenerate quantum LDPC codes with good finite length performance. <em>Quantum</em>, 5:585, 2021. <a href="https://arxiv.org/abs/1904.02703">arXiv:1904.02703</a>, <a href="https://doi.org/10.22331/q-2021-11-22-585">doi:10.22331/q-2021-11-22-585</a>.&#160;<a class="footnote-backref" href="#fnref:panteleev2021" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+<p>Pavel Panteleev and Gleb Kalachev. Degenerate quantum LDPC codes with good finite length performance. <em>Quantum</em>, 5:585, 2021. <a href="https://arxiv.org/abs/1904.02703">arXiv:1904.02703</a>, <a href="https://doi.org/10.22331/q-2021-11-22-585">doi:10.22331/q-2021-11-22-585</a>.&#160;<a class="footnote-backref" href="#fnref:panteleev2021" title="Jump back to footnote 17 in the text">&#8617;</a></p>
 </li>
 <li id="fn:beni2025">
-<p>Laleh Aghababaie Beni, Oscar Higgott, and Noah Shutty. Tesseract: a search-based decoder for quantum error correction. 2025. <a href="https://arxiv.org/abs/2503.10988">arXiv:2503.10988</a>.&#160;<a class="footnote-backref" href="#fnref:beni2025" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+<p>Laleh Aghababaie Beni, Oscar Higgott, and Noah Shutty. Tesseract: a search-based decoder for quantum error correction. 2025. <a href="https://arxiv.org/abs/2503.10988">arXiv:2503.10988</a>.&#160;<a class="footnote-backref" href="#fnref:beni2025" title="Jump back to footnote 18 in the text">&#8617;</a></p>
 </li>
 <li id="fn:schulman2017">
-<p>John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. 2017. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2017" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+<p>John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. 2017. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2017" title="Jump back to footnote 19 in the text">&#8617;</a></p>
 </li>
 <li id="fn:schulman2015gae">
-<p>John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. 2015. <a href="https://arxiv.org/abs/1506.02438">arXiv:1506.02438</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2015gae" title="Jump back to footnote 18 in the text">&#8617;</a></p>
-</li>
-<li id="fn:bonillaataides2021">
-<p>J. Pablo Bonilla Ataides, David K. Tuckett, Stephen D. Bartlett, Steven T. Flammia, and Benjamin J. Brown. The XZZX surface code. <em>Nature Communications</em>, 12:2172, 2021. <a href="https://arxiv.org/abs/2009.07851">arXiv:2009.07851</a>, <a href="https://doi.org/10.1038/s41467-021-22274-1">doi:10.1038/s41467-021-22274-1</a>.&#160;<a class="footnote-backref" href="#fnref:bonillaataides2021" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+<p>John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. 2015. <a href="https://arxiv.org/abs/1506.02438">arXiv:1506.02438</a>.&#160;<a class="footnote-backref" href="#fnref:schulman2015gae" title="Jump back to footnote 20 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

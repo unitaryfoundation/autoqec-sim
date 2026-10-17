@@ -7819,7 +7819,10 @@ times <code>Z</code> of another ancilla, a random outcome). The standard four-la
 surface-code cycle is one such schedule. When no schedule exists within
 the search cap (the Steane code), the generators fall back to batches of
 mutually interleavable ones, one block after another with their own
-measurements (<code>extraction="batched"</code> forces this). Preparation and
+measurements (<code>extraction="batched"</code> forces this). A
+<code>autoqec_sim.code.SubsystemCode</code> is measured through its gauge
+generators, in batches, and each stabilizer's detector compares the parity
+of the gauge outcomes whose product it is. Preparation and
 final readout are noiseless <code>MPP</code> measurements of every generator and of
 the logical operators of the chosen basis (<code>Z</code> or <code>X</code> memory);
 detectors compare consecutive measurements of each generator, and the
@@ -8883,13 +8886,14 @@ cap. Generators in <code>skip</code> (routed ones) get an empty tuple.</p>
 
 
 <a href="#autoqec_sim.memory_objective.code_distance" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_distance</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_distance</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>The code's exact distance up to <code>EXACT_MAX_N</code> qubits, else the
-randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
+randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>;
+a subsystem code answers with its gauge-fixed stabilizer code.</p>
 
 
     </div>
@@ -8905,7 +8909,7 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 
 <a href="#autoqec_sim.memory_objective.hook_orders" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">hook_orders</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">target</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">interleave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -8915,14 +8919,16 @@ randomized upper bound of <code>StabilizerCode.distance_upper_bound</code>.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Hook-aware gate orders of every generator (<code>_hook_order</code>);
+        <p>Hook-aware gate orders of every measured generator (<code>_hook_order</code>);
 <code>target</code> defaults to <code>code_distance</code>. With <code>interleave</code> the
 orders are chosen jointly, among the hook-safe ones, so that every
 generator can run in one interleaved block with one measurement per
 round (<code>interleavable</code>); when no such choice exists within the
 search cap, each generator gets its first hook-safe order and the
 circuit falls back to batches. <code>flags</code> is the flag variant the circuit
-will use, which shifts the gate layers of the flagged generators.</p>
+will use, which shifts the gate layers of the flagged generators. A
+subsystem code's measured generators are its gauge generators, ordered
+against its gauge-fixed stabilizer code and never interleaved.</p>
 
 
     </div>
@@ -8938,7 +8944,7 @@ will use, which shifts the gate layers of the flagged generators.</p>
 
 <a href="#autoqec_sim.memory_objective.build_memory_circuit" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">build_memory_circuit</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Z"</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">connectivity</span><span class="o">=</span><span class="s2">"all_to_all"</span><span class="p">,</span>
@@ -8977,11 +8983,19 @@ will use, which shifts the gate layers of the flagged generators.</p>
 
   
       dataclass
-   (autoqec_sim.code.StabilizerCode)" href="../code/#autoqec_sim.code.StabilizerCode">StabilizerCode</a></code>
+   (autoqec_sim.code.StabilizerCode)" href="../code/#autoqec_sim.code.StabilizerCode">StabilizerCode</a> | <a class="autorefs autorefs-internal" title="            SubsystemCode
+
+
+  
+      dataclass
+   (autoqec_sim.code.SubsystemCode)" href="../code/#autoqec_sim.code.SubsystemCode">SubsystemCode</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Stabilizer code.</p>
+                <p>Stabilizer code, or a <code>SubsystemCode</code>, whose gauge generators
+are measured (one ancilla each, in batches of mutually interleavable
+generators, never one interleaved block) and whose stabilizers are
+read as parities of the gauge outcomes.</p>
               </div>
             </td>
             <td>
@@ -9887,12 +9901,13 @@ at one half. Agrees with <code>1 - (1 - p)^(1/R)</code> to first order in <code>
 
 
 <a href="#autoqec_sim.memory_objective.code_key" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_key</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">code_key</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="n">StabilizerCode</span> <span class="o">|</span> <span class="n">SubsystemCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Canonical key of the stabilizer group (reduced row echelon form).</p>
+        <p>Canonical key of the stabilizer group (reduced row echelon form); of
+the gauge group for a subsystem code.</p>
 
 
     </div>
@@ -10215,8 +10230,10 @@ memory experiment in both bases.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A <code>StabilizerCode</code>, or its stabilizer generators as Pauli
-strings for <code>StabilizerCode.from_stabilizers</code>.</p>
+                <p>A <code>StabilizerCode</code>, its stabilizer generators as Pauli
+strings for <code>StabilizerCode.from_stabilizers</code>, or a
+<code>SubsystemCode</code>, whose gauge generators are measured and whose
+stabilizers are read as parities of the gauge outcomes.</p>
               </div>
             </td>
             <td>
