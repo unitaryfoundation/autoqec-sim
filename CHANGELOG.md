@@ -41,6 +41,14 @@
   and `sat_codes`; the noise-aware, topology, and evolutionary-search
   reports move from the untracked `runs/` directories to
   `experiments/<name>/REPORT.md`.
+- Subsystem codes: `SubsystemCode.from_gauge` derives the center, the
+  bare logicals, and a gauge fixing from independent gauge generators;
+  the memory circuit measures the gauge generators in batches and reads
+  each stabilizer as the parity of the gauge outcomes whose product it is,
+  with the product's sign in the reference measurements, so `evaluate_code`
+  and `MemoryObjective` take subsystem codes. `known_codes` gains the
+  Bacon-Shor [[9,1,3]] and distance-3 heavy-hexagon gauge generators
+  (`get_subsystem`).
 - The memory circuit interleaves every generator into one block with one
   measurement per round when a hook-safe schedule exists: `hook_orders`
   chooses the orders jointly so that no qubit sees two gates in one layer

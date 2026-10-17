@@ -26,7 +26,7 @@ regress        rediscovery regression
 agents.ppo     PPO agent (optional torch dependency, imported lazily)
 """
 
-from .code import StabilizerCode
+from .code import StabilizerCode, SubsystemCode
 from .env import CodeDiscoveryEnv
 from .errors import ErrorSet
 from .evaluate import CodeEvaluation, DominantFault, FaultLocation, evaluate_code
@@ -46,6 +46,7 @@ __all__ = [
     "EvolutionarySearch",
     "FaultLocation",
     "StabilizerCode",
+    "SubsystemCode",
     "__version__",
     "evaluate_code",
     "identity_tableau",

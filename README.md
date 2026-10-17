@@ -46,9 +46,10 @@ sampled tiers take over; the circuit-distance search stops at weight 6;
 the memory circuit interleaves all checks into one block with one
 measurement per round where a hook-safe schedule exists (every surface
 code tried) and falls back to separate blocks with their own measurements
-where none does (the Steane code); flag and gauge extraction beyond one
-flag per generator are not expressible; and the presets are noise models
-assembled from public specifications, not device measurements.
+where none does (the Steane code); subsystem codes are measured through
+their gauge generators, but flags beyond one per generator and adaptive
+protocols are not expressible; and the presets are noise models assembled
+from public specifications, not device measurements.
 
 ## What the proposers have found
 

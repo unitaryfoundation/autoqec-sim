@@ -64,7 +64,10 @@ times ``Z`` of another ancilla, a random outcome). The standard four-layer
 surface-code cycle is one such schedule. When no schedule exists within
 the search cap (the Steane code), the generators fall back to batches of
 mutually interleavable ones, one block after another with their own
-measurements (``extraction="batched"`` forces this). Preparation and
+measurements (``extraction="batched"`` forces this). A
+:class:`~autoqec_sim.code.SubsystemCode` is measured through its gauge
+generators, in batches, and each stabilizer's detector compares the parity
+of the gauge outcomes whose product it is. Preparation and
 final readout are noiseless ``MPP`` measurements of every generator and of
 the logical operators of the chosen basis (``Z`` or ``X`` memory);
 detectors compare consecutive measurements of each generator, and the
@@ -117,7 +120,7 @@ import stim
 from autoqec_sim import noise as nm
 from autoqec_sim.noise import Profile
 
-from .code import EXACT_MAX_N, StabilizerCode
+from .code import EXACT_MAX_N, StabilizerCode, SubsystemCode
 from .graphs import Graph
 from .reward import batched_distance, low_weight_stabilizer_penalty
 from .symplectic import rref
@@ -365,8 +368,9 @@ def _order_value(order, cost: _CompletionCost, target: int, vec) -> int:
 
 def _acceptable_orders(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, target: int, rng, max_perms: int = 300, limit: int = 48) -> list[list[tuple[int, str]]]:
     """The hook-safe gate orders of one generator, up to ``limit`` of them
-    with the first acceptable one first; when no order is acceptable, the
-    single order with the largest minimum criterion value. Permutations are
+    with the first acceptable one first; when no order is acceptable, up to
+    ``limit`` orders by decreasing minimum criterion value, the best first
+    (the schedule search then chooses among them freely). Permutations are
     enumerated for weight ``<= 6`` and sampled otherwise."""
     w = len(sup)
     if w <= 2:
@@ -386,16 +390,19 @@ def _acceptable_orders(sup: list[tuple[int, str]], n: int, cost: _CompletionCost
     else:
         candidates = (tuple(sup[i] for i in rng.permutation(w)) for _ in range(max_perms))
     good: list[list[tuple[int, str]]] = []
-    best, best_val = list(sup), -1
-    for order in candidates:
+    rest: list[tuple[int, int, list[tuple[int, str]]]] = []
+    for i, order in enumerate(candidates):
         val = _order_value(order, cost, target, vec)
         if val >= target:
             good.append(list(order))
             if len(good) >= limit:
                 break
-        elif val > best_val:
-            best, best_val = list(order), val
-    return good or [best]
+        else:
+            rest.append((-val, i, list(order)))
+    if good:
+        return good
+    rest.sort()
+    return [o for _, _, o in rest[:limit]]
 
 
 def _hook_order(sup: list[tuple[int, str]], n: int, cost: _CompletionCost, target: int, rng, max_perms: int = 300) -> list[tuple[int, str]]:
@@ -534,31 +541,39 @@ def _interleave(domains: list[list[list[tuple[int, str]]]], flags: str, node_cap
     return None
 
 
-def code_distance(code: StabilizerCode) -> int:
+def code_distance(code: StabilizerCode | SubsystemCode) -> int:
     """The code's exact distance up to ``EXACT_MAX_N`` qubits, else the
-    randomized upper bound of :meth:`StabilizerCode.distance_upper_bound`."""
-    if code.n <= EXACT_MAX_N:
-        return code.distance_exact()
-    return int(code.distance_upper_bound()[0])
+    randomized upper bound of :meth:`StabilizerCode.distance_upper_bound`;
+    a subsystem code answers with its gauge-fixed stabilizer code."""
+    base = code.fixed if isinstance(code, SubsystemCode) else code
+    if base.n <= EXACT_MAX_N:
+        return base.distance_exact()
+    return int(base.distance_upper_bound()[0])
 
 
-def hook_orders(code: StabilizerCode, target: int | None = None, seed: int = 0, interleave: bool = True, flags: str = "none") -> list[list[tuple[int, str]]]:
-    """Hook-aware gate orders of every generator (:func:`_hook_order`);
+def hook_orders(code: StabilizerCode | SubsystemCode, target: int | None = None, seed: int = 0, interleave: bool = True, flags: str = "none") -> list[list[tuple[int, str]]]:
+    """Hook-aware gate orders of every measured generator (:func:`_hook_order`);
     ``target`` defaults to :func:`code_distance`. With ``interleave`` the
     orders are chosen jointly, among the hook-safe ones, so that every
     generator can run in one interleaved block with one measurement per
     round (:func:`interleavable`); when no such choice exists within the
     search cap, each generator gets its first hook-safe order and the
     circuit falls back to batches. ``flags`` is the flag variant the circuit
-    will use, which shifts the gate layers of the flagged generators."""
-    n = code.n
+    will use, which shifts the gate layers of the flagged generators. A
+    subsystem code's measured generators are its gauge generators, ordered
+    against its gauge-fixed stabilizer code and never interleaved."""
+    if isinstance(code, SubsystemCode):
+        gens, base, interleave = code.gauge, code.fixed, False
+    else:
+        gens, base = code.stabilizers, code
+    n = base.n
     if target is None:
-        target = code_distance(code)
+        target = code_distance(base)
     # the criteria of _hook_order compare 1 + cost and 2 + cost with the
     # target, so costs of target - 1 and above need not be told apart
-    cost = _CompletionCost(code, max(1, target - 2))
+    cost = _CompletionCost(base, max(1, target - 2))
     rng = np.random.default_rng(seed)
-    supports = [_support(code.stabilizers[j], n, "sorted", rng) for j in range(code.stabilizers.shape[0])]
+    supports = [_support(gens[j], n, "sorted", rng) for j in range(gens.shape[0])]
     if not interleave:
         return [_hook_order(sup, n, cost, target, rng) for sup in supports]
     domains = [_acceptable_orders(sup, n, cost, target, rng) for sup in supports]
@@ -650,6 +665,10 @@ class MemoryCircuit:
     flag_index: dict = field(default_factory=dict)
     layout_name: str = ""
     extraction: str = "batched"
+    # per stabilizer, the measured generators whose outcome parity is its
+    # eigenvalue (the generator itself for a stabilizer code; the gauge
+    # factors for a subsystem code)
+    factors: list[list[int]] | None = None
 
     @property
     def num_generators(self) -> int:
@@ -661,6 +680,8 @@ class MemoryCircuit:
 
     def assemble(self, body: stim.Circuit) -> stim.Circuit:
         m, k = self.num_generators, self.k
+        factors = self.factors if self.factors is not None else [[j] for j in range(m)]
+        s = len(factors)
         n_pre = self.prefix.num_measurements
         n_body = body.num_measurements
         if n_body != self.body.num_measurements:
@@ -674,22 +695,26 @@ class MemoryCircuit:
         def rec(i):
             return stim.target_rec(i - total)
 
+        def parity(r, i):
+            return [rec(n_pre + self.meas_index[(r, j)]) for j in factors[i]]
+
         for r in range(self.rounds):
-            for j in range(m):
-                cur = n_pre + self.meas_index[(r, j)]
-                prev = j if r == 0 else n_pre + self.meas_index[(r - 1, j)]
-                c.append("DETECTOR", [rec(cur), rec(prev)], [j, r])
+            for i in range(s):
+                prev = [rec(i)] if r == 0 else parity(r - 1, i)
+                c.append("DETECTOR", [*parity(r, i), *prev], [i, r])
             for j in range(m):
                 if (r, j) in self.flag_index:
                     c.append("DETECTOR", [rec(n_pre + self.flag_index[(r, j)])], [j, r, 1])
-        for j in range(m):
-            c.append("DETECTOR", [rec(n_pre + n_body + j), rec(n_pre + self.meas_index[(self.rounds - 1, j)])], [j, self.rounds])
+        for i in range(s):
+            c.append("DETECTOR", [rec(n_pre + n_body + i), *parity(self.rounds - 1, i)], [i, self.rounds])
         for i in range(k):
-            c.append("OBSERVABLE_INCLUDE", [rec(m + i), rec(n_pre + n_body + m + i)], i)
+            c.append("OBSERVABLE_INCLUDE", [rec(s + i), rec(n_pre + n_body + s + i)], i)
         return c
 
 
-def _mpp_targets(row: np.ndarray, n: int):
+def _mpp_targets(row: np.ndarray, n: int, invert: bool = False):
+    """``MPP`` targets of a symplectic row; ``invert`` flips the recorded
+    result (the product measured is minus the Pauli)."""
     targets = []
     for q in range(n):
         x, z = int(row[q]), int(row[n + q])
@@ -697,12 +722,13 @@ def _mpp_targets(row: np.ndarray, n: int):
             continue
         if targets:
             targets.append(stim.target_combiner())
-        targets.append({(1, 0): stim.target_x, (1, 1): stim.target_y, (0, 1): stim.target_z}[(x, z)](q))
+        maker = {(1, 0): stim.target_x, (1, 1): stim.target_y, (0, 1): stim.target_z}[(x, z)]
+        targets.append(maker(q, invert=invert and not targets))
     return targets
 
 
 def build_memory_circuit(
-    code: StabilizerCode,
+    code: StabilizerCode | SubsystemCode,
     rounds: int,
     basis: str = "Z",
     connectivity="all_to_all",
@@ -718,7 +744,10 @@ def build_memory_circuit(
     Parameters
     ----------
     code
-        Stabilizer code.
+        Stabilizer code, or a :class:`SubsystemCode`, whose gauge generators
+        are measured (one ancilla each, in batches of mutually interleavable
+        generators, never one interleaved block) and whose stabilizers are
+        read as parities of the gauge outcomes.
     rounds
         Noisy rounds, at least 1.
     basis
@@ -761,15 +790,21 @@ def build_memory_circuit(
         raise ValueError("order must be hook, sorted, or random")
     if extraction not in ("auto", "interleaved", "batched"):
         raise ValueError("extraction must be auto, interleaved, or batched")
+    subsystem = isinstance(code, SubsystemCode)
+    if subsystem and extraction == "interleaved":
+        raise ValueError("a subsystem code's gauge generators run in batches, not one interleaved block")
+    if subsystem:
+        extraction = "batched"
+    gens = code.gauge if subsystem else code.stabilizers
     n, k = code.n, code.k
-    m = code.stabilizers.shape[0]
+    m = gens.shape[0]
     rng = np.random.default_rng(seed)
     if orders is not None:
         supports = [list(o) for o in orders]
     elif order == "hook":
         supports = hook_orders(code, hook_target, seed, interleave=extraction != "batched", flags=flags)
     else:
-        supports = [_support(code.stabilizers[j], n, order, rng) for j in range(m)]
+        supports = [_support(gens[j], n, order, rng) for j in range(m)]
     flagged = [j for j in range(m) if flags == "one" and len(supports[j]) >= 3]
     layout = layout_for(n, m, connectivity, flags=len(flagged))
     ancilla = _assign_sites(layout, supports)
@@ -879,11 +914,13 @@ def build_memory_circuit(
     body = stim.Circuit("\n".join(lines))
 
     logicals = code.logical_z if basis == "Z" else code.logical_x
+    factors, signs = (code.stabilizer_factors() if subsystem else (None, [1] * code.stabilizers.shape[0]))
     prefix = stim.Circuit()
     suffix = stim.Circuit()
-    for row in code.stabilizers:
-        prefix.append("MPP", _mpp_targets(row, n))
-        suffix.append("MPP", _mpp_targets(row, n))
+    for row, sign in zip(code.stabilizers, signs, strict=True):
+        # the reference measures the stabilizer with the sign of its gauge product
+        prefix.append("MPP", _mpp_targets(row, n, invert=sign < 0))
+        suffix.append("MPP", _mpp_targets(row, n, invert=sign < 0))
     for row in logicals:
         prefix.append("MPP", _mpp_targets(row, n))
         suffix.append("MPP", _mpp_targets(row, n))
@@ -892,7 +929,7 @@ def build_memory_circuit(
         num_qubits=layout.num_qubits, ancilla=ancilla, flag=[flag_q.get(j, -1) for j in range(m)],
         batches=batches, supports=supports, routed_gates=routed_gates, two_qubit_gates=two_q,
         layers=layers, meas_index=meas_index, flag_index=flag_index, layout_name=layout.name,
-        extraction="interleaved" if interleaved else "batched",
+        extraction="interleaved" if interleaved else "batched", factors=factors,
     )
 
 
@@ -1960,9 +1997,10 @@ def per_round(p_shot: float, rounds: int) -> float:
     return 0.5 * (1.0 - (1.0 - 2.0 * p) ** (1.0 / rounds))
 
 
-def code_key(code: StabilizerCode) -> bytes:
-    """Canonical key of the stabilizer group (reduced row echelon form)."""
-    red, _ = rref(code.stabilizers)
+def code_key(code: StabilizerCode | SubsystemCode) -> bytes:
+    """Canonical key of the stabilizer group (reduced row echelon form); of
+    the gauge group for a subsystem code."""
+    red, _ = rref(code.gauge if isinstance(code, SubsystemCode) else code.stabilizers)
     return red.tobytes()
 
 

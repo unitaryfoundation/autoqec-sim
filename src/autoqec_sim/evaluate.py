@@ -25,7 +25,7 @@ import stim
 from autoqec_sim import noise as nm
 from autoqec_sim.noise import Profile
 
-from .code import StabilizerCode
+from .code import StabilizerCode, SubsystemCode
 from .memory_objective import (
     BASES,
     TIERS,
@@ -166,8 +166,10 @@ def evaluate_code(
     Parameters
     ----------
     code
-        A :class:`StabilizerCode`, or its stabilizer generators as Pauli
-        strings for :meth:`StabilizerCode.from_stabilizers`.
+        A :class:`StabilizerCode`, its stabilizer generators as Pauli
+        strings for :meth:`StabilizerCode.from_stabilizers`, or a
+        :class:`SubsystemCode`, whose gauge generators are measured and whose
+        stabilizers are read as parities of the gauge outcomes.
     profile
         ``autoqec_sim.noise.Profile``; every rate is multiplied by ``scale``.
     rounds
@@ -188,7 +190,7 @@ def evaluate_code(
     max_faults
         Minimum-weight undetectable fault sets listed per basis.
     """
-    if not isinstance(code, StabilizerCode):
+    if not isinstance(code, (StabilizerCode, SubsystemCode)):
         code = StabilizerCode.from_stabilizers(code)
     if tier not in TIERS:
         raise ValueError(f"tier must be one of {TIERS}")

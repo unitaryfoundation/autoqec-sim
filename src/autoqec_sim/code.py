@@ -287,6 +287,127 @@ class StabilizerCode:
         return [row_to_pauli_string(r) for r in rows]
 
 
+
+@dataclass
+class SubsystemCode:
+    """A subsystem code given by independent generators of its gauge group.
+
+    Attributes
+    ----------
+    gauge
+        ``(g, 2n)`` binary symplectic rows, independent, every generator
+        taken with sign ``+1``.
+    stabilizers
+        ``(s, 2n)`` rows spanning the center of the gauge group, the
+        stabilizer group of the code.
+    logical_x, logical_z
+        ``(k, 2n)`` bare logical operators: they commute with every gauge
+        generator and are not in the gauge group.
+    fixed
+        The stabilizer code with generators ``stabilizers`` plus a maximal
+        commuting set of gauge generators (one gauge fixing). It carries
+        the same bare logicals and stands in for the distance and the
+        hook-order search of a memory circuit.
+
+    The memory circuit of :mod:`autoqec_sim.memory_objective` measures the
+    gauge generators, each with its own ancilla, and forms each stabilizer
+    as the parity of the gauge outcomes whose product it is
+    (:meth:`stabilizer_factors`).
+    """
+
+    gauge: np.ndarray
+    stabilizers: np.ndarray
+    logical_x: np.ndarray
+    logical_z: np.ndarray
+    fixed: StabilizerCode
+
+    @classmethod
+    def from_gauge(cls, gauge) -> SubsystemCode:
+        """From gauge generators as Pauli strings (a leading sign is
+        ignored) or symplectic rows; dependent generators are dropped."""
+        rows = np.array([sp.pauli_to_vec(g) if isinstance(g, str) else (np.asarray(g, dtype=np.uint8) & 1) for g in gauge], dtype=np.uint8)
+        G = rows[sp.independent_rows(rows)]
+        n2 = G.shape[1]
+        # the center: products c G of generators that commute with every generator
+        gram = sp.symplectic_product(G, G)
+        coeff = sp.kernel(gram)
+        center = ((coeff.astype(np.int64) @ G.astype(np.int64)) % 2).astype(np.uint8) if coeff.shape[0] else np.zeros((0, n2), dtype=np.uint8)
+        S = center[sp.independent_rows(center)] if center.shape[0] else center
+        # bare logicals: the normalizer of the gauge group modulo the center
+        quotient = []
+        cur = S.copy()
+        for v in sp.normalizer_basis(G):
+            if not sp.in_rowspace(v, cur):
+                quotient.append(v)
+                cur = np.vstack([cur, v[None]])
+        pairs, iso = sp.symplectic_gram_schmidt(quotient)
+        if iso:
+            raise ValueError("the normalizer of the gauge group modulo its center is not symplectic")
+        lx = np.array([u for u, _ in pairs], dtype=np.uint8).reshape(len(pairs), n2)
+        lz = np.array([v for _, v in pairs], dtype=np.uint8).reshape(len(pairs), n2)
+        # one gauge fixing: a maximal commuting set of generators independent of the center
+        fixed_rows = S.copy()
+        chosen: list[np.ndarray] = []
+        for g in G:
+            if chosen and np.any(sp.symplectic_product(g[None], np.array(chosen))):
+                continue
+            if sp.in_rowspace(g, fixed_rows):
+                continue
+            chosen.append(g)
+            fixed_rows = np.vstack([fixed_rows, g[None]])
+        fixed = StabilizerCode.from_stabilizers(fixed_rows)
+        if fixed.k != lx.shape[0]:
+            raise ValueError("gauge fixing left a different number of logical qubits than the bare logicals")
+        return cls(G, S, lx, lz, fixed)
+
+    @property
+    def n(self) -> int:
+        return self.gauge.shape[1] // 2
+
+    @property
+    def k(self) -> int:
+        return self.logical_x.shape[0]
+
+    @property
+    def num_gauge(self) -> int:
+        return self.gauge.shape[0]
+
+    def gauge_strings(self) -> list[str]:
+        return [sp.vec_to_pauli(row) for row in self.gauge]
+
+    def stabilizer_strings(self) -> list[str]:
+        return [sp.vec_to_pauli(row) for row in self.stabilizers]
+
+    def stabilizer_factors(self) -> tuple[list[list[int]], list[int]]:
+        """For each stabilizer, the indices of the gauge generators whose
+        product it is (unique, the generators being independent) and the
+        sign of that product, ``+1`` or ``-1``, relative to the stabilizer
+        as a positive Pauli. Raises ``ValueError`` when the factors of some
+        stabilizer do not pairwise commute, since their outcomes measured in
+        one round would not multiply to the stabilizer's eigenvalue."""
+        import stim
+
+        if self.stabilizers.shape[0] == 0:
+            return [], []
+        coeff = sp.gf2_solve(self.gauge.T, self.stabilizers.T)  # (g, s)
+        factors, signs = [], []
+        for i in range(self.stabilizers.shape[0]):
+            idx = [j for j in range(self.num_gauge) if coeff[j, i]]
+            sub = self.gauge[idx]
+            if np.any(sp.symplectic_product(sub, sub)):
+                raise ValueError(f"stabilizer {i} is a product of gauge generators that do not all commute")
+            prod = stim.PauliString(self.n)
+            for j in idx:
+                prod = prod * stim.PauliString(sp.vec_to_pauli(self.gauge[j]))
+            signs.append(int(prod.sign.real))
+            factors.append(idx)
+        return factors, signs
+
+    def parameters(self) -> tuple[int, int, int]:
+        """``(n, k, d)`` with ``d`` the exact distance of the gauge-fixed
+        stabilizer code."""
+        return (self.n, self.k, self.fixed.distance_exact())
+
 def codes_from_batch(tab: np.ndarray, k: int) -> list[StabilizerCode]:
     return [StabilizerCode.from_tableau(tab, k, b) for b in range(tab.shape[0])]
 

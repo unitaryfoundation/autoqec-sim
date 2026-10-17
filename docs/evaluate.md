@@ -167,6 +167,33 @@ faults per shot. Beyond distance 6 the proxy is zero again; the search
 cost grows about twentyfold per unit of weight.
 
 
+## Subsystem codes
+
+A `SubsystemCode` is given by independent generators of its gauge group;
+the center (the stabilizer group), the bare logical operators, and one
+gauge fixing (a stabilizer code with the same bare logicals, used for the
+distance and the gate-order search) are computed from them. Its memory
+circuit measures every gauge generator with its own ancilla, in batches of
+mutually interleavable generators, and reads each stabilizer as the parity
+of the gauge outcomes whose product it is, with the sign of that product
+carried into the reference measurements. The gauge generators of the
+Bacon-Shor code [@bacon2006] and of the distance-3 heavy-hexagon code
+[@sundaresan2023] ship in `known_codes` (`get_subsystem`).
+
+```python
+--8<-- "docs/examples/evaluate_code.py:subsystem"
+```
+
+```
+(9, 1, 3) ['XXXXXXIII', 'IIIXXXXXX', 'ZZIZZIZZI', 'IZZIZZIZZ']
+error per round 1.01e-02  d_circ {'Z': 3, 'X': 3}  gauge generators measured 12
+```
+
+A stabilizer whose factors do not all commute cannot be read in one round,
+and `stabilizer_factors` raises for it; the heavy-hexagon code's two
+weight-6 Z stabilizers and four X stabilizers are all products of
+commuting gauge generators.
+
 ## Validation and limits
 
 - The proxy is exact for what it computes. On the one-round 5x5 surface
@@ -193,8 +220,9 @@ cost grows about twentyfold per unit of weight.
   (the Steane code), generators that share a qubit with different Pauli
   letters run in separate blocks with their own measurements, and the
   extra idle time makes such a code's absolute rate pessimistic
-  (`per_basis[b]["extraction"]` says which schedule was used). Flags
-  beyond one per generator, gauge measurements, and transport are not
+  (`per_basis[b]["extraction"]` says which schedule was used). Subsystem
+  codes are measured through their gauge generators (above); flags beyond
+  one per generator, adaptive protocols, and transport are not
   expressible.
 - The presets are noise models assembled from public specifications, not
   device measurements, and `evaluate_code` builds its own circuit. A rate

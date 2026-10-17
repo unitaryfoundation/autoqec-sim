@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-from .code import StabilizerCode
+from .code import StabilizerCode, SubsystemCode
 
 FIVE_QUBIT = ["XZZXI", "IXZZX", "XIXZZ", "ZXIXZ"]
 
@@ -114,6 +114,50 @@ KNOWN = {
 def get(name: str) -> StabilizerCode:
     strings, _ = KNOWN[name]
     return StabilizerCode.from_stabilizers(strings)
+
+
+def _bacon_shor_gauge(rows: int = 3, cols: int = 3) -> list[str]:
+    """Gauge generators of the Bacon-Shor code on a ``rows x cols`` grid,
+    qubits row-major: ``XX`` on vertically adjacent qubits and ``ZZ`` on
+    horizontally adjacent ones."""
+    n = rows * cols
+    out = []
+    for c in range(cols):
+        for r in range(rows - 1):
+            s = ["I"] * n
+            s[r * cols + c] = s[(r + 1) * cols + c] = "X"
+            out.append("".join(s))
+    for r in range(rows):
+        for c in range(cols - 1):
+            s = ["I"] * n
+            s[r * cols + c] = s[r * cols + c + 1] = "Z"
+            out.append("".join(s))
+    return out
+
+
+# Bacon-Shor [[9,1,3]]: twelve weight-2 gauge generators; the stabilizers are
+# the weight-6 products on pairs of adjacent rows (X) and columns (Z).
+BACON_SHOR_9_GAUGE = _bacon_shor_gauge(3, 3)
+
+# The distance-3 heavy-hexagon subsystem code of Sundaresan et al. (its
+# equations 1 to 4, qubits 1 to 9 as indices 0 to 8): weight-2 and weight-4
+# Z gauge generators and weight-2 X gauge generators; the center holds two
+# weight-6 Z stabilizers and four X stabilizers of weight 2 and 4.
+HEAVY_HEX_9_GAUGE = [
+    "ZZIIIIIII", "IZZIZZIII", "IIIZZIZZI", "IIIIIIIZZ",
+    "XIIXIIIII", "IXIIXIIII", "IIXIIXIII", "IIIXIIXII", "IIIIXIIXI", "IIIIIXIIX",
+]
+
+SUBSYSTEM = {
+    "bacon_shor_9": (BACON_SHOR_9_GAUGE, (9, 1, 3)),
+    "heavy_hex_9": (HEAVY_HEX_9_GAUGE, (9, 1, 3)),
+}
+
+
+def get_subsystem(name: str) -> SubsystemCode:
+    """A :class:`SubsystemCode` from its gauge generators."""
+    gauge, _ = SUBSYSTEM[name]
+    return SubsystemCode.from_gauge(gauge)
 
 
 def parameters(name: str) -> tuple[int, int, int]:
