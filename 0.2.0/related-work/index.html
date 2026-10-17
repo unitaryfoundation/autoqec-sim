@@ -1661,6 +1661,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#evaluating-codes-under-circuit-level-noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluating codes under circuit-level noise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reviews" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2143,6 +2154,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#evaluating-codes-under-circuit-level-noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluating codes under circuit-level noise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reviews" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2285,10 +2307,57 @@ further evaluation tools. Stim <sup id="fnref:gidney2021"><a class="footnote-ref
 detector-error-model work; Clifft <sup id="fnref:chase2026"><a class="footnote-ref" href="#fn:chase2026">92</a></sup> is the Unitary Foundation's
 near-Clifford sampler; <sup id="fnref:fur2026"><a class="footnote-ref" href="#fn:fur2026">93</a></sup> reports hardware error-detection
 experiments from the same group.</p>
+<h2 id="evaluating-codes-under-circuit-level-noise">Evaluating codes under circuit-level noise<a class="headerlink" href="#evaluating-codes-under-circuit-level-noise" title="Permanent link">&para;</a></h2>
+<p>The evaluator's proxy is a leading-order count of the minimum-weight
+undetectable fault sets of the extraction circuit, decoded by maximum
+likelihood over those sets alone, and its ingredients are standard.
+Counting malignant pairs of fault locations bounded circuit-level failure
+to leading order in the threshold proofs of <sup id="fnref:aliferis2006"><a class="footnote-ref" href="#fn:aliferis2006">94</a></sup>;
+<sup id="fnref:fowler2013"><a class="footnote-ref" href="#fn:fowler2013">95</a></sup> enumerated the minimum-weight fault configurations of a
+periodic surface-code circuit to give its low-rate logical error
+analytically for arbitrary per-gate Pauli noise; and <sup id="fnref:beverland2019"><a class="footnote-ref" href="#fn:beverland2019">96</a></sup>
+showed that the number of minimum-weight failing configurations, the
+entropy term, sets the low-rate logical error alongside the distance,
+which is what separates codes of equal distance on the same footprint
+here. Where the leading order ends, sampling takes over; the rare-event
+splitting method of <sup id="fnref:bravyi2013"><a class="footnote-ref" href="#fn:bravyi2013">97</a></sup> reaches rates below what direct
+sampling gives, and this package raises the noise scale instead of
+implementing it. The reference decoders are minimum-weight matching in
+its sparse-blossom implementation <sup id="fnref:higgott2025"><a class="footnote-ref" href="#fn:higgott2025">98</a></sup>, BP+OSD [@roffe2020;
+@panteleev2021], and the Tesseract most-likely-error search <sup id="fnref:beni2025"><a class="footnote-ref" href="#fn:beni2025">99</a></sup>.
+Which of 39 Clifford deformations of the distance-3 surface code is best
+depends on the decoder, with PyMatching against BP+OSD at Pearson 0.88
+under one circuit-level noise model and 0.30 under another
+<sup id="fnref:bonnelykke2026"><a class="footnote-ref" href="#fn:bonnelykke2026">100</a></sup>, which is why the validation here
+(<code>experiments/proxy_tesseract/REPORT.md</code>) is against a near-maximum-
+likelihood decoder. Circuit noise models built from device parameters go
+back to the superconducting-inspired SI1000 model of <sup id="fnref:gidney2021b"><a class="footnote-ref" href="#fn:gidney2021b">101</a></sup>; the
+presets here are the same kind of object, assembled from public
+specifications. Flag-qubit extraction with two extra qubits for
+distance-3 codes <sup id="fnref:chao2018"><a class="footnote-ref" href="#fn:chao2018">102</a></sup> and with flag ancillas for arbitrary
+distance <sup id="fnref:chamberland2018"><a class="footnote-ref" href="#fn:chamberland2018">103</a></sup> is what the one-flag option (one flag on each
+generator of weight three or more) approximates. Subsystem codes are
+measured through their gauge generators in the stabilizer formalism of
+<sup id="fnref:poulin2005"><a class="footnote-ref" href="#fn:poulin2005">104</a></sup>, with the bare logical operators of <sup id="fnref:bravyi2011"><a class="footnote-ref" href="#fn:bravyi2011">105</a></sup>; the
+Bacon-Shor code <sup id="fnref:bacon2006"><a class="footnote-ref" href="#fn:bacon2006">106</a></sup> and the heavy-hexagon code <sup id="fnref2:chamberland2020"><a class="footnote-ref" href="#fn:chamberland2020">58</a></sup>
+are the two shipped. The published memory experiments the evaluator is
+compared against (<code>experiments/hardware_comparison/REPORT.md</code>) are the
+distance-3 surface codes of <sup id="fnref:acharya2023"><a class="footnote-ref" href="#fn:acharya2023">107</a></sup><sup id="fnref:acharya2025"><a class="footnote-ref" href="#fn:acharya2025">108</a></sup>, the Steane code
+on a trapped-ion processor <sup id="fnref:ryananderson2021"><a class="footnote-ref" href="#fn:ryananderson2021">109</a></sup>, the toric and bivariate
+bicycle <sup id="fnref:bravyi2024"><a class="footnote-ref" href="#fn:bravyi2024">110</a></sup> codes on a 40-ion chain <sup id="fnref2:tham2026"><a class="footnote-ref" href="#fn:tham2026">55</a></sup>, and the
+heavy-hexagon subsystem code <sup id="fnref:sundaresan2023"><a class="footnote-ref" href="#fn:sundaresan2023">111</a></sup>; that comparison is of the
+package's model on its own circuit against each paper's reported number,
+not a prediction of the devices.</p>
+<p>Where this package stands: the leading-order estimator applies the
+counting of <sup id="fnref2:fowler2013"><a class="footnote-ref" href="#fn:fowler2013">95</a></sup> and <sup id="fnref2:beverland2019"><a class="footnote-ref" href="#fn:beverland2019">96</a></sup> to the extraction circuit
+of an arbitrary stabilizer code through stim's detector error model
+<sup id="fnref2:gidney2021"><a class="footnote-ref" href="#fn:gidney2021">91</a></sup>, with the enumeration carried to weight-3 fault sets at
+circuit distance 5 and 6; the decoders, noise models, and experiments it
+is checked against are prior work.</p>
 <h2 id="reviews">Reviews<a class="headerlink" href="#reviews" title="Permanent link">&para;</a></h2>
-<p>AI for quantum error correction <sup id="fnref:wang2024"><a class="footnote-ref" href="#fn:wang2024">94</a></sup>, reinforcement learning for
-quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:bukov2026">95</a></sup>, and noise-adapted error correction
-<sup id="fnref:jayashankar2022"><a class="footnote-ref" href="#fn:jayashankar2022">96</a></sup>. No dedicated review of automated code design exists.</p>
+<p>AI for quantum error correction <sup id="fnref:wang2024"><a class="footnote-ref" href="#fn:wang2024">112</a></sup>, reinforcement learning for
+quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:bukov2026">113</a></sup>, and noise-adapted error correction
+<sup id="fnref:jayashankar2022"><a class="footnote-ref" href="#fn:jayashankar2022">114</a></sup>. No dedicated review of automated code design exists.</p>
 <div class="footnote">
 <hr />
 <ol>
@@ -2455,7 +2524,7 @@ quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:b
 <p>Jwo-Sy Chen, Erik Nielsen, Matthew Ebert, Volkan Inlek, Kenneth Wright, Vandiver Chaplin, Andrii Maksymov, Eduardo Páez, Amrit Poudel, Peter Maunz, and John Gamble. Benchmarking a trapped-ion quantum computer with 30 qubits. <em>Quantum</em>, 8:1516, 2024. <a href="https://arxiv.org/abs/2308.05071">arXiv:2308.05071</a>, <a href="https://doi.org/10.22331/q-2024-11-07-1516">doi:10.22331/q-2024-11-07-1516</a>.&#160;<a class="footnote-backref" href="#fnref:chen2024" title="Jump back to footnote 54 in the text">&#8617;</a></p>
 </li>
 <li id="fn:tham2026">
-<p>Edwin Tham, Michael L. Goldman, Shantanu Debnath, Ashay N. Patel, Jyothi Saraladevi, Jason Nguyen, Erik Nielsen, Neal Pisenti, Kenneth Wright, John Gamble, and Nicolas Delfosse. Breakeven demonstration of quantum low-density parity-check codes. 2026. <a href="https://arxiv.org/abs/2606.06455">arXiv:2606.06455</a>.&#160;<a class="footnote-backref" href="#fnref:tham2026" title="Jump back to footnote 55 in the text">&#8617;</a></p>
+<p>Edwin Tham, Michael L. Goldman, Shantanu Debnath, Ashay N. Patel, Jyothi Saraladevi, Jason Nguyen, Erik Nielsen, Neal Pisenti, Kenneth Wright, John Gamble, and Nicolas Delfosse. Breakeven demonstration of quantum low-density parity-check codes. 2026. <a href="https://arxiv.org/abs/2606.06455">arXiv:2606.06455</a>.&#160;<a class="footnote-backref" href="#fnref:tham2026" title="Jump back to footnote 55 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:tham2026" title="Jump back to footnote 55 in the text">&#8617;</a></p>
 </li>
 <li id="fn:harper2026">
 <p>Robin Harper, Constance Lainé, Evan Hockings, Campbell McLauchlan, Georgia M. Nixon, Benjamin J. Brown, and Stephen D. Bartlett. Characterising the failure mechanisms of error-corrected quantum logic gates. <em>Nature Communications</em>, 17:5039, 2026. <a href="https://arxiv.org/abs/2504.07258">arXiv:2504.07258</a>, <a href="https://doi.org/10.1038/s41467-026-71773-6">doi:10.1038/s41467-026-71773-6</a>.&#160;<a class="footnote-backref" href="#fnref:harper2026" title="Jump back to footnote 56 in the text">&#8617;</a></p>
@@ -2464,7 +2533,7 @@ quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:b
 <p>Arian Vezvaee, Cesar Benito, Mario Morford-Oberst, Alejandro Bermudez, and Daniel A. Lidar. Surface code scaling on heavy-hex superconducting quantum processors. <em>Nature Communications</em>, 17:9201, 2026. <a href="https://arxiv.org/abs/2510.18847">arXiv:2510.18847</a>, <a href="https://doi.org/10.1038/s41467-026-76090-6">doi:10.1038/s41467-026-76090-6</a>.&#160;<a class="footnote-backref" href="#fnref:vezvaee2026" title="Jump back to footnote 57 in the text">&#8617;</a></p>
 </li>
 <li id="fn:chamberland2020">
-<p>Christopher Chamberland, Guanyu Zhu, Theodore J. Yoder, Jared B. Hertzberg, and Andrew W. Cross. Topological and subsystem codes on low-degree graphs with flag qubits. <em>Physical Review X</em>, 10:011022, 2020. <a href="https://arxiv.org/abs/1907.09528">arXiv:1907.09528</a>, <a href="https://doi.org/10.1103/PhysRevX.10.011022">doi:10.1103/PhysRevX.10.011022</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2020" title="Jump back to footnote 58 in the text">&#8617;</a></p>
+<p>Christopher Chamberland, Guanyu Zhu, Theodore J. Yoder, Jared B. Hertzberg, and Andrew W. Cross. Topological and subsystem codes on low-degree graphs with flag qubits. <em>Physical Review X</em>, 10:011022, 2020. <a href="https://arxiv.org/abs/1907.09528">arXiv:1907.09528</a>, <a href="https://doi.org/10.1103/PhysRevX.10.011022">doi:10.1103/PhysRevX.10.011022</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2020" title="Jump back to footnote 58 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:chamberland2020" title="Jump back to footnote 58 in the text">&#8617;</a></p>
 </li>
 <li id="fn:peham2024">
 <p>Tom Peham, Ludwig Schmid, Lucas Berent, Markus Müller, and Robert Wille. Automated synthesis of fault-tolerant state preparation circuits for quantum error correction codes. <em>PRX Quantum</em>, 6:020330, 2025. <a href="https://arxiv.org/abs/2408.11894">arXiv:2408.11894</a>, <a href="https://doi.org/10.1103/PRXQuantum.6.020330">doi:10.1103/PRXQuantum.6.020330</a>.&#160;<a class="footnote-backref" href="#fnref:peham2024" title="Jump back to footnote 59 in the text">&#8617;</a></p>
@@ -2563,7 +2632,7 @@ quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:b
 <p>Balint Pato, June Vanlerberghe, and Kenneth R. Brown. Hyper-optimized quantum Lego contraction schedules. <em>Quantum</em>, 10:2092, 2026. <a href="https://arxiv.org/abs/2510.08210">arXiv:2510.08210</a>, <a href="https://doi.org/10.22331/q-2026-05-05-2092">doi:10.22331/q-2026-05-05-2092</a>.&#160;<a class="footnote-backref" href="#fnref:pato2025" title="Jump back to footnote 90 in the text">&#8617;</a></p>
 </li>
 <li id="fn:gidney2021">
-<p>Craig Gidney. Stim: A fast stabilizer circuit simulator. <em>Quantum</em>, 5:497, 2021. <a href="https://arxiv.org/abs/2103.02202">arXiv:2103.02202</a>, <a href="https://doi.org/10.22331/q-2021-07-06-497">doi:10.22331/q-2021-07-06-497</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021" title="Jump back to footnote 91 in the text">&#8617;</a></p>
+<p>Craig Gidney. Stim: A fast stabilizer circuit simulator. <em>Quantum</em>, 5:497, 2021. <a href="https://arxiv.org/abs/2103.02202">arXiv:2103.02202</a>, <a href="https://doi.org/10.22331/q-2021-07-06-497">doi:10.22331/q-2021-07-06-497</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021" title="Jump back to footnote 91 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:gidney2021" title="Jump back to footnote 91 in the text">&#8617;</a></p>
 </li>
 <li id="fn:chase2026">
 <p>Bradley A. Chase and Farrokh Labib. Clifft: Fast exact simulation of near-Clifford quantum circuits. 2026. <a href="https://arxiv.org/abs/2604.27058">arXiv:2604.27058</a>.&#160;<a class="footnote-backref" href="#fnref:chase2026" title="Jump back to footnote 92 in the text">&#8617;</a></p>
@@ -2571,14 +2640,68 @@ quantum technology <sup id="fnref:bukov2026"><a class="footnote-ref" href="#fn:b
 <li id="fn:fur2026">
 <p>Yanis Le Fur, Ethan Egger, Hong-Ye Hu, Vincent Russo, William J. Zeng, and Ryan LaRose. Opportunities and challenges in scaling quantum error detection on hardware. 2026. <a href="https://arxiv.org/abs/2605.02861">arXiv:2605.02861</a>.&#160;<a class="footnote-backref" href="#fnref:fur2026" title="Jump back to footnote 93 in the text">&#8617;</a></p>
 </li>
+<li id="fn:aliferis2006">
+<p>Panos Aliferis, Daniel Gottesman, and John Preskill. Quantum accuracy threshold for concatenated distance-3 codes. <em>Quantum Information and Computation</em>, 6:97–165, 2006. <a href="https://arxiv.org/abs/quant-ph/0504218">arXiv:quant-ph/0504218</a>, <a href="https://doi.org/10.26421/QIC6.2-1">doi:10.26421/QIC6.2-1</a>.&#160;<a class="footnote-backref" href="#fnref:aliferis2006" title="Jump back to footnote 94 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fowler2013">
+<p>Austin G. Fowler. Analytic asymptotic performance of topological codes. <em>Physical Review A</em>, 87:040301, 2013. <a href="https://arxiv.org/abs/1208.1334">arXiv:1208.1334</a>, <a href="https://doi.org/10.1103/PhysRevA.87.040301">doi:10.1103/PhysRevA.87.040301</a>.&#160;<a class="footnote-backref" href="#fnref:fowler2013" title="Jump back to footnote 95 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:fowler2013" title="Jump back to footnote 95 in the text">&#8617;</a></p>
+</li>
+<li id="fn:beverland2019">
+<p>Michael E. Beverland, Benjamin J. Brown, Michael J. Kastoryano, and Quentin Marolleau. The role of entropy in topological quantum error correction. <em>Journal of Statistical Mechanics: Theory and Experiment</em>, 2019:073404, 2019. <a href="https://arxiv.org/abs/1812.05117">arXiv:1812.05117</a>, <a href="https://doi.org/10.1088/1742-5468/ab25de">doi:10.1088/1742-5468/ab25de</a>.&#160;<a class="footnote-backref" href="#fnref:beverland2019" title="Jump back to footnote 96 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:beverland2019" title="Jump back to footnote 96 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bravyi2013">
+<p>Sergey Bravyi and Alexander Vargo. Simulation of rare events in quantum error correction. <em>Physical Review A</em>, 88:062308, 2013. <a href="https://arxiv.org/abs/1308.6270">arXiv:1308.6270</a>, <a href="https://doi.org/10.1103/PhysRevA.88.062308">doi:10.1103/PhysRevA.88.062308</a>.&#160;<a class="footnote-backref" href="#fnref:bravyi2013" title="Jump back to footnote 97 in the text">&#8617;</a></p>
+</li>
+<li id="fn:higgott2025">
+<p>Oscar Higgott and Craig Gidney. Sparse Blossom: Correcting a million errors per core second with minimum-weight matching. <em>Quantum</em>, 9:1600, 2025. <a href="https://arxiv.org/abs/2303.15933">arXiv:2303.15933</a>, <a href="https://doi.org/10.22331/q-2025-01-20-1600">doi:10.22331/q-2025-01-20-1600</a>.&#160;<a class="footnote-backref" href="#fnref:higgott2025" title="Jump back to footnote 98 in the text">&#8617;</a></p>
+</li>
+<li id="fn:beni2025">
+<p>Laleh Aghababaie Beni, Oscar Higgott, and Noah Shutty. Tesseract: a search-based decoder for quantum error correction. 2025. <a href="https://arxiv.org/abs/2503.10988">arXiv:2503.10988</a>.&#160;<a class="footnote-backref" href="#fnref:beni2025" title="Jump back to footnote 99 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bonnelykke2026">
+<p>Julius Rye Bønnelykke, Benjamin Joecker, Peter Krogstrup, Vincent Philippe Michal, and Mark Kamper Svendsen. Decoder- and noise-aware optimization framework for Clifford-deformed quantum error-correcting codes. 2026. <a href="https://arxiv.org/abs/2610.13589">arXiv:2610.13589</a>.&#160;<a class="footnote-backref" href="#fnref:bonnelykke2026" title="Jump back to footnote 100 in the text">&#8617;</a></p>
+</li>
+<li id="fn:gidney2021b">
+<p>Craig Gidney, Michael Newman, Austin Fowler, and Michael Broughton. A fault-tolerant honeycomb memory. <em>Quantum</em>, 5:605, 2021. <a href="https://arxiv.org/abs/2108.10457">arXiv:2108.10457</a>, <a href="https://doi.org/10.22331/q-2021-12-20-605">doi:10.22331/q-2021-12-20-605</a>.&#160;<a class="footnote-backref" href="#fnref:gidney2021b" title="Jump back to footnote 101 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chao2018">
+<p>Rui Chao and Ben W. Reichardt. Quantum error correction with only two extra qubits. <em>Physical Review Letters</em>, 121:050502, 2018. <a href="https://arxiv.org/abs/1705.02329">arXiv:1705.02329</a>, <a href="https://doi.org/10.1103/PhysRevLett.121.050502">doi:10.1103/PhysRevLett.121.050502</a>.&#160;<a class="footnote-backref" href="#fnref:chao2018" title="Jump back to footnote 102 in the text">&#8617;</a></p>
+</li>
+<li id="fn:chamberland2018">
+<p>Christopher Chamberland and Michael E. Beverland. Flag fault-tolerant error correction with arbitrary distance codes. <em>Quantum</em>, 2:53, 2018. <a href="https://arxiv.org/abs/1708.02246">arXiv:1708.02246</a>, <a href="https://doi.org/10.22331/q-2018-02-08-53">doi:10.22331/q-2018-02-08-53</a>.&#160;<a class="footnote-backref" href="#fnref:chamberland2018" title="Jump back to footnote 103 in the text">&#8617;</a></p>
+</li>
+<li id="fn:poulin2005">
+<p>David Poulin. Stabilizer formalism for operator quantum error correction. <em>Physical Review Letters</em>, 95:230504, 2005. <a href="https://arxiv.org/abs/quant-ph/0508131">arXiv:quant-ph/0508131</a>, <a href="https://doi.org/10.1103/PhysRevLett.95.230504">doi:10.1103/PhysRevLett.95.230504</a>.&#160;<a class="footnote-backref" href="#fnref:poulin2005" title="Jump back to footnote 104 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bravyi2011">
+<p>Sergey Bravyi. Subsystem codes with spatially local generators. <em>Physical Review A</em>, 83:012320, 2011. <a href="https://arxiv.org/abs/1008.1029">arXiv:1008.1029</a>, <a href="https://doi.org/10.1103/PhysRevA.83.012320">doi:10.1103/PhysRevA.83.012320</a>.&#160;<a class="footnote-backref" href="#fnref:bravyi2011" title="Jump back to footnote 105 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bacon2006">
+<p>Dave Bacon. Operator quantum error-correcting subsystems for self-correcting quantum memories. <em>Physical Review A</em>, 73:012340, 2006. <a href="https://arxiv.org/abs/quant-ph/0506023">arXiv:quant-ph/0506023</a>, <a href="https://doi.org/10.1103/PhysRevA.73.012340">doi:10.1103/PhysRevA.73.012340</a>.&#160;<a class="footnote-backref" href="#fnref:bacon2006" title="Jump back to footnote 106 in the text">&#8617;</a></p>
+</li>
+<li id="fn:acharya2023">
+<p>Google Quantum AI. Suppressing quantum errors by scaling a surface code logical qubit. <em>Nature</em>, 614:676–681, 2023. <a href="https://arxiv.org/abs/2207.06431">arXiv:2207.06431</a>, <a href="https://doi.org/10.1038/s41586-022-05434-1">doi:10.1038/s41586-022-05434-1</a>.&#160;<a class="footnote-backref" href="#fnref:acharya2023" title="Jump back to footnote 107 in the text">&#8617;</a></p>
+</li>
+<li id="fn:acharya2025">
+<p>Google Quantum AI and Collaborators. Quantum error correction below the surface code threshold. <em>Nature</em>, 638:920–926, 2025. <a href="https://arxiv.org/abs/2408.13687">arXiv:2408.13687</a>, <a href="https://doi.org/10.1038/s41586-024-08449-y">doi:10.1038/s41586-024-08449-y</a>.&#160;<a class="footnote-backref" href="#fnref:acharya2025" title="Jump back to footnote 108 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ryananderson2021">
+<p>C. Ryan-Anderson, J. G. Bohnet, K. Lee, D. Gresh, A. Hankin, J. P. Gaebler, D. Francois, A. Chernoguzov, D. Lucchetti, N. C. Brown, T. M. Gatterman, S. K. Halit, K. Gilmore, J. A. Gerber, B. Neyenhuis, D. Hayes, and R. P. Stutz. Realization of real-time fault-tolerant quantum error correction. <em>Physical Review X</em>, 11:041058, 2021. <a href="https://arxiv.org/abs/2107.07505">arXiv:2107.07505</a>, <a href="https://doi.org/10.1103/PhysRevX.11.041058">doi:10.1103/PhysRevX.11.041058</a>.&#160;<a class="footnote-backref" href="#fnref:ryananderson2021" title="Jump back to footnote 109 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bravyi2024">
+<p>Sergey Bravyi, Andrew W. Cross, Jay M. Gambetta, Dmitri Maslov, Patrick Rall, and Theodore J. Yoder. High-threshold and low-overhead fault-tolerant quantum memory. <em>Nature</em>, 627:778–782, 2024. <a href="https://arxiv.org/abs/2308.07915">arXiv:2308.07915</a>, <a href="https://doi.org/10.1038/s41586-024-07107-7">doi:10.1038/s41586-024-07107-7</a>.&#160;<a class="footnote-backref" href="#fnref:bravyi2024" title="Jump back to footnote 110 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sundaresan2023">
+<p>Neereja Sundaresan, Theodore J. Yoder, Youngseok Kim, Muyuan Li, Edward H. Chen, Grace Harper, Ted Thorbeck, Andrew W. Cross, Antonio D. Córcoles, and Maika Takita. Demonstrating multi-round subsystem quantum error correction using matching and maximum likelihood decoders. <em>Nature Communications</em>, 14:2852, 2023. <a href="https://arxiv.org/abs/2203.07205">arXiv:2203.07205</a>, <a href="https://doi.org/10.1038/s41467-023-38247-5">doi:10.1038/s41467-023-38247-5</a>.&#160;<a class="footnote-backref" href="#fnref:sundaresan2023" title="Jump back to footnote 111 in the text">&#8617;</a></p>
+</li>
 <li id="fn:wang2024">
-<p>Zihao Wang and Hao Tang. Artificial intelligence for quantum error correction: A comprehensive review. 2024. <a href="https://arxiv.org/abs/2412.20380">arXiv:2412.20380</a>.&#160;<a class="footnote-backref" href="#fnref:wang2024" title="Jump back to footnote 94 in the text">&#8617;</a></p>
+<p>Zihao Wang and Hao Tang. Artificial intelligence for quantum error correction: A comprehensive review. 2024. <a href="https://arxiv.org/abs/2412.20380">arXiv:2412.20380</a>.&#160;<a class="footnote-backref" href="#fnref:wang2024" title="Jump back to footnote 112 in the text">&#8617;</a></p>
 </li>
 <li id="fn:bukov2026">
-<p>Marin Bukov and Florian Marquardt. Reinforcement learning for quantum technology. 2026. <a href="https://arxiv.org/abs/2601.18953">arXiv:2601.18953</a>.&#160;<a class="footnote-backref" href="#fnref:bukov2026" title="Jump back to footnote 95 in the text">&#8617;</a></p>
+<p>Marin Bukov and Florian Marquardt. Reinforcement learning for quantum technology. 2026. <a href="https://arxiv.org/abs/2601.18953">arXiv:2601.18953</a>.&#160;<a class="footnote-backref" href="#fnref:bukov2026" title="Jump back to footnote 113 in the text">&#8617;</a></p>
 </li>
 <li id="fn:jayashankar2022">
-<p>Akshaya Jayashankar and Prabha Mandayam. Quantum error correction: Noise-adapted techniques and applications. 2022. <a href="https://arxiv.org/abs/2208.00365">arXiv:2208.00365</a>.&#160;<a class="footnote-backref" href="#fnref:jayashankar2022" title="Jump back to footnote 96 in the text">&#8617;</a></p>
+<p>Akshaya Jayashankar and Prabha Mandayam. Quantum error correction: Noise-adapted techniques and applications. 2022. <a href="https://arxiv.org/abs/2208.00365">arXiv:2208.00365</a>.&#160;<a class="footnote-backref" href="#fnref:jayashankar2022" title="Jump back to footnote 114 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
