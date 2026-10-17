@@ -4,10 +4,10 @@ Status: complete. Every number below comes from a JSON under
 `experiments/ldpc_scaling/runs/` (named in the last column of the run table or in
 the text) or from `experiments/regression/regression_ppo_4x4_seed*.json`; the tables and
 figures regenerate with
-`uv run --extra rl python -m autoqec_sim.experiments.ldpc_scaling report`
-and this file with `uv run --extra rl python experiments/ldpc_scaling/assemble_report.py`.
+`uv run --extra rl python -m experiments.ldpc_scaling.run report`
+and this file with `uv run --extra rl python -m experiments.ldpc_scaling.assemble_report`.
 Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective`),
-`src/autoqec_sim/experiments/ldpc_scaling.py`. Logs: `experiments/ldpc_scaling/runs/logs/`.
+`experiments/ldpc_scaling/run.py`. Logs: `experiments/ldpc_scaling/runs/logs/`.
 
 ## Summary
 
@@ -330,4 +330,4 @@ Both seeds reach distance 4 (the scaling probe's range for this policy on the le
 | `experiments/ldpc_scaling/runs/queue.sh`, `jobs.txt`, `jobs_ldpc2.txt` | the 3-slot runner and the job lists |
 | `experiments/regression/regression_ppo_4x4_seed{0,1}.json` | the 4x4 rediscovery target of Task A |
 | `experiments/ldpc_scaling/figures/` | the two figures, drawn by `report` with `experiments.figstyle` |
-| `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_scaling.py`, `experiments/ldpc_scaling/assemble_report.py` | the objective, the experiment, and this report's assembly |
+| `src/autoqec_sim/ldpc.py`, `experiments/ldpc_scaling/run.py`, `experiments/ldpc_scaling/assemble_report.py` | the objective, the experiment, and this report's assembly |

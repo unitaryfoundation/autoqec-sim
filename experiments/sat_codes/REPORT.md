@@ -2,8 +2,8 @@
 
 Status: complete for the selection below. Every number comes from
 `experiments/sat_codes/runs/sat_codes.json`; this file regenerates with
-`python -m autoqec_sim.experiments.sat_codes report`. Code:
-`src/autoqec_sim/experiments/sat_codes.py`.
+`python -m experiments.sat_codes.run report`. Code:
+`experiments/sat_codes/run.py`.
 
 Source: DalFavero et al., arXiv:2608.23460, `experiments/surface/` of
 github.com/bdalfavero/satisfying-codes: 100,000 SAT-sampled 9-qubit

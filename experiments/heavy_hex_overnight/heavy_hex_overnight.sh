@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Launch the unattended heavy-hex PPO run detached from this shell.
 #
-# Runs python -m autoqec_sim.experiments.heavy_hex_overnight drive under
+# Runs python -m experiments.heavy_hex_overnight.run drive under
 # nohup with a global wall cap (default 10 h) and a thread cap (default 4),
 # writes everything under experiments/heavy_hex_overnight/runs/, and prints the pid.
 # Rerunning the script resumes: every cell whose JSON exists is skipped.
@@ -49,7 +49,7 @@ fi
 export OMP_NUM_THREADS="$THREADS" OPENBLAS_NUM_THREADS="$THREADS" MKL_NUM_THREADS="$THREADS" VECLIB_MAXIMUM_THREADS="$THREADS"
 export PYTHONUNBUFFERED=1
 
-nohup uv run --extra rl python -m autoqec_sim.experiments.heavy_hex_overnight drive \
+nohup uv run --extra rl python -m experiments.heavy_hex_overnight.run drive \
   --hours "$HOURS" --threads "$THREADS" --out-dir "$OUT" \
   >> "$OUT/driver.out" 2>&1 < /dev/null &
 DRIVER=$!

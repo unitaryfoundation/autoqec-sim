@@ -30,10 +30,10 @@ set, and how does the cost grow with the lattice?
 ## Reproduce
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.topologies matrix
-uv run --extra rl python -m autoqec_sim.experiments.topologies run --topology heavy_hex --target-n 16 --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.topologies report
-uv run --extra rl python -m autoqec_sim.experiments.topologies figure
+uv run --extra rl python -m experiments.topologies.run matrix
+uv run --extra rl python -m experiments.topologies.run run --topology heavy_hex --target-n 16 --seed 0
+uv run --extra rl python -m experiments.topologies.run report
+uv run --extra rl python -m experiments.topologies.run figure
 ```
 
 The write-up is

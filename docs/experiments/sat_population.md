@@ -29,10 +29,10 @@ information about circuit-level rates, and what does?
 ## Reproduce
 
 ```
-uv run python -m autoqec_sim.experiments.sat_population prepare --source <satisfying-codes>/experiments/surface
-uv run python -m autoqec_sim.experiments.sat_population run --workers 4
-uv run python -m autoqec_sim.experiments.sat_population confirm
-uv run python -m autoqec_sim.experiments.sat_population report
+uv run python -m experiments.sat_population.run prepare --source <satisfying-codes>/experiments/surface
+uv run python -m experiments.sat_population.run run --workers 4
+uv run python -m experiments.sat_population.run confirm
+uv run python -m experiments.sat_population.run report
 ```
 
 The write-up is

@@ -30,9 +30,9 @@ action space?
 ## Reproduce
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.topologies_ea run --topology square --target-n 9 --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.topologies_ea report
-uv run --extra rl python -m autoqec_sim.experiments.topologies_ea figure
+uv run --extra rl python -m experiments.topologies_ea.run run --topology square --target-n 9 --seed 0
+uv run --extra rl python -m experiments.topologies_ea.run report
+uv run --extra rl python -m experiments.topologies_ea.run figure
 ```
 
 The write-up is

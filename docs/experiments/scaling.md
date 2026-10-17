@@ -29,10 +29,10 @@ LDPC penalty of the rediscovery regression carry to `n = 12` to `16`?
 ## Reproduce
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.scaling variant --variant equivariant --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.scaling ldpc --n 12 --k 2 --graph all_to_all:12 --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.scaling report
-uv run --extra rl python -m autoqec_sim.experiments.scaling figure
+uv run --extra rl python -m experiments.scaling.run variant --variant equivariant --seed 0
+uv run --extra rl python -m experiments.scaling.run ldpc --n 12 --k 2 --graph all_to_all:12 --seed 0
+uv run --extra rl python -m experiments.scaling.run report
+uv run --extra rl python -m experiments.scaling.run figure
 ```
 
 The write-up is

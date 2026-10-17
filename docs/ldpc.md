@@ -95,11 +95,11 @@ percent of the wall time) and 0.08 s on the lattice (the report's "Exact
 feasibility mask" section).
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity run --variant mask_terminal --cell n12_k2_square --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity report
+uv run --extra rl python -m experiments.ldpc_sparsity.run run --variant mask_terminal --cell n12_k2_square --seed 0
+uv run --extra rl python -m experiments.ldpc_sparsity.run report
 ```
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.ldpc_scaling run --form unnormalized --target n12_k2_all_to_all --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.ldpc_scaling report
+uv run --extra rl python -m experiments.ldpc_scaling.run run --form unnormalized --target n12_k2_all_to_all --seed 0
+uv run --extra rl python -m experiments.ldpc_scaling.run report
 ```

@@ -11,7 +11,7 @@ PPO's environment steps, both from the records in this directory. The wall
 time of each run is written next to its marker. Output goes to
 ``docs/assets/figures/rediscovery.{png,pdf}`` for the README and the docs.
 
-    uv run python experiments/regression/figure.py
+    uv run python -m experiments.regression.figure
 """
 
 from __future__ import annotations
@@ -19,8 +19,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from autoqec_sim.experiments import figstyle
 from autoqec_sim.regress import TARGETS
+
+from ..common import figstyle
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parents[1] / "docs" / "assets" / "figures" / "rediscovery"

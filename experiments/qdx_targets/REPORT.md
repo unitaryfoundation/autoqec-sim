@@ -2,8 +2,8 @@
 
 Status: 24 of 45 targets run so far found and verified. Every
 number comes from a JSON under `experiments/qdx_targets/runs/`; this file
-regenerates with `python -m autoqec_sim.experiments.qdx_targets report`.
-Code: `src/autoqec_sim/experiments/qdx_targets.py`.
+regenerates with `python -m experiments.qdx_targets.run report`.
+Code: `experiments/qdx_targets/run.py`.
 
 QDX (Olle, Zen, Puviani, Marquardt, npj Quantum Information 10, 126 (2024);
 github.com/jolle-ag/qdx) publishes every [[n, k, d]] its agents found on

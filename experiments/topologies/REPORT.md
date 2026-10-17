@@ -2,8 +2,8 @@
 
 Status: complete for the cells listed. Every number comes from a JSON under
 `results/topologies/` (named in the last column of each table) and the tables
-regenerate with `uv run --extra rl python -m autoqec_sim.experiments.topologies report`.
-Code: `src/autoqec_sim/experiments/topologies.py`.
+regenerate with `uv run --extra rl python -m experiments.topologies.run report`.
+Code: `experiments/topologies/run.py`.
 
 ## Summary
 
@@ -135,13 +135,13 @@ lattices (the triangular lattice contains the square edges).
 ## Regenerate
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.topologies matrix
-uv run --extra rl python -m autoqec_sim.experiments.topologies report
+uv run --extra rl python -m experiments.topologies.run matrix
+uv run --extra rl python -m experiments.topologies.run report
 ```
 
 One cell, one seed, and one baseline:
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.topologies run --topology heavy_hex --target-n 16 --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.topologies baseline --topology square --target-n 9
+uv run --extra rl python -m experiments.topologies.run run --topology heavy_hex --target-n 16 --seed 0
+uv run --extra rl python -m experiments.topologies.run baseline --topology square --target-n 9
 ```

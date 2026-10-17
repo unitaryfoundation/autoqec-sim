@@ -2,8 +2,8 @@
 
 Status: complete.
 Every number comes from `experiments/sat_population/runs/records.jsonl`;
-this file regenerates with `python -m autoqec_sim.experiments.sat_population report`.
-Code: `src/autoqec_sim/experiments/sat_population.py`; population:
+this file regenerates with `python -m experiments.sat_population.run report`.
+Code: `experiments/sat_population/run.py`; population:
 `experiments/sat_population/population.json`.
 
 Source: DalFavero et al., arXiv:2608.23460, `experiments/surface/` of

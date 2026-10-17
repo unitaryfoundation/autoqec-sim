@@ -28,10 +28,10 @@ the experiment the proposal cites [@olle2024] for.
 ## Reproduce
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.noise_aware run --setting 3x3 --profile ion --seed 0
-uv run --extra rl python -m autoqec_sim.experiments.noise_aware baselines --setting 3x3
-uv run --extra rl python -m autoqec_sim.experiments.noise_aware report
-uv run --extra rl python -m autoqec_sim.experiments.noise_aware figure
+uv run --extra rl python -m experiments.noise_aware.run run --setting 3x3 --profile ion --seed 0
+uv run --extra rl python -m experiments.noise_aware.run baselines --setting 3x3
+uv run --extra rl python -m experiments.noise_aware.run report
+uv run --extra rl python -m experiments.noise_aware.run figure
 ```
 
 `--threads N` caps torch and BLAS; the release numbers came from the

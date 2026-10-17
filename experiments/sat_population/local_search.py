@@ -8,7 +8,7 @@ generators, scores up to eight distinct completions, and accepts the best if it 
 logged so the trajectory compares with random sampling at equal evaluation counts. Needs the `qodesign`
 package of github.com/bdalfavero/satisfying-codes on the path, `pycmsgen`, and `python-sat`.
 
-    uv run --with pycmsgen --with python-sat python experiments/sat_population/local_search.py <seed> <steps> <out.json>
+    uv run --with pycmsgen --with python-sat python -m experiments.sat_population.local_search <seed> <steps> <out.json>
 
 Results of three runs of 40 steps are in `local_search/run_{1,2,3}.json`: final proxy rates 0.000339,
 0.000331, and 0.000365 after 143, 129, and 159 evaluations; the random sample's best of 2,000 draws is
@@ -34,9 +34,10 @@ from qodesign.sat import (
 )
 
 from autoqec_sim.code import StabilizerCode
-from autoqec_sim.experiments.memory_objective import hadamard_conjugate
 from autoqec_sim.memory_objective import MemoryObjective
 from autoqec_sim.noise import presets
+
+from ..memory_objective.run import hadamard_conjugate
 
 N = 9
 FOOTPRINTS = [{0, 1, 3, 4}, {4, 5, 7, 8}, {2, 5}, {3, 6}, {1, 2, 4, 5}, {3, 4, 6, 7}, {0, 1}, {7, 8}]

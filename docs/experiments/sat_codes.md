@@ -28,9 +28,9 @@ survive circuit-level noise?
 ## Reproduce
 
 ```
-uv run python -m autoqec_sim.experiments.sat_codes run
-uv run python -m autoqec_sim.experiments.sat_codes report
-uv run python -m autoqec_sim.experiments.sat_codes figure
+uv run python -m experiments.sat_codes.run run
+uv run python -m experiments.sat_codes.run report
+uv run python -m experiments.sat_codes.run figure
 ```
 
 The selection is `experiments/sat_codes/selection.json`; the write-up is

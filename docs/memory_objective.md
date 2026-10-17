@@ -1,7 +1,7 @@
 # Memory objective: design note
 
 Module `src/autoqec_sim/memory_objective.py`; experiment
-`src/autoqec_sim/experiments/memory_objective.py`; results
+`experiments/memory_objective/run.py`; results
 `experiments/memory_objective/REPORT.md` (every number below is copied from
 there, which regenerates from `experiments/memory_objective/runs/*.json`).
 

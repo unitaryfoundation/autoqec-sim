@@ -27,9 +27,9 @@ matched gate set, connectivity, and success criterion, with one run of
 ## Reproduce
 
 ```
-uv run --extra rl python -m autoqec_sim.experiments.qdx_targets run --tier d3
-uv run --extra rl python -m autoqec_sim.experiments.qdx_targets report
-uv run --extra rl python -m autoqec_sim.experiments.qdx_targets figure
+uv run --extra rl python -m experiments.qdx_targets.run run --tier d3
+uv run --extra rl python -m experiments.qdx_targets.run report
+uv run --extra rl python -m experiments.qdx_targets.run figure
 ```
 
 The write-up, with the QDX columns read from its archive, is

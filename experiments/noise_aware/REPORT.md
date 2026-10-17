@@ -1,10 +1,10 @@
 # Noise-aware code discovery with PPO under three noise profiles
 
-Question: does the code an RL agent discovers depend on the noise model it is trained against, and in the direction the model's structure predicts (the experiment the proposal cites Olle et al., arXiv:2311.04750, for)? Module: `src/autoqec_sim/experiments/noise_aware.py`; one cell reproduces with `uv run --extra rl python -m autoqec_sim.experiments.noise_aware run --setting S --profile P --seed K`.
+Question: does the code an RL agent discovers depend on the noise model it is trained against, and in the direction the model's structure predicts (the experiment the proposal cites Olle et al., arXiv:2311.04750, for)? Module: `experiments/noise_aware/run.py`; one cell reproduces with `uv run --extra rl python -m experiments.noise_aware.run run --setting S --profile P --seed K`.
 
 ## Verdict
 
-Status: complete. 45 PPO runs (3 settings x 3 profiles x 5 seeds, padding penalty on), three baseline sets, 31 process-hours in about 3.5 hours of wall time on 6 threads. Every number below is copied from the tables of this report, which regenerate from `runs/*.json` and `baselines_*.json` with `python -m autoqec_sim.experiments.noise_aware report`.
+Status: complete. 45 PPO runs (3 settings x 3 profiles x 5 seeds, padding penalty on), three baseline sets, 31 process-hours in about 3.5 hours of wall time on 6 threads. Every number below is copied from the tables of this report, which regenerate from `runs/*.json` and `baselines_*.json` with `python -m experiments.noise_aware.run report`.
 
 Yes, the code depends on the noise profile, and the dependence is large where the profiles differ in structure, but it is not the dependence the memory-noise picture predicts. What the agent adapts is the encoding circuit's fault propagation, not the code's X/Z distance structure.
 

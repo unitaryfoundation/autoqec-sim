@@ -7,7 +7,7 @@
 Every number in the prose is computed here from the JSONs; the planned
 cells that have no JSON are listed as pending.
 
-    uv run --extra rl python experiments/ldpc_sparsity/assemble_report.py
+    uv run --extra rl python -m experiments.ldpc_sparsity.assemble_report
 """
 
 from __future__ import annotations
@@ -17,8 +17,8 @@ from pathlib import Path
 
 import numpy as np
 
-from autoqec_sim.experiments import ldpc_sparsity as S
-from autoqec_sim.experiments.ldpc_sparsity import CELL_SPECS, TARGETS
+from . import run as S
+from .run import CELL_SPECS, TARGETS
 
 ROOT = Path(__file__).resolve().parents[2]
 RES = ROOT / "experiments" / "ldpc_sparsity" / "runs"
@@ -233,11 +233,11 @@ def main():
     A(f"Status: {status}. Every number below comes from a JSON under")
     A("`experiments/ldpc_sparsity/runs/` (named in the last column of the run table);")
     A("the tables and figures regenerate with")
-    A("`uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity report`")
-    A("and this file with `uv run --extra rl python experiments/ldpc_sparsity/assemble_report.py`.")
+    A("`uv run --extra rl python -m experiments.ldpc_sparsity.run report`")
+    A("and this file with `uv run --extra rl python -m experiments.ldpc_sparsity.assemble_report`.")
     A("Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective` forms `shaped` and `terminal`,")
     A("`heavy_generator_count`, `greedy_action_mask`),")
-    A("`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;")
+    A("`experiments/ldpc_sparsity/run.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;")
     A("compute records: `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, imported into")
     A("`genesis/ledger/compute.jsonl`.")
     A("")
@@ -409,7 +409,7 @@ def main():
     A("| `experiments/ldpc_sparsity/figures/` | the figures, drawn by `report` with `experiments.figstyle` |")
     A("| `experiments/ldpc_sparsity/runs/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |")
     A("| `experiments/ldpc_sparsity/exact_mask.md`, `verdict.md` | the hand-written reading of the exact-mask section and the verdict, inserted by the assembly |")
-    A("| `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_sparsity.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |")
+    A("| `src/autoqec_sim/ldpc.py`, `experiments/ldpc_sparsity/run.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |")
     text = "\n".join(lines) + "\n"
     verdict_file = OUT.parent / "verdict.md"
     verdict = verdict_file.read_text().strip() if verdict_file.exists() else "(verdict prose pending)"

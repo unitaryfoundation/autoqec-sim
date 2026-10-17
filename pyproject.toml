@@ -55,26 +55,28 @@ docs = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/autoqec_sim"]
-# Work in progress that is not part of 0.2.0.
-exclude = ["src/autoqec_sim/experiments"]
 
 [tool.hatch.build.targets.sdist]
+# Anchored to the root so that experiments/tests and experiments/README.md
+# stay out; the experiments are not part of the distribution.
 include = [
-    "src/autoqec_sim",
-    "tests",
-    "docs",
-    "benchmarks",
-    "tools",
-    "CHANGELOG.md",
-    "CITATION.cff",
-    "LICENSE",
-    "README.md",
-    "pyproject.toml",
+    "/src/autoqec_sim",
+    "/tests",
+    "/docs",
+    "/benchmarks",
+    "/tools",
+    "/CHANGELOG.md",
+    "/CITATION.cff",
+    "/LICENSE",
+    "/README.md",
+    "/pyproject.toml",
 ]
-exclude = ["src/autoqec_sim/experiments"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# experiments/tests imports the experiment code as experiments.<name>.run from
+# the repository root, which is not installed with the package.
+testpaths = ["tests", "experiments/tests"]
+pythonpath = ["."]
 addopts = "-q"
 
 [tool.ruff]
@@ -91,7 +93,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["autoqec_sim"]
+known-first-party = ["autoqec_sim", "experiments"]
 
 # CPU-only torch on Linux for the `rl` extra (the agent is CPU-only; the
 # default PyPI wheel on Linux bundles CUDA). macOS wheels on PyPI are CPU.

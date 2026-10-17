@@ -19,17 +19,36 @@
 | `autoqec_sim.backends.torch_backend` | Opt-in torch versions of the gate kernels, `ActionTable`, the symplectic product, and the parity masks (`undetected_mask`, `in_stabilizer_mask`, `batched_distance`, the rewards) on `cpu` or `cuda` tensors, same names and semantics as the numpy functions, bit-for-bit agreement tested. The mod-2 reduction and both commutation tests run as one in-place `remainder_(2)` and one matrix-vector product, without the int64 copy and the boolean reductions of the numpy path. `numpy_reward_adapter` plugs a torch reward into the environment. See `docs/gpu.md`. |
 | `autoqec_sim.agents.ppo` | PPO [@schulman2017] agent (PyTorch, CPU): clipped objective, GAE [@schulman2015gae], shared value head, entropy bonus, action masking, over the batched environment. torch is an optional dependency (`rl` extra) and is imported lazily. |
 | `autoqec_sim.agents.ppo_regress` | The rediscovery regression run with PPO instead of evolutionary search, reusing the targets, reward, replay, and verification of `regress`, plus the PPO-only 4x4 rotated-surface target `[[16, 1, 4]]` (1M env steps, `full` budget only). |
-| `autoqec_sim.experiments.noise_aware` | The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines, report and figures); see docs/experiments/index.md. |
-| `autoqec_sim.experiments.scaling` | The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on `[[16, 1, 4]]` (curriculum, macro actions, equivariant policy, batch and entropy, episode cap), and LDPC-constrained `[[n, k, 3]]` targets at `n = 12` to `16`; see docs/experiments/index.md. |
-| `autoqec_sim.experiments.ldpc_scaling` | The LDPC constraint forms above `n = 9`: `unnormalized`, `final`, and `schedule` against the regression's `penalty` form on `[[12, 2, 3]]` and `[[16, 4, 3]]` with `w_max = 4`, all-to-all and square graphs, three seeds, equivariant policy, fixed budget per run; see "LDPC constraint" and `experiments/ldpc_scaling/REPORT.md`. |
-| `autoqec_sim.experiments.ldpc_sparsity` | Sparsity as a property of the trained policy: the `shaped` (dense per-step term in reward units), `terminal` (count-unit signal at any candidate), and `mask` (greedy `w*` action mask) variants against `unnormalized` at equal budget on `[[12, 2, 3]]` (all-to-all, `square:3x4`) and `[[16, 4, 3]]` (`square:4x4`), measured as the fraction of at-distance terminal states inside the bound; see `experiments/ldpc_sparsity/REPORT.md`. |
-| `autoqec_sim.experiments.ion_chain` | The noise-aware 4x4 protocol of `gpu_scale` (equivariant PPO, batch 1024, three profiles, cross-evaluation) on all-to-all connectivity at `n = 16`, the connectivity of an ion chain, with and without S in the gate set; the report compares the all-to-all codes under the ion profile with the 4x4 lattice cells of `experiments/gpu_scale/runs/`, the rotated surface code's lattice and all-to-all encoders, and the `n = 16` known codes; see `experiments/ion_chain/runs/REPORT.md`. |
-| `autoqec_sim.experiments.topologies` | The three-topology run matrix: the PPO agent alone on square, triangular, and heavy-hex lattices at two qubit-count tiers, one objective (`[[n, 1, 3]]`, no idle qubit, H and CNOT on lattice edges, 50-gate cap), common metrics per cell (steps to success, exact `d`, `w*`, qubit degree, weight enumerators, Heron and board fault masses, rotated surface baseline); see docs/experiments/index.md. |
-| `autoqec_sim.experiments.memory_objective` | Benchmark of the memory objective's tiers on five codes and three profiles, rank correlation on random distance-3 codes, the XZZX [@bonillaataides2021] bias-sensitivity test, the lattice-routing comparison, and the PPO smoke run with the memory reward; see `experiments/memory_objective/REPORT.md`. |
-| `autoqec_sim.experiments.memory_ppo` | The noise-aware 4x4 protocol of `gpu_scale` with the memory objective as the noise term (`R = 4` rounds, all-to-all layout, proxy tier in training) on four cells (chain 0.25 bare and one-flag, board 0.25, Heron 0.05), three seeds, and a second run without the LDPC term, with a gate-count term, the sampled tier outside the proxy's regime, and the sparsest generator basis; `score` re-evaluates the discovered codes, the encoder-objective 4x4 codes, and the rotated surface and XZZX codes under every profile at the proxy, sampled, and bposd tiers; see `experiments/memory_ppo/REPORT.md`. |
-| `autoqec_sim.experiments.figstyle` | The one matplotlib style every figure of the package uses (6.5 in text width, standard heights, panel labels, profile colors). |
 
 Not included: Clifft integration and cuQuantum kernels.
+
+## Experiments
+
+The experiments are not part of the installed package. Each lives in
+`experiments/<name>/run.py` in the repository, next to its `REPORT.md` and
+`figures/`, and runs from the repository root as
+`uv run python -m experiments.<name>.run <subcommand>` (`--extra rl` for the
+PPO-based ones); `experiments/common/figstyle.py` is the one matplotlib style
+every figure shares. `experiments/README.md` has the layout and the
+regeneration steps, and [Experiments](experiments/index.md) has one page per
+experiment with its question, result, and commands.
+
+| Experiment | Contents |
+|---|---|
+| `noise_aware` | The noise-aware discovery experiment (three noise profiles, three settings, five PPO seeds each, cross-evaluation, known-code baselines). |
+| `scaling` | The RL scaling probe: diagnosis of the 4x4 failure, one-change-at-a-time variants of the agent on `[[16, 1, 4]]`, and LDPC-constrained `[[n, k, 3]]` targets at `n = 12` to `16`. |
+| `ldpc_scaling` | The LDPC constraint forms above `n = 9` (`unnormalized`, `final`, `schedule` against `penalty`) on `[[12, 2, 3]]` and `[[16, 4, 3]]` with `w_max = 4`. |
+| `ldpc_sparsity` | Sparsity as a property of the trained policy: the `shaped`, `terminal`, and `mask` variants against `unnormalized` at equal budget. |
+| `gpu_scale` | The noise-aware 4x4 protocol on the torch backend (equivariant PPO, batch 1024, three profiles, cross-evaluation) and the 5x5 targets. |
+| `ion_chain` | The `gpu_scale` protocol on all-to-all connectivity at `n = 16`, with and without S in the gate set. |
+| `topologies` | The three-topology PPO run matrix on square, triangular, and heavy-hex lattices at two qubit-count tiers, with common metrics per cell. |
+| `topologies_ea` | The package's evolutionary search on the same matrix and budget as `topologies`. |
+| `heavy_hex_overnight` | The heavy-hex column of `topologies` widened to six seeds and extended to `[[18, 1, d >= 4]]`, driven unattended under a wall cap. |
+| `memory_objective` | Benchmark of the memory objective's tiers on five codes and three profiles, rank correlation on random distance-3 codes, the XZZX bias-sensitivity test, the lattice-routing comparison, and the PPO smoke run. |
+| `memory_ppo` | The 4x4 protocol with the memory objective as the noise term, a second run without the LDPC term, and `score` for the discovered and reference codes under every profile and tier. |
+| `qdx_targets` | QDX's published all-to-all target set through this package's PPO at matched settings. |
+| `sat_codes` | Fifteen SAT-designed biased-noise codes under the circuit-level memory objective against the rotated surface and XZZX codes. |
+| `sat_population` | The same question over 2,150 SAT-sampled codes, with the structural features of each code's extraction circuit. |
 
 ## Layout
 
@@ -37,9 +56,10 @@ Not included: Clifft integration and cuQuantum kernels.
 src/autoqec_sim/         package
 src/autoqec_sim/backends/  torch backend of the gate kernels and parity masks (opt-in; docs/gpu.md)
 src/autoqec_sim/agents/  PPO agent, its two policies (flat MLP, permutation-equivariant), and its regression
-src/autoqec_sim/experiments/  noise-aware, scaling, LDPC-form, and topology experiments and the shared figure style
-tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, noise-aware experiment, torch backend vs numpy, the quick-start example)
-experiments/<name>/      one directory per experiment: REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
+tests/                   pytest suite (tableau vs stim, codes, rewards, env, noise hook, LDPC, regression, PPO, torch backend vs numpy, the quick-start example)
+experiments/<name>/      one directory per experiment: run.py (python -m experiments.<name>.run, not installed with the package), REPORT.md, figures/, launcher scripts, and runs/ (raw output, not tracked)
+experiments/common/      the matplotlib style every experiment figure shares
+experiments/tests/       the experiment tests, collected with the suite by uv run pytest
 experiments/regression/  regression.json (evolutionary) and regression_ppo.json (PPO), full budget; regression_ppo_4x4_seed{0,1}.json (PPO, the 4x4 target)
 experiments/regression/figure.py  the rediscovery-cost figure of the README and the regression page, from those files
 benchmarks/profile_tableau.py  CPU throughput and memory profile of the tableau, reward, and environment (docs/profile.md, docs/gpu.md)

@@ -1,11 +1,13 @@
 # Experiments
 
 Each experiment asks one question about code discovery or code
-evaluation, runs from one module under `autoqec_sim.experiments`, and
-keeps its write-up in `experiments/<name>/REPORT.md` in the repository
-(raw runs under `experiments/<name>/runs/` are not tracked). Each page
-gives the question, the result with its figure, and the commands that
-reproduce one run.
+evaluation, runs from `experiments/<name>/run.py` in the repository
+(`uv run python -m experiments.<name>.run` from the repository root;
+the code is not part of the installed package), and keeps its write-up
+in `experiments/<name>/REPORT.md` next to it (raw runs under
+`experiments/<name>/runs/` are not tracked). Each page gives the
+question, the result with its figure, and the commands that reproduce
+one run.
 
 | Experiment | Question | Result |
 |---|---|---|

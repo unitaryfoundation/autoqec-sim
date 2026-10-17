@@ -66,6 +66,15 @@
   claimed 0 of 18 successes. Rerun after the fix: 17 of 18, with PPO 1.4x
   to 6x more step-efficient and the evolutionary search far cheaper in
   wall time (`experiments/topologies_ea/REPORT.md`).
+- The experiment code moves out of the installed package, from
+  `src/autoqec_sim/experiments/<name>.py` to `experiments/<name>/run.py`
+  next to each experiment's `REPORT.md` and `figures/`, with the shared
+  figure style in `experiments/common/figstyle.py` and the experiment
+  tests in `experiments/tests/`. A pip install of `autoqec-sim` no longer
+  carries the experiments; a clone runs them from the repository root as
+  `uv run python -m experiments.<name>.run <subcommand>` in place of
+  `python -m autoqec_sim.experiments.<name> <subcommand>`
+  (`experiments/README.md`).
 
 ## 0.2.0 (2026-10-16)
 

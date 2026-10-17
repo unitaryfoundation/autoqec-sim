@@ -36,10 +36,10 @@ cannot do for a local-Clifford deformation.
 ## Reproduce
 
 ```
-uv run python -m autoqec_sim.experiments.memory_objective benchmark
-uv run python -m autoqec_sim.experiments.memory_objective random
-uv run python -m autoqec_sim.experiments.memory_objective bias
-uv run python -m autoqec_sim.experiments.memory_objective report
+uv run python -m experiments.memory_objective.run benchmark
+uv run python -m experiments.memory_objective.run random
+uv run python -m experiments.memory_objective.run bias
+uv run python -m experiments.memory_objective.run report
 ```
 
 The other subcommands are `random-check`, `lattice`, and `ppo`; `bposd`

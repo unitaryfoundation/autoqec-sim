@@ -3,11 +3,11 @@
 Status: partial (32 of 60 planned runs; the pending cells are listed at the end). Every number below comes from a JSON under
 `experiments/ldpc_sparsity/runs/` (named in the last column of the run table);
 the tables and figures regenerate with
-`uv run --extra rl python -m autoqec_sim.experiments.ldpc_sparsity report`
-and this file with `uv run --extra rl python experiments/ldpc_sparsity/assemble_report.py`.
+`uv run --extra rl python -m experiments.ldpc_sparsity.run report`
+and this file with `uv run --extra rl python -m experiments.ldpc_sparsity.assemble_report`.
 Code: `src/autoqec_sim/ldpc.py` (`LdpcObjective` forms `shaped` and `terminal`,
 `heavy_generator_count`, `greedy_action_mask`),
-`src/autoqec_sim/experiments/ldpc_sparsity.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;
+`experiments/ldpc_sparsity/run.py`. Logs: `experiments/ldpc_sparsity/runs/logs/`;
 compute records: `experiments/ldpc_sparsity/runs/compute_pod.jsonl`, imported into
 `genesis/ledger/compute.jsonl`.
 
@@ -598,4 +598,4 @@ Planned runs without a result JSON at the time of writing:
 | `experiments/ldpc_sparsity/figures/` | the figures, drawn by `report` with `experiments.figstyle` |
 | `experiments/ldpc_sparsity/runs/bench/` | `bench-mask` measurements of the mask cost per env step on the pod CPU |
 | `experiments/ldpc_sparsity/exact_mask.md`, `verdict.md` | the hand-written reading of the exact-mask section and the verdict, inserted by the assembly |
-| `src/autoqec_sim/ldpc.py`, `src/autoqec_sim/experiments/ldpc_sparsity.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |
+| `src/autoqec_sim/ldpc.py`, `experiments/ldpc_sparsity/run.py`, `experiments/ldpc_sparsity/assemble_report.py` | the objective forms and mask, the experiment, and this report's assembly |

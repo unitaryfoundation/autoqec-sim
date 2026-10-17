@@ -3,8 +3,8 @@
 Status: complete. Every number below comes from a JSON under
 `experiments/scaling/runs/` (named in the last column of each table or in the text)
 and the tables regenerate with
-`uv run --extra rl python -m autoqec_sim.experiments.scaling report`.
-Code: `src/autoqec_sim/experiments/scaling.py`. Logs: `experiments/scaling/runs/logs/`.
+`uv run --extra rl python -m experiments.scaling.run report`.
+Code: `experiments/scaling/run.py`. Logs: `experiments/scaling/runs/logs/`.
 
 ## Summary
 
@@ -408,4 +408,4 @@ in") and the table gives them per run.
 | `experiments/scaling/runs/logs/*.log` | per-update training logs of every run, queue logs |
 | `experiments/scaling/runs/jobs_step*.txt`, `experiments/scaling/runs/queue.sh` | the job lists and the 3-slot runner |
 | `experiments/scaling/figures/diag_4x4.png` (and `.pdf`) | the diagnosis figure, drawn by `report` with `experiments.figstyle` |
-| `src/autoqec_sim/experiments/scaling.py` | all code of this probe |
+| `experiments/scaling/run.py` | all code of this probe |

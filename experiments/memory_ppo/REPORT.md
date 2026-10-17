@@ -1,6 +1,6 @@
 # PPO with the memory objective on the 4x4 setting
 
-Status: 12 runs of run 1 and 9 runs of run 2 recorded. Every number below is read from a JSON under `experiments/memory_ppo/runs/` (`run_*.json`, `scores.json`, `run2/`) or `experiments/gpu_scale/runs/run_noise4x4_*.json`; the tables regenerate with `python -m autoqec_sim.experiments.memory_ppo report`. Code: `src/autoqec_sim/experiments/memory_ppo.py` (module docstring: reward, profiles, scales, selection); objective: `src/autoqec_sim/memory_objective.py`, `docs/memory_objective.md`.
+Status: 12 runs of run 1 and 9 runs of run 2 recorded. Every number below is read from a JSON under `experiments/memory_ppo/runs/` (`run_*.json`, `scores.json`, `run2/`) or `experiments/gpu_scale/runs/run_noise4x4_*.json`; the tables regenerate with `python -m experiments.memory_ppo.run report`. Code: `experiments/memory_ppo/run.py` (module docstring: reward, profiles, scales, selection); objective: `src/autoqec_sim/memory_objective.py`, `docs/memory_objective.md`.
 
 # Run 1: memory term with the LDPC penalty, proxy tier, highest-reward selection
 
