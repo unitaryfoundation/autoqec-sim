@@ -1201,6 +1201,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../experiments/proxy_tesseract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proxy against Tesseract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2091,6 +2119,11 @@
   reports move from the untracked <code>runs/</code> directories to
   <code>experiments/&lt;name&gt;/REPORT.md</code>.</p>
 </li>
+<li>A tracked validation experiment of the evaluator: <code>experiments/
+  proxy_tesseract</code> scores the 5x5 rotated surface code, its XZZX
+  deformation, and 19 random Clifford deformations of distance 5 with the
+  proxy tier and with 50,000 Tesseract shots per basis, at three and five
+  rounds, and reports the rank agreement, the ratio, and the cost.</li>
 <li>Subsystem codes: <code>SubsystemCode.from_gauge</code> derives the center, the
   bare logicals, and a gauge fixing from independent gauge generators;
   the memory circuit measures the gauge generators in batches and reads
