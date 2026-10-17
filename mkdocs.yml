@@ -115,6 +115,7 @@ nav:
               - SAT-designed codes: experiments/sat_codes.md
               - SAT population: experiments/sat_population.md
               - Proxy against Tesseract: experiments/proxy_tesseract.md
+              - Published experiments: experiments/hardware_comparison.md
       - Execution:
           - GPU backend: gpu.md
           - CPU profile: profile.md

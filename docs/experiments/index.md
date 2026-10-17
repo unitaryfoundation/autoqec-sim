@@ -20,6 +20,7 @@ one run.
 | [SAT-designed codes](sat_codes.md) | Does a code-capacity ranking of fifteen SAT-designed codes survive circuit-level noise? | Barely: Spearman 0.08 to 0.52; XZZX beats or ties every one of them |
 | [SAT population](sat_population.md) | The same question over 2,150 codes | No: Spearman 0.00 to 0.21; the best codes sit 30 to 40 percent below XZZX |
 | [Proxy against Tesseract](proxy_tesseract.md) | Does the shot-free proxy rank distance-5 codes like a near-maximum-likelihood decoder? | Yes: Spearman 0.89 and 0.93 over 21 codes at three and five rounds, about 30 percent low in level at 1.7 to 2.8 expected faults per shot, at a fifth of the cost of 50,000 shots |
+| [Published experiments](hardware_comparison.md) | How far is the evaluator from five published per-round logical error rates, on its own circuit with each paper's parameters? | Below the paper's number in all nine rows: 0.4 to 0.9 of it for the surface, toric, bicycle, and heavy-hex rows, 0.2 to 0.45 for Steane, where the circuits differ most; matching on the Google circuits within 2 to 24 percent of the papers' matching figures |
 
 Every number on these pages is copied from the experiment's report, which
 regenerates from the runs with the module's `report` command; the figures

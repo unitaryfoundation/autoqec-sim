@@ -46,6 +46,16 @@
   deformation, and 19 random Clifford deformations of distance 5 with the
   proxy tier and with 50,000 Tesseract shots per basis, at three and five
   rounds, and reports the rank agreement, the ratio, and the cost.
+- A second tracked validation experiment: `experiments/
+  hardware_comparison` builds the package's circuit for the codes of five
+  published memory experiments (Google 2023 and 2024 surface codes,
+  Quantinuum H1 Steane, the 40-ion toric and bivariate-bicycle codes,
+  ibm_peekskill heavy-hexagon) under noise profiles read from each paper,
+  scores them at the paper's round count, and puts the paper's own
+  per-round number beside them. Every parameter and measured value was
+  checked against the paper's text, the assumptions are listed per row,
+  and the page states that the comparison is model against reported
+  number, not a device prediction.
 - Subsystem codes: `SubsystemCode.from_gauge` derives the center, the
   bare logicals, and a gauge fixing from independent gauge generators;
   the memory circuit measures the gauge generators in batches and reads
